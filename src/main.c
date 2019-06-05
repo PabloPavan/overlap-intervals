@@ -8,20 +8,31 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
 	/* code */
-	char a = 'a';
-	cout << a << endl;
+
 	Heap h(5);
-	Node n(a,2);
+	cout << "size " << h.getSize() << endl;
+	// phase, job, day, start, end
+	Node n(1,1,1,2,100);
 
 	h.insert(&n);
+    
+    cout << "size " << h.getSize() << endl;
 
-	Node n2('b',1);
+	Node n2(2,2,1,1,120);
 
 	h.insert(&n2);
 
+	cout << "size " << h.getSize() << endl;
+
 	Node* nx = h.extract();
 
-	cout << nx->getCharacter() << endl;
+	cout << "phase " << nx->getPhase() << endl;
+	cout << "job " << nx->getJob() << endl;
+	cout << "day " << nx->getDay() << endl;
+	cout << "start " << nx->getStart() << endl;
+	cout << "end " << nx->getEnd() << endl;
+
+	cout << "size " << h.getSize() << endl;
 
 
 

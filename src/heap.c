@@ -4,8 +4,8 @@
 /* Private */
 
 void Heap::heapifydown(unsigned int index = 0) { /* O(lg n) */
-    while ((left(index) < size && this->heap[index]->getindex() > this->heap[left(index)]->getindex()) || (right(index) < size && this->heap[index]->getindex() > this->heap[right(index)]->getindex())) {
-        if (right(index) < size && this->heap[right(index)]->getindex() < this->heap[left(index)]->getindex()) {
+    while ((left(index) < size && this->heap[index]->getStart() > this->heap[left(index)]->getStart()) || (right(index) < size && this->heap[index]->getStart() > this->heap[right(index)]->getStart())) {
+        if (right(index) < size && this->heap[right(index)]->getStart() < this->heap[left(index)]->getStart()) {
             swap(index, right(index));
             index = right(index);
         } else {
@@ -16,7 +16,7 @@ void Heap::heapifydown(unsigned int index = 0) { /* O(lg n) */
 }
 
 void Heap::heapifyup(unsigned int index) { /* O(lg n) */
-    while (index > 0 && this->heap[index]->getindex() < this->heap[parent(index)]->getindex()) {
+    while (index > 0 && this->heap[index]->getStart() < this->heap[parent(index)]->getStart()) {
         swap(index, parent(index));
         index = parent(index);
     }

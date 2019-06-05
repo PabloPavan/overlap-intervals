@@ -1,5 +1,4 @@
 #include "node.h"
-
 /* Private */
 
 /* Post-order destroy */
@@ -16,22 +15,26 @@ void Node::destroy(Node* node) { /* O(n lg n) */
 /* Public */
 
 /* For leaf nodes */
-Node::Node(char character, unsigned int index) { /* O(1) */
-    this->character = character;
-    this->index = index;
+Node::Node(int phase, int job, int day, unsigned int start, unsigned int end) { /* O(1) */
+    this->phase = phase;
+    this->job = job;
+    this->day = day;
+    this->start = start;
+    this->end = end;
+
     this->leaf = true;
     this->left = (Node *) 0;
     this->right = (Node *) 0;
 }
 
 /* For inner nodes */
-Node::Node(Node* left, Node* right) { /* O(1) */
-    this->character = '\0';
-    this->index = left->index + right->index;
-    this->leaf = false;
-    this->left = left;
-    this->right = right;
-}
+// Node::Node(Node* left, Node* right) { /* O(1) */
+//     this->phase = '\0';
+//     this->start = left->start + right->start;
+//     this->leaf = false;
+//     this->left = left;
+//     this->right = right;
+// }
 
 /* Called by root */
 void Node::destroy() { /* O(n lg n) */
@@ -41,13 +44,26 @@ void Node::destroy() { /* O(n lg n) */
         destroy(this->right);
 }
 
-char Node::getCharacter() { /* O(1) */
-    return this->character;
+int Node::getPhase() { /* O(1) */
+    return this->phase;
 }
 
-unsigned int Node::getindex() { /* O(1) */
-    return this->index;
+int Node::getJob() { /* O(1) */
+    return this->job;
 }
+
+int Node::getDay() { /* O(1) */
+    return this->day;
+}
+
+unsigned int Node::getStart() { /* O(1) */
+    return this->start;
+}
+
+unsigned int Node::getEnd() { /* O(1) */
+    return this->end;
+}
+
 
 Node* Node::getLeft() { /* O(1) */
     return this->left;

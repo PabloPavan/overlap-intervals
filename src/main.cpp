@@ -13,13 +13,13 @@
 
 using namespace std;
 
-#define DUMMY
+#define DUMP
 
 int main(int argc, char const *argv[])
 {
 
 	Heap h(5);
-
+	int l =  0;
 	FILE *f = fopen("../data/intervals.csv", "r");
 	char line[2048];
 	char delim[] = ";";
@@ -27,8 +27,8 @@ int main(int argc, char const *argv[])
 
 	Node *no;
 
-	vector<char[2048]> filename_v;
-	vector<char[2048]> info_v;
+	vector<char*> filename_v;
+	//vector<char[2048]> info_v;
 
 	while(fgets(line, sizeof(line), f)){
 		char *filename;
@@ -39,6 +39,7 @@ int main(int argc, char const *argv[])
 		char *info;
 
 		char *token = strtok(line,delim); //filename
+		//strcpy (filename,token);
 		filename = token;
 		//cout << filename << endl;
 		token = strtok(NULL,delim);// joid 
@@ -77,25 +78,52 @@ int main(int argc, char const *argv[])
 		long int endi = (long int) end;
 		end_time = end_time + endi;
 
-		#ifdef DUMMY
+		cout << "linha " << l << endl;
+		#ifdef DUMP
 		printf(" start_time final : %ld\n",  start_time);
 		printf(" end_time final : %ld\n",  end_time);
-		#endif DUMMY
+		#endif DUMP
 
 
-		if(find(filename_v.begin(), filename_v.end(), filename) != filename_v.end()) {
-		    cout << "oi" << endl;
-		} else {
-		    filename_v.push_back(filename)
+		if(filename_v.empty()){
+			filename_v.push_back(filename);
+			cout << "entre aq adicinei ele " << filename << endl;
+		}else{
+			for (int i = 0; i < filename_v.size(); ++i){
+				cout << "i " << i << endl;
+				if(strcmp(filename_v[i],filename) == 0){
+					cout << "filename  " << filename << endl;
+					cout << "vector " << filename_v[i] << endl;
+					cout << "achou index:" << i << endl;		
+				}else{
+					cout << "adicionei esse cara " << filename << endl;
+			  		filename_v.push_back(filename);	
+			  		
+				}
+			}
 		}
-
+		// nao sei pq nao funciona isso, da o mesmo resultado do codigo acima
+		// vector<char*>::iterator filename_it = find(filename_v.begin(), filename_v.end(), filename);
+		// if (filename_it != filename_v.end()){
+		// 	int index = distance(filename_v.begin(), filename_it);
+		// 	#ifdef DUMP
+		//  	cout <<"Index of element in vector : "<< index << endl;
+		//  	#endif DUMP
+		// }else{
+		// 	filename_v.insert(filename_v.begin(), filename);
+		// }
 
 
 		// no  = new Node(1,1,1,2,100);
 
 		// h.insert(no);
-
+		l++;
 	}
+
+	for (vector<char*>::iterator i = filename_v.begin(); i != filename_v.end(); ++i)
+		{
+			cout << "oi   " << *i << endl;
+		}
 
 	// cout << h.getSize() << endl;
 

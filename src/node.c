@@ -16,9 +16,9 @@ void Node::destroy(Node* node) { /* O(n lg n) */
 /* Public */
 
 /* For leaf nodes */
-Node::Node(char character, unsigned int frequency) { /* O(1) */
+Node::Node(char character, unsigned int index) { /* O(1) */
     this->character = character;
-    this->frequency = frequency;
+    this->index = index;
     this->leaf = true;
     this->left = (Node *) 0;
     this->right = (Node *) 0;
@@ -27,7 +27,7 @@ Node::Node(char character, unsigned int frequency) { /* O(1) */
 /* For inner nodes */
 Node::Node(Node* left, Node* right) { /* O(1) */
     this->character = '\0';
-    this->frequency = left->frequency + right->frequency;
+    this->index = left->index + right->index;
     this->leaf = false;
     this->left = left;
     this->right = right;
@@ -45,8 +45,8 @@ char Node::getCharacter() { /* O(1) */
     return this->character;
 }
 
-unsigned int Node::getFrequency() { /* O(1) */
-    return this->frequency;
+unsigned int Node::getindex() { /* O(1) */
+    return this->index;
 }
 
 Node* Node::getLeft() { /* O(1) */

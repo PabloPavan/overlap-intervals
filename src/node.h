@@ -10,16 +10,11 @@ private:
     int day;
     unsigned int start;
     unsigned int end;
-    
-    bool leaf;
-    Node *left, *right;
-    /* Post-order destroy */
     void destroy(Node *node);
 public:
     /* For leaf nodes */
     Node(int phase, int job, int day, unsigned int start, unsigned int end);
-    /* For inner nodes */
-    Node(Node *left, Node *right);
+    
     /* Called by root */
     void destroy();
     int getPhase();
@@ -27,8 +22,7 @@ public:
     int getDay();
     unsigned int getStart();
     unsigned int getEnd();
-    Node* getLeft();
-    Node* getRight();
-    bool isLeaf();
+
+
 };
 #endif	/* NODE_H */

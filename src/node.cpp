@@ -9,7 +9,7 @@ void Node::destroy(Node* node) { /* O(n lg n) */
 /* Public */
 
 /* For leaf nodes */
-Node::Node(int phase, int job, int day, unsigned int start, unsigned int end) { /* O(1) */
+Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) */
     this->phase = phase;
     this->job = job;
     this->day = day;
@@ -30,11 +30,11 @@ int Node::getDay() { /* O(1) */
     return this->day;
 }
 
-unsigned int Node::getStart() { /* O(1) */
+long int Node::getStart() { /* O(1) */
     return this->start;
 }
 
-unsigned int Node::getEnd() { /* O(1) */
+long int Node::getEnd() { /* O(1) */
     return this->end;
 }
 

@@ -7,28 +7,97 @@
 #include <cstring>
 #include <string>
 #include <fstream>
+#include <iomanip>  
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
+#define DUMMY
 
 int main(int argc, char const *argv[])
 {
-	/* code */
 
-	// Heap h(5);
-	// cout << "size " << h.getSize() << endl;
-	// // phase, job, day, start, end
-	// Node n(1,1,1,2,100);
+	Heap h(5);
 
-	// h.insert(&n);
-    
- //    cout << "size " << h.getSize() << endl;
+	FILE *f = fopen("../data/intervals.csv", "r");
+	char line[2048];
+	char delim[] = ";";
+	fgets(line, sizeof(line), f); // skip header
 
-	// Node n2(2,2,1,1,120);
+	Node *no;
 
-	// h.insert(&n2);
+	vector<char[2048]> filename_v;
+	vector<char[2048]> info_v;
 
-	// cout << "size " << h.getSize() << endl;
+	while(fgets(line, sizeof(line), f)){
+		char *filename;
+		long int start_time;
+		long int end_time;
+		double start;
+		double end;
+		char *info;
+
+		char *token = strtok(line,delim); //filename
+		filename = token;
+		//cout << filename << endl;
+		token = strtok(NULL,delim);// joid 
+		token = strtok(NULL,delim); //uid
+		token = strtok(NULL,delim); //runtime
+		token = strtok(NULL,delim); //start_time
+		start_time = atoi(token);
+		//cout << start_time << endl;
+		token = strtok(NULL,delim); //end_time
+		end_time = atoi(token);
+		//cout << end_time << endl;
+		token = strtok(NULL,delim); //exec
+		token = strtok(NULL,delim); //file
+		token = strtok(NULL,delim); //interval-id
+		token = strtok(NULL,delim); //start
+		start = atof(token);
+		//printf("%f\n",  start);
+		token = strtok(NULL,delim); //end
+		end = atof(token);
+		//printf("%f\n",  end);
+		token = strtok(NULL,delim); //info
+		info = token;
+		//cout << info << endl;
+		token = strtok(NULL,delim); //X1_access_count
+		token = strtok(NULL,delim); //X1_access_size
+		token = strtok(NULL,delim); //read_bytes
+		token = strtok(NULL,delim); //write_bytes
+
+		// convert the start_time, end_time, start and end to micro
+		start  = start * 1000000;
+		start_time = start_time * 1000000;
+		long int starti = (long int) start;
+		start_time = start_time + starti;
+		end  = end * 1000000;
+		end_time = end_time * 1000000;
+		long int endi = (long int) end;
+		end_time = end_time + endi;
+
+		#ifdef DUMMY
+		printf(" start_time final : %ld\n",  start_time);
+		printf(" end_time final : %ld\n",  end_time);
+		#endif DUMMY
+
+
+		if(find(filename_v.begin(), filename_v.end(), filename) != filename_v.end()) {
+		    cout << "oi" << endl;
+		} else {
+		    filename_v.push_back(filename)
+		}
+
+
+
+		// no  = new Node(1,1,1,2,100);
+
+		// h.insert(no);
+
+	}
+
+	// cout << h.getSize() << endl;
 
 	// Node* nx = h.extract();
 
@@ -36,124 +105,8 @@ int main(int argc, char const *argv[])
 	// cout << "job " << nx->getJob() << endl;
 	// cout << "day " << nx->getDay() << endl;
 	// cout << "start " << nx->getStart() << endl;
-	// cout << "end " << nx->getEnd() << endl;
-
-	// cout << "size " << h.getSize() << endl;
 
 
-
-	//FILE *file = fopen("data/interval.csv", "r");
-	ifstream infile("../data/intervals.csv");
-	map<string, int> mymap;
-
-	string cabecalho;
-	string word;
-	string filename;
-	unsigned int jobid;
-	unsigned int uid;
-	unsigned int runtime;
-	unsigned int start_time;
-	unsigned int end_time;
-	unsigned int exec;
-	unsigned int file;
-	unsigned int interval_id;
-	float start;
-	float end;
-	string info;
-	unsigned int X1_access_count,X1_access_size,read_bytes,write_bytes;
-
-
-getline(infile, cabecalho);
-while(getline(infile, word, ';')){
-	filename = word;
-	cout << "filename: " << filename << endl ;
-
-	getline(infile, word, ';');
-	jobid = stoi(word.c_str());
-	cout << "jobid: " << jobid << endl ;
-
-	getline(infile, word, ';');
-	uid = stoi(word.c_str());
-	cout << "uid: " << uid << endl ;
-
-	getline(infile, word, ';');
-	runtime = stoi(word.c_str());
-	cout << "runtime: " << runtime << endl ;
-
-	getline(infile, word, ';');
-	start_time = stoi(word.c_str());
-	cout << "start_time: " << start_time << endl ;
-
-	getline(infile, word, ';');
-	end_time = stoi(word.c_str());
-	cout << "end_time: " << end_time << endl ;
-
-	getline(infile, word, ';');
-	cout << "exec: " << exec << endl ;
-
-	getline(infile, word, ';');
-	file = stoi(word.c_str());
-	cout << "file: " << file << endl ;
-
-	getline(infile, word, ';');
-	interval_id = stoi(word.c_str());
-	cout << "interval_id: " << interval_id << endl ;
-
-	getline(infile, word, ';');
-	start = stof(word.c_str());
-	cout << "start: " << start << endl ;
-
-	getline(infile, word, ';');
-	end = stof(word.c_str());
-	cout << "end: " << end << endl ;
-
-	getline(infile, word, ';');
-	info = word;
-	cout << "info: " << info << endl ;
-
-	getline(infile, word, ';');
-	X1_access_count = stoi(word.c_str());
-	cout << "X1_access_count: " << X1_access_count << endl ;
-
-	getline(infile, word, ';');
-	X1_access_size = stoi(word.c_str());
-	cout << "X1_access_size: " << X1_access_size << endl ;
-
-	getline(infile, word, ';');
-	read_bytes = stoi(word.c_str());
-	cout << "read_bytes: " << read_bytes << endl ;
-
-	getline(infile, word);
-	write_bytes = stoi(word.c_str());
-	cout << "write_bytes: " << write_bytes << endl ;
-
-}
-// cout << "filename: " << filename << endl ; 
-// getline(infile, filename, ';');
-// cout << "filename: " << filename << endl ; 
-
-    // getline(file, nome, ',') ;
-    // cout << "User: " << nome << " " ;
-
-    // getline(file, idade, ',') ;
-    // cout << "Idade: " << idade << " "  ; 
-
-    // getline(file, genero);
-    // cout << "Sexo: " <<  genero<< " "  ;
-
-
-
-		// if(fgetc(f) == 10){
-		// 	//fprintf(h, "\n");
-		// 	break;
-		// }
-		// else if(i != 0)
-		// 	cout << "oi" << endl;
-			//fprintf(h, ",");
-
-		//mymap.insert(pair<string,int>(word, i));
-	//cout <<  word << endl;
-	
-
+   fclose(f);
 	return 0;
 }

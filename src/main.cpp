@@ -25,17 +25,16 @@ int idx_find(char *word, vector<char*>&v){
 int main(int argc, char const *argv[]){
 
 	Heap h(30000);
-	FILE *f = fopen("../data/intervals.csv", "r");
+
+	FILE *f = fopen("../data/intervals.small.csv", "r");
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
-	fgets(line, sizeof(line), f); // skip header
 
 	Node *no;
-
 	vector<char*> filename_v;
 	vector<char*> info_v;
 
-	//vector<char[BUFFER_SIZE]> info_v;
+	fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
 		char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
@@ -92,37 +91,55 @@ int main(int argc, char const *argv[]){
 		printf("end_time: %ld\n",  end_time);
 		#endif
 
-		int idx_f = idx_find(filename, filename_v);
-
-		int idx_i = idx_find(info, info_v);
-
-		#ifdef DUMP
-		printf("index filename (job): %d\n",  idx_f);
-		printf("index info (phase): %d\n",  idx_i);
-		#endif
-
-
-		// no  = new Node(info_i,filename_i,1,start_time,end_time);
-		// h.insert(no);
+		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_time,end_time);
+		h.insert(no);
 		
 	}
+	fclose(f);
+
+	#ifdef DUMP
+	for (int i = 0; i < info_v.size(); ++i)
+		printf("Index: %d = %s\n", i, info_v[i]);
+	
+	for (int i = 0; i < filename_v.size(); ++i)
+		printf("Index: %d = %s\n", i, filename_v[i]);
+
+	cout << "size of heap before: " << h.getSize() << endl;
+	#endif
+
+	Node* nx;
+	Node* x;
+
+	//cout << "funciona " << h.extract()->getStart() << endl;
+
+	while(!h.isEmpty()){
+		vector<Node*> nodes;
+		nx = h.extract();
+		cout << "phase " << nx->getPhase() << endl;
+		cout << "job " << nx->getJob() << endl;
+		cout << "day " << nx->getDay() << endl;
+		cout << "start " << nx->getStart() << endl;
+		cout << "end " << nx->getEnd() << endl;
+
+	 	nodes.push_back(nx);
+	 	// for (int i = 0; i < nodes.size(); ++i)
+			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
+	 	do{
+	 		x = h.extract();
+	 		nodes.push_back(x); 
+	 	}while(x->getStart() == nx->getStart());
+			
+		
+
+		//nx->destroy();
+	 }
 
 
-	for (vector<char*>::iterator i = filename_v.begin(); i != filename_v.end(); ++i)
-		{
-			cout << ":   " << *i << endl;
-		}
 
-	cout << h.getSize() << endl;
+	#ifdef DUMP
+	cout << "size of heap after: " << h.getSize() << endl;
+	#endif
 
-	// Node* nx = h.extract();
-
-	// cout << "phase " << nx->getPhase() << endl;
-	// cout << "job " << nx->getJob() << endl;
-	// cout << "day " << nx->getDay() << endl;
-	// cout << "start " << nx->getStart() << endl;
-
-
-   fclose(f);
+   
 	return 0;
 }

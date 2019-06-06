@@ -128,8 +128,8 @@ int main(int argc, char const *argv[]){
 	 		x = h.extract();
 	 		nodes.push_back(x); 
 	 	}while(x->getStart() == nx->getStart());
-			
-		
+		// meu ultimo elemento dos nodes é o proximo node 
+
 
 		//nx->destroy();
 	 }

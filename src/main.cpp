@@ -1,27 +1,26 @@
 #include "node.h"
 #include "heap.h"
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <map>
 #include <cstring>
-#include <string>
-#include <fstream>
-#include <iomanip>  
 #include <vector>
-#include <algorithm>
+
 
 using namespace std;
 
 #define DUMP
 #define BUFFER_SIZE 2048
 
+int idx_find(char *word, vector<char*>v){
+	int idx = 0;
+	for (idx = 0; idx < v.size(); ++idx)
+		if(strcmp(v[idx],word) == 0){ break; }
+	return idx;	
+}
+
 int main(int argc, char const *argv[]){
 
-	int i;
-	Heap h(5);
-	int l =  0;
-	FILE *f = fopen("../data/intervals.small.csv", "r");
+	Heap h(30000);
+	FILE *f = fopen("../data/intervals.csv", "r");
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	fgets(line, sizeof(line), f); // skip header
@@ -29,6 +28,8 @@ int main(int argc, char const *argv[]){
 	Node *no;
 
 	vector<char*> filename_v;
+	vector<char*> info_v;
+
 	//vector<char[BUFFER_SIZE]> info_v;
 
 	while(fgets(line, sizeof(line), f)){
@@ -37,7 +38,7 @@ int main(int argc, char const *argv[]){
 		long int end_time;
 		double start;
 		double end;
-		char *info;
+		char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
 
 		char *token = strtok(line,delim); //filename
 		//strcpy (filename,token);
@@ -63,7 +64,8 @@ int main(int argc, char const *argv[]){
 		end = atof(token);
 		//printf("%f\n",  end);
 		token = strtok(NULL,delim); //info
-		info = token;
+		strcpy(info, token);
+		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		//cout << info << endl;
 		token = strtok(NULL,delim); //X1_access_count
 		token = strtok(NULL,delim); //X1_access_size
@@ -80,50 +82,41 @@ int main(int argc, char const *argv[]){
 		long int endi = (long int) end;
 		end_time = end_time + endi;
 
-		cout << "linha " << l << endl;
 		#ifdef DUMP
-		printf(" start_time final : %ld\n",  start_time);
-		printf(" end_time final : %ld\n",  end_time);
+		printf("start_time: %ld\n",  start_time);
+		printf("end_time: %ld\n",  end_time);
+		#endif
+
+		int idx_f = idx_find(filename, filename_v);
+
+		if(idx_f == filename_v.size()){
+			filename_v.push_back(filename);	
+		}
+
+		int idx_i = idx_find(info, info_v);
+
+		if(idx_i == info_v.size()){
+			info_v.push_back(info);	
+		}
+
+		#ifdef DUMP
+		printf("index filename (job): %d\n",  idx_f);
+		printf("index info (phase): %d\n",  idx_i);
 		#endif
 
 
-
-		for (i = 0; i < filename_v.size(); ++i)
-			if(strcmp(filename_v[i],filename) == 0){
-				cout << "\t\tfilename  " << filename << endl;
-				cout << "\t\tvector " << filename_v[i] << endl;
-				cout << "\t\tachou index:" << i << endl;
-				break;
-			}
-		if(i == filename_v.size()){
-			cout << "\t\t\tadicionei esse cara " << filename << endl;
-			filename_v.push_back(filename);	
-		}
-		
-		// nao sei pq nao funciona isso, da o mesmo resultado do codigo acima
-		// vector<char*>::iterator filename_it = find(filename_v.begin(), filename_v.end(), filename);
-		// if (filename_it != filename_v.end()){
-		// 	int index = distance(filename_v.begin(), filename_it);
-		// 	#ifdef DUMP
-		//  	cout <<"Index of element in vector : "<< index << endl;
-		//  	#endif DUMP
-		// }else{
-		// 	filename_v.insert(filename_v.begin(), filename);
-		// }
-
-
-		// no  = new Node(1,1,1,2,100);
-
+		// no  = new Node(info_i,filename_i,1,start_time,end_time);
 		// h.insert(no);
-		l++;
+		
 	}
+
 
 	for (vector<char*>::iterator i = filename_v.begin(); i != filename_v.end(); ++i)
 		{
-			cout << "oi:   " << *i << endl;
+			cout << ":   " << *i << endl;
 		}
 
-	// cout << h.getSize() << endl;
+	cout << h.getSize() << endl;
 
 	// Node* nx = h.extract();
 

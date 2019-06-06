@@ -14,24 +14,25 @@
 using namespace std;
 
 #define DUMP
+#define BUFFER_SIZE 2048
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]){
 
+	int i;
 	Heap h(5);
 	int l =  0;
-	FILE *f = fopen("../data/intervals.csv", "r");
-	char line[2048];
+	FILE *f = fopen("../data/intervals.small.csv", "r");
+	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	fgets(line, sizeof(line), f); // skip header
 
 	Node *no;
 
 	vector<char*> filename_v;
-	//vector<char[2048]> info_v;
+	//vector<char[BUFFER_SIZE]> info_v;
 
 	while(fgets(line, sizeof(line), f)){
-		char *filename;
+		char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
 		long int start_time;
 		long int end_time;
 		double start;
@@ -40,7 +41,8 @@ int main(int argc, char const *argv[])
 
 		char *token = strtok(line,delim); //filename
 		//strcpy (filename,token);
-		filename = token;
+		strcpy(filename, token);
+		filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
 		//cout << filename << endl;
 		token = strtok(NULL,delim);// joid 
 		token = strtok(NULL,delim); //uid
@@ -82,26 +84,22 @@ int main(int argc, char const *argv[])
 		#ifdef DUMP
 		printf(" start_time final : %ld\n",  start_time);
 		printf(" end_time final : %ld\n",  end_time);
-		#endif DUMP
+		#endif
 
 
-		if(filename_v.empty()){
-			filename_v.push_back(filename);
-			cout << "entre aq adicinei ele " << filename << endl;
-		}else{
-			for (int i = 0; i < filename_v.size(); ++i){
-				cout << "i " << i << endl;
-				if(strcmp(filename_v[i],filename) == 0){
-					cout << "filename  " << filename << endl;
-					cout << "vector " << filename_v[i] << endl;
-					cout << "achou index:" << i << endl;		
-				}else{
-					cout << "adicionei esse cara " << filename << endl;
-			  		filename_v.push_back(filename);	
-			  		
-				}
+
+		for (i = 0; i < filename_v.size(); ++i)
+			if(strcmp(filename_v[i],filename) == 0){
+				cout << "\t\tfilename  " << filename << endl;
+				cout << "\t\tvector " << filename_v[i] << endl;
+				cout << "\t\tachou index:" << i << endl;
+				break;
 			}
+		if(i == filename_v.size()){
+			cout << "\t\t\tadicionei esse cara " << filename << endl;
+			filename_v.push_back(filename);	
 		}
+		
 		// nao sei pq nao funciona isso, da o mesmo resultado do codigo acima
 		// vector<char*>::iterator filename_it = find(filename_v.begin(), filename_v.end(), filename);
 		// if (filename_it != filename_v.end()){
@@ -122,7 +120,7 @@ int main(int argc, char const *argv[])
 
 	for (vector<char*>::iterator i = filename_v.begin(); i != filename_v.end(); ++i)
 		{
-			cout << "oi   " << *i << endl;
+			cout << "oi:   " << *i << endl;
 		}
 
 	// cout << h.getSize() << endl;

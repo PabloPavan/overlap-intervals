@@ -10,10 +10,15 @@ using namespace std;
 #define DUMP
 #define BUFFER_SIZE 2048
 
-int idx_find(char *word, vector<char*>v){
+int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
 	for (idx = 0; idx < v.size(); ++idx)
-		if(strcmp(v[idx],word) == 0){ break; }
+		if(strcmp(v[idx],word) == 0) 
+			break;
+
+	if(idx == v.size())
+		v.push_back(word);	
+	
 	return idx;	
 }
 
@@ -89,15 +94,7 @@ int main(int argc, char const *argv[]){
 
 		int idx_f = idx_find(filename, filename_v);
 
-		if(idx_f == filename_v.size()){
-			filename_v.push_back(filename);	
-		}
-
 		int idx_i = idx_find(info, info_v);
-
-		if(idx_i == info_v.size()){
-			info_v.push_back(info);	
-		}
 
 		#ifdef DUMP
 		printf("index filename (job): %d\n",  idx_f);

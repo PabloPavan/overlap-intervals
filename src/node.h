@@ -10,12 +10,11 @@ private:
     int day;
     long int start;
     long int end;
-    void destroy(Node *node);
+    
 public:
-    /* For leaf nodes */
+    
     Node(int phase, int job, int day, long int start, long int end);
     
-    /* Called by root */
     void destroy();
     int getPhase();
     int getJob();

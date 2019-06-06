@@ -1,14 +1,9 @@
 #include "node.h"
 /* Private */
 
-/* Post-order destroy */
-void Node::destroy(Node* node) { /* O(n lg n) */
-    delete node;
-}
 
 /* Public */
 
-/* For leaf nodes */
 Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) */
     this->phase = phase;
     this->job = job;
@@ -17,6 +12,9 @@ Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) 
     this->end = end;
 }
 
+void Node::destroy() { /* O(n lg n) */
+    delete this;
+}
 
 int Node::getPhase() { /* O(1) */
     return this->phase;

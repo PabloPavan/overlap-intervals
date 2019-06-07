@@ -176,7 +176,7 @@ int main(int argc, char const *argv[]){
 		// ultimo elemento do nodes é o next node 
 	 	next = back_pop(nodes);
 
-	 	if(next->getStart() <= min_find(nodes)){
+	 	if(next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
 	 		new_end = next->getStart();
 	 	}else{
 	 		new_end = min_find(nodes);

@@ -20,7 +20,49 @@ int idx_find(char *word, vector<char*>&v){
 		v.push_back(word);	
 	
 	return idx;	
+
 }
+long int min_find(vector<Node*>&v){
+    long int min = v[0]->getEnd();
+    for(int i=0; i < v.size(); i++)
+        if(v[i]->getEnd() < min)
+        	min = v[i]->getEnd();
+
+    return min;
+}
+
+Node* back_pop(vector<Node*>&v){
+	Node * no;
+	no = v.back();
+	v.pop_back();
+	return no;
+}
+
+void make_new_interval(int long new_end, vector<Node*>&v){
+	// open csv final file and add new line
+	// start and end 
+	// phase and jobs sep by ,
+	// day 
+	char sep[] = ",";
+	// char 
+	char* jobs = (char*) calloc(1, sizeof(int));
+
+	cout << (char[255]) v[0]->getJob() << endl;
+
+	static_cast<char>(i);
+	//(char) v[0]->getJob()
+
+	cout << "asdada  " << jobs << endl;
+	//strcat(jobs, sep);
+	// for(int i=1; i < v.size(); i++){
+		
+	// 	//jobs+= (char*) v[0]->getJob();
+	// }
+
+	cout << "start: " << v[0]->getStart() << "end: " << new_end << "phases: " << endl;
+}
+	
+
 
 int main(int argc, char const *argv[]){
 
@@ -109,11 +151,14 @@ int main(int argc, char const *argv[]){
 
 	Node* nx;
 	Node* x;
+	Node* next;
 
-	//cout << "funciona " << h.extract()->getStart() << endl;
+	//cout << "funciona " << h.extract()->getEnd() << endl;
 
 	while(!h.isEmpty()){
 		vector<Node*> nodes;
+		long int new_end = 0;
+
 		nx = h.extract();
 		cout << "phase " << nx->getPhase() << endl;
 		cout << "job " << nx->getJob() << endl;
@@ -128,11 +173,23 @@ int main(int argc, char const *argv[]){
 	 		x = h.extract();
 	 		nodes.push_back(x); 
 	 	}while(x->getStart() == nx->getStart());
-		// meu ultimo elemento dos nodes é o proximo node 
+		// ultimo elemento do nodes é o next node 
+	 	next = back_pop(nodes);
 
+	 	if(next->getStart() <= min_find(nodes)){
+	 		new_end = next->getStart();
+	 	}else{
+	 		new_end = min_find(nodes);
+	 	}
+ 	
+ 		make_new_interval(new_end, nodes);
 
+	 	// }
 		//nx->destroy();
+
+
 	 }
+
 
 
 

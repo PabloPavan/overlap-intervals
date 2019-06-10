@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -c
+CFLAGS = -c -g
 SOURCES =  $(shell find -type f -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = intervals.x
@@ -17,5 +17,9 @@ clean :
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
+
+rundebug: $(EXECUTABLE)
+	valgrind --leak-check=full ./$(EXECUTABLE)
+
 	
 .PHONY: all clean

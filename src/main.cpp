@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define DUMP
+//#define DUMP
 #define BUFFER_SIZE 2048
 
 int idx_find(char *word, vector<char*>&v){
@@ -32,7 +32,7 @@ long int min_find(vector<Node*>&v){
 }
 
 Node* back_pop(vector<Node*>&v){
-	Node * no;
+	Node *no;
 	no = v.back();
 	v.pop_back();
 	return no;
@@ -44,29 +44,43 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 	char sep[] = ",";
+
+	char *jobs = (char*) calloc(1, sizeof(int));
+
+	sprintf(jobs, "%d", v[0]->getJob());
+
+	printf("sprintf = %s\n", jobs);
+
+	//printf("%s\n", jobs );
+
 	// char 
-	char* jobs = (char*) calloc(1, sizeof(int));
+	// char* jobs = 
 
-	cout << (char[255]) v[0]->getJob() << endl;
+	// cout << (char[255]) v[0]->getJob() << endl;
 
-	static_cast<char>(i);
-	//(char) v[0]->getJob()
+	// static_cast<char>(i);
+	// //(char) v[0]->getJob()
 
-	cout << "asdada  " << jobs << endl;
+	// cout << "asdada  " << jobs << endl;
 	//strcat(jobs, sep);
 	// for(int i=1; i < v.size(); i++){
 		
 	// 	//jobs+= (char*) v[0]->getJob();
 	// }
 
+	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << "end: " << new_end << "phases: " << endl;
+	#endif 
+
+	free(jobs);
 }
 	
 
 
 int main(int argc, char const *argv[]){
 
-	Heap h(30000);
+	Heap *h;
+	h = new Heap(30000);
 
 	FILE *f = fopen("../data/intervals.small.csv", "r");
 	char line[BUFFER_SIZE];
@@ -134,9 +148,13 @@ int main(int argc, char const *argv[]){
 		#endif
 
 		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_time,end_time);
-		h.insert(no);
+		h->insert(no);
+
+		// free(filename);
+		// free(info);
 		
 	}
+	
 	fclose(f);
 
 	#ifdef DUMP
@@ -146,55 +164,62 @@ int main(int argc, char const *argv[]){
 	for (int i = 0; i < filename_v.size(); ++i)
 		printf("Index: %d = %s\n", i, filename_v[i]);
 
-	cout << "size of heap before: " << h.getSize() << endl;
+	cout << "size of heap before: " << h->getSize() << endl;
 	#endif
 
 	Node* nx;
 	Node* x;
 	Node* next;
 
-	//cout << "funciona " << h.extract()->getEnd() << endl;
+	//cout << "funciona " << h->extract()->getEnd() << endl;
 
-	while(!h.isEmpty()){
+	while(!h->isEmpty()){
 		vector<Node*> nodes;
 		long int new_end = 0;
 
-		nx = h.extract();
+		nx = h->extract();
+		#ifdef DUMP
 		cout << "phase " << nx->getPhase() << endl;
 		cout << "job " << nx->getJob() << endl;
 		cout << "day " << nx->getDay() << endl;
 		cout << "start " << nx->getStart() << endl;
 		cout << "end " << nx->getEnd() << endl;
-
+		#endif
 	 	nodes.push_back(nx);
 	 	// for (int i = 0; i < nodes.size(); ++i)
 			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
 	 	do{
-	 		x = h.extract();
+	 		x = h->extract();
 	 		nodes.push_back(x); 
 	 	}while(x->getStart() == nx->getStart());
 		// ultimo elemento do nodes é o next node 
 	 	next = back_pop(nodes);
 
-	 	if(next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
-	 		new_end = next->getStart();
-	 	}else{
-	 		new_end = min_find(nodes);
-	 	}
+	 	cout << next->getStart() << endl;
+
+	 	h->insert(next);
+
+	 // 	if(next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
+	 // 		new_end = next->getStart();
+	 // 	}else{
+	 // 		new_end = min_find(nodes);
+	 // 	}
  	
- 		make_new_interval(new_end, nodes);
+ 	// 	make_new_interval(new_end, nodes);
 
-	 	// }
-		//nx->destroy();
+ 	// 	//h->insert(next);
+
+	 // 	// }
+		// nx->destroy();
 
 
-	 }
+	}
 
 
 
 
 	#ifdef DUMP
-	cout << "size of heap after: " << h.getSize() << endl;
+	cout << "size of heap after: " << h->getSize() << endl;
 	#endif
 
    

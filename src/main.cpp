@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define DUMP
+//#define DUMP
 #define BUFFER_SIZE 2048
 
 int idx_find(char *word, vector<char*>&v){
@@ -69,7 +69,7 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// }
 
 	#ifdef DUMP
-	cout << "start: " << v[0]->getStart() << "end: " << new_end << "phases: " << endl;
+	cout << "start: " << v[0]->getStart() << " end: " << new_end << " phases: " << v[0]->getPhase() << endl;
 	#endif 
 
 	free(jobs);
@@ -189,37 +189,32 @@ int main(int argc, char const *argv[]){
 		cout << "end " << n_current->getEnd() << endl << endl;
 		#endif
 	 	nodes.push_back(n_current);
-	 	for (int i = 0; i < nodes.size(); ++i)
-			printf("Index: %d = %ld\n", i, nodes[i]->getStart());
+	 	// for (int i = 0; i < nodes.size(); ++i)
+			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
 	 	do{
 	 		n_temp = h->extract();
-	 		cout << "----" << n_temp->getStart() << " ";
+	 		// cout << "----" << n_temp->getStart() << " ";
 	 		nodes.push_back(n_temp);
 	 	}while(n_temp->getStart() == n_current->getStart());
-	 	cout << "hello" << endl;
+	 	// cout << "hello" << endl;
 		// ultimo elemento do nodes é o n_next node 
 
 	 	//n_next = back_pop(nodes);
 	 	n_next = nodes.back();
 		nodes.pop_back();
 
-	 	cout << "oiii" << n_next->getStart() << endl;
+
+	 	long int min_end = min_find(nodes);
+		if(n_next->getStart() <= min_end ){ 
+	 	 	new_end = n_next->getStart();
+		}else{
+	 		new_end = min_end;
+		}
+
+		make_new_interval(new_end, nodes);
+
 
 	 	h->insert(n_next);
-
-	 // 	if(n_next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
-	 // 		new_end = n_next->getStart();
-	 // 	}else{
-	 // 		new_end = min_find(nodes);
-	 // 	}
- 	
- 	// 	make_new_interval(new_end, nodes);
-
- 	// 	//h->insert(n_next);
-
-	 // 	// }
-		// nx->destroy();
-
 
 	}
 

@@ -79,7 +79,7 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 
 int main(int argc, char const *argv[]){
 
-	long int epoch_time = 1325376000
+	long int epoch_time = 1325376000;
 	Heap *h;
 	h = new Heap(30000);
 
@@ -175,8 +175,8 @@ int main(int argc, char const *argv[]){
 	Node* n_next;
 
 	//cout << "funciona " << h->extract()->getEnd() << endl;
-
-	while(!h->isEmpty()){
+	cout << "-----------------------------------------------" << endl;
+	while(h->getSize() > 1){
 		vector<Node*> nodes;
 		long int new_end = 0;
 
@@ -186,14 +186,15 @@ int main(int argc, char const *argv[]){
 		cout << "job " << n_current->getJob() << endl;
 		cout << "day " << n_current->getDay() << endl;
 		cout << "start " << n_current->getStart() << endl;
-		cout << "end " << n_current->getEnd() << endl;
+		cout << "end " << n_current->getEnd() << endl << endl;
 		#endif
 	 	nodes.push_back(n_current);
-	 	// for (int i = 0; i < nodes.size(); ++i)
-			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
+	 	for (int i = 0; i < nodes.size(); ++i)
+			printf("Index: %d = %ld\n", i, nodes[i]->getStart());
 	 	do{
 	 		n_temp = h->extract();
-	 		nodes.push_back(x); 
+	 		cout << "----" << n_temp->getStart() << " ";
+	 		nodes.push_back(n_temp);
 	 	}while(n_temp->getStart() == n_current->getStart());
 	 	cout << "hello" << endl;
 		// ultimo elemento do nodes é o n_next node 

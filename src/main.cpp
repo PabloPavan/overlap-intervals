@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//#define DUMP
+#define DUMP
 #define BUFFER_SIZE 2048
 
 int idx_find(char *word, vector<char*>&v){
@@ -167,9 +167,9 @@ int main(int argc, char const *argv[]){
 	cout << "size of heap before: " << h->getSize() << endl;
 	#endif
 
-	Node* nx;
-	Node* x;
-	Node* next;
+	Node* n_current;
+	Node* n_temp;
+	Node* n_next;
 
 	//cout << "funciona " << h->extract()->getEnd() << endl;
 
@@ -177,37 +177,41 @@ int main(int argc, char const *argv[]){
 		vector<Node*> nodes;
 		long int new_end = 0;
 
-		nx = h->extract();
+		n_current = h->extract();
 		#ifdef DUMP
-		cout << "phase " << nx->getPhase() << endl;
-		cout << "job " << nx->getJob() << endl;
-		cout << "day " << nx->getDay() << endl;
-		cout << "start " << nx->getStart() << endl;
-		cout << "end " << nx->getEnd() << endl;
+		cout << "phase " << n_current->getPhase() << endl;
+		cout << "job " << n_current->getJob() << endl;
+		cout << "day " << n_current->getDay() << endl;
+		cout << "start " << n_current->getStart() << endl;
+		cout << "end " << n_current->getEnd() << endl;
 		#endif
-	 	nodes.push_back(nx);
+	 	nodes.push_back(n_current);
 	 	// for (int i = 0; i < nodes.size(); ++i)
 			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
 	 	do{
-	 		x = h->extract();
+	 		n_temp = h->extract();
 	 		nodes.push_back(x); 
-	 	}while(x->getStart() == nx->getStart());
-		// ultimo elemento do nodes é o next node 
-	 	next = back_pop(nodes);
+	 	}while(n_temp->getStart() == n_current->getStart());
+	 	cout << "hello" << endl;
+		// ultimo elemento do nodes é o n_next node 
 
-	 	cout << next->getStart() << endl;
+	 	//n_next = back_pop(nodes);
+	 	n_next = nodes.back();
+		nodes.pop_back();
 
-	 	h->insert(next);
+	 	cout << "oiii" << n_next->getStart() << endl;
 
-	 // 	if(next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
-	 // 		new_end = next->getStart();
+	 	h->insert(n_next);
+
+	 // 	if(n_next->getStart() <= min_find(nodes)){ // store min_find(nodes) in some variable so you don't have to calculate it twice in case you enter the else (Fran)
+	 // 		new_end = n_next->getStart();
 	 // 	}else{
 	 // 		new_end = min_find(nodes);
 	 // 	}
  	
  	// 	make_new_interval(new_end, nodes);
 
- 	// 	//h->insert(next);
+ 	// 	//h->insert(n_next);
 
 	 // 	// }
 		// nx->destroy();

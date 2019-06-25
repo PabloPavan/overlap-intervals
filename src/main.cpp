@@ -79,6 +79,7 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 
 int main(int argc, char const *argv[]){
 
+	long int epoch_time = 1325376000
 	Heap *h;
 	h = new Heap(30000);
 
@@ -134,10 +135,12 @@ int main(int argc, char const *argv[]){
 
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1000000;
+		start_time = start_time - epoch_time; 
 		start_time = start_time * 1000000;
 		long int starti = (long int) start;
 		start_time = start_time + starti;
 		end  = end * 1000000;
+		end_time = end_time - epoch_time; 
 		end_time = end_time * 1000000;
 		long int endi = (long int) end;
 		end_time = end_time + endi;

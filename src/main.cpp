@@ -3,11 +3,12 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <set>
 
 
 using namespace std;
 
-//#define DUMP
+#define DUMP
 #define BUFFER_SIZE 2048
 
 int idx_find(char *word, vector<char*>&v){
@@ -22,9 +23,28 @@ int idx_find(char *word, vector<char*>&v){
 	return idx;	
 
 }
+
+/* remove values duplicates 
+	recive vector pointer of nodes and name of funtion 
+	return values vector
+
+ */
+ vector<int> remove_duplicates(vector<Node*>&v, int (Node::*functionPtr)()){
+	vector<int> vec;
+ 	set<int> s;
+ 	for (int i=0; i <= v.size(); ++i){
+ 	    	s.insert((v[i]->*functionPtr)());
+	    
+ 	}
+ 	vec.assign(s.begin(),s.end()); 
+ 	return vec;
+ 	}
+
+
+
 long int min_find(vector<Node*>&v){
     long int min = v[0]->getEnd();
-    for(int i=0; i < v.size(); i++)
+    for(int i=0; i <= v.size(); i++)
         if(v[i]->getEnd() < min)
         	min = v[i]->getEnd();
 
@@ -43,36 +63,45 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// start and end 
 	// phase and jobs sep by ,
 	// day 
+
 	char sep[] = ",";
 
-	char *jobs = (char*) calloc(1, sizeof(int));
+	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
+	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
 
-	sprintf(jobs, "%d", v[0]->getJob());
+	char *jobs = (char*) calloc(v.size(), sizeof(int));
+	char *phases = (char*) calloc(v.size(), sizeof(int));
+	char *tmp = (char*) calloc(1, sizeof(int));
 
-	printf("sprintf = %s\n", jobs);
+	int number_of_jobs = 0;
+	for (number_of_jobs = 0; number_of_jobs < jobs_vec.size()-1; ++number_of_jobs){
+		sprintf(tmp, "%d", jobs_vec[number_of_jobs]);
+		strcat(tmp, sep);
+		strcat(jobs, tmp);
+	}
+	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
+	strcat(jobs, tmp);
+	int number_of_phases = 0;
+	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
+		//cout << "phases " <<  phases_vec[i];
+		sprintf(tmp, "%d", phases_vec[number_of_phases]);
+		strcat(tmp, sep);
+		strcat(phases, tmp);
+	}
+	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
+	strcat(phases, tmp);
 
-	//printf("%s\n", jobs );
 
-	// char 
-	// char* jobs = 
 
-	// cout << (char[255]) v[0]->getJob() << endl;
-
-	// static_cast<char>(i);
-	// //(char) v[0]->getJob()
-
-	// cout << "asdada  " << jobs << endl;
-	//strcat(jobs, sep);
-	// for(int i=1; i < v.size(); i++){
-		
-	// 	//jobs+= (char*) v[0]->getJob();
-	// }
-
+	cout << "--------- intevals ---------------------" << endl;
 	#ifdef DUMP
-	cout << "start: " << v[0]->getStart() << " end: " << new_end << " phases: " << v[0]->getPhase() << endl;
+	cout << "start: " << v[0]->getStart() << " end: " << new_end << " phases: " << phases; 
+	cout << " number of phases: " << number_of_phases  << " jobs: " << jobs << " number of jobs: " << number_of_jobs << endl;
 	#endif 
 
 	free(jobs);
+	free(phases);
+	free(tmp);
 }
 	
 
@@ -181,7 +210,9 @@ int main(int argc, char const *argv[]){
 		long int new_end = 0;
 
 		n_current = h->extract();
+
 		#ifdef DUMP
+		cout << "--------------------infos --------------------" << endl;
 		cout << "phase " << n_current->getPhase() << endl;
 		cout << "job " << n_current->getJob() << endl;
 		cout << "day " << n_current->getDay() << endl;
@@ -189,20 +220,16 @@ int main(int argc, char const *argv[]){
 		cout << "end " << n_current->getEnd() << endl << endl;
 		#endif
 	 	nodes.push_back(n_current);
-	 	// for (int i = 0; i < nodes.size(); ++i)
-			// printf("Index: %d = %ld\n", i, nodes[i]->getStart());
+	 
 	 	do{
 	 		n_temp = h->extract();
-	 		// cout << "----" << n_temp->getStart() << " ";
+	
 	 		nodes.push_back(n_temp);
 	 	}while(n_temp->getStart() == n_current->getStart());
-	 	// cout << "hello" << endl;
+
 		// ultimo elemento do nodes é o n_next node 
 
-	 	//n_next = back_pop(nodes);
-	 	n_next = nodes.back();
-		nodes.pop_back();
-
+	 	n_next = back_pop(nodes);
 
 	 	long int min_end = min_find(nodes);
 		if(n_next->getStart() <= min_end ){ 
@@ -217,6 +244,11 @@ int main(int argc, char const *argv[]){
 	 	h->insert(n_next);
 
 	}
+
+	// n_current = h->extract();
+	// vector<Node*> nodes;
+	// nodes.push_back(n_current);
+	// make_new_interval(n_current->getEnd(), nodes);
 
 
 

@@ -32,8 +32,10 @@ int idx_find(char *word, vector<char*>&v){
  vector<int> remove_duplicates(vector<Node*>&v, int (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
- 	for (int i=0; i <= v.size(); ++i){
+ 	for (int i=0; i < v.size(); ++i){
+ 		printf("%p  %d XXXXXS\n", v, i);
  	    	s.insert((v[i]->*functionPtr)());
+ 		
 	    
  	}
  	vec.assign(s.begin(),s.end()); 
@@ -44,7 +46,7 @@ int idx_find(char *word, vector<char*>&v){
 
 long int min_find(vector<Node*>&v){
     long int min = v[0]->getEnd();
-    for(int i=0; i <= v.size(); i++)
+    for(int i=0; i < v.size(); i++)
         if(v[i]->getEnd() < min)
         	min = v[i]->getEnd();
 
@@ -64,10 +66,13 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
-	char sep[] = ",";
+	cout << "entrou" << endl;
 
+	printf("%p\n xxx %p\n", v, &Node::getJob);
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
+
+	cout << "passou" << endl;
 
 	char *jobs = (char*) calloc(v.size()*2, sizeof(int));
 	char *phases = (char*) calloc(v.size()*2, sizeof(int));
@@ -78,14 +83,14 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 		sprintf(tmp, "%d,", jobs_vec[number_of_jobs]);
 		strcat(jobs, tmp);
 	}
-	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
+	sprintf(tmp, "%d", jobs_vec[number_of_jobs]);
 	strcat(jobs, tmp);
 	int number_of_phases = 0;
 	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
 		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
 		strcat(phases, tmp);
 	}
-	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
+	sprintf(tmp, "%d", phases_vec[number_of_phases]);
 	strcat(phases, tmp);
 
 
@@ -160,16 +165,20 @@ int main(int argc, char const *argv[]){
 		token = strtok(NULL,delim); //write_bytes
 
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1000000;
+		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
 		start_time = start_time * 1000000;
 		long int starti = (long int) start;
+
 		start_time = start_time + starti;
-		end  = end * 1000000;
-		end_time = end_time - epoch_time; 
-		end_time = end_time * 1000000;
+
+		end = end * 1000000;
+		// end_time = end_time - epoch_time; 
+		// end_time = end_time * 1000000;
 		long int endi = (long int) end;
-		end_time = end_time + endi;
+		end_time = start_time + (endi - starti);
+
+
 
 		#ifdef DUMP
 		printf("start_time: %ld\n",  start_time);
@@ -202,7 +211,7 @@ int main(int argc, char const *argv[]){
 
 	//cout << "funciona " << h->extract()->getEnd() << endl;
 	cout << "-----------------------------------------------" << endl;
-	while(h->getSize() > 1){
+	while(!h->isEmpty()){
 		vector<Node*> nodes;
 		long int new_end = 0;
 
@@ -216,30 +225,50 @@ int main(int argc, char const *argv[]){
 		cout << "start " << n_current->getStart() << endl;
 		cout << "end " << n_current->getEnd() << endl << endl;
 		#endif
-	 	nodes.push_back(n_current);
-	 
-	 	do{
-	 		n_temp = h->extract();
-	
-	 		nodes.push_back(n_temp);
-	 	}while(n_temp->getStart() == n_current->getStart());
 
-		// ultimo elemento do nodes é o n_next node 
+		if(!h->isEmpty()){
+	 		nodes.push_back(n_current);
+	 	
+		 	do{
+		 		n_temp = h->extract();
+		
+		 		nodes.push_back(n_temp);
+		 	}while(n_temp->getStart() == n_current->getStart());
 
-	 	n_next = back_pop(nodes);
+		
+			// ultimo elemento do nodes é o n_next node 
 
-	 	long int min_end = min_find(nodes);
-		if(n_next->getStart() <= min_end ){ 
-	 	 	new_end = n_next->getStart();
+			n_next = back_pop(nodes);
+
+		
+		 	long int min_end = min_find(nodes);
+			if(n_next->getStart() <= min_end ){ 
+		 	 	new_end = n_next->getStart();
+			}else{
+		 		new_end = min_end;
+			}
+
+			make_new_interval(new_end, nodes);
+		
+			h->insert(n_next);
+
 		}else{
-	 		new_end = min_end;
+			cout << "aqui" << endl;
+			cout << nodes.size() << endl;
+			nodes.push_back(n_current);
+
+
+
+			for (int i = 0; i < nodes.size(); ++i){
+			 cout << nodes[i]->getStart() << endl;
+			 cout << nodes[i]->getEnd() << endl;
+			}
+			
+
+			make_new_interval(n_current->getEnd(), nodes);
 		}
 
-		make_new_interval(new_end, nodes);
-
-
-	 	h->insert(n_next);
-
+			 	
 	}
 
 	// n_current = h->extract();

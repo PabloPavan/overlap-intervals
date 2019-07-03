@@ -69,8 +69,8 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
 
-	char *jobs = (char*) calloc(v.size(), sizeof(int));
-	char *phases = (char*) calloc(v.size(), sizeof(int));
+	char *jobs = (char*) calloc(v.size()*2, sizeof(int));
+	char *phases = (char*) calloc(v.size()*2, sizeof(int));
 	char *tmp = (char*) calloc(1, sizeof(int));
 
 	int number_of_jobs = 0;
@@ -84,8 +84,7 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	int number_of_phases = 0;
 	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
 		//cout << "phases " <<  phases_vec[i];
-		sprintf(tmp, "%d", phases_vec[number_of_phases]);
-		strcat(tmp, sep);
+		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
 		strcat(phases, tmp);
 	}
 	sprintf(tmp, "%d", phases_vec[number_of_phases++]);

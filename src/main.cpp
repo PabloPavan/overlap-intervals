@@ -75,15 +75,13 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 
 	int number_of_jobs = 0;
 	for (number_of_jobs = 0; number_of_jobs < jobs_vec.size()-1; ++number_of_jobs){
-		sprintf(tmp, "%d", jobs_vec[number_of_jobs]);
-		strcat(tmp, sep);
+		sprintf(tmp, "%d,", jobs_vec[number_of_jobs]);
 		strcat(jobs, tmp);
 	}
 	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
 	strcat(jobs, tmp);
 	int number_of_phases = 0;
 	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
-		//cout << "phases " <<  phases_vec[i];
 		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
 		strcat(phases, tmp);
 	}

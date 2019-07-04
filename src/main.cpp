@@ -5,11 +5,10 @@
 #include <vector>
 #include <set>
 
-
 using namespace std;
 
 #define DUMP
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 4096
 
 int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
@@ -29,26 +28,28 @@ int idx_find(char *word, vector<char*>&v){
 	return values vector
 
  */
- vector<int> remove_duplicates(vector<Node*>&v, int (Node::*functionPtr)()){
+ vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
- 	for (int i=0; i < v.size(); ++i){
- 		printf("%p  %d XXXXXS\n", v, i);
- 	    	s.insert((v[i]->*functionPtr)());
- 		
-	    
+ 	for(int i = 0; i < v.size(); ++i){
+ 		vector<int> u = (v[i]->*functionPtr)();
+ 		for(int j = 0; j < u.size(); ++j)
+			s.insert(u[j]);
  	}
  	vec.assign(s.begin(),s.end()); 
  	return vec;
- 	}
-
+}
 
 
 long int min_find(vector<Node*>&v){
-    long int min = v[0]->getEnd();
-    for(int i=0; i < v.size(); i++)
-        if(v[i]->getEnd() < min)
-        	min = v[i]->getEnd();
+	// cout << "aaa ";
+	// for(int i=0; i < v.size(); i++)
+	// 	cout << v[i]->getEnd() <<  " ";
+	// cout << endl;
+    long int min = 0;
+    for(int i = 1; i < v.size(); i++)
+        if(v[i]->getEnd() < v[min]->getEnd())
+        	min = i;
 
     return min;
 }
@@ -66,39 +67,50 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
-	cout << "entrou" << endl;
-
-	printf("%p\n xxx %p\n", v, &Node::getJob);
+	// printf("%p\n xxx %p\n", v, &Node::getJob);
+	// cout << endl << "jobs before: ";
+	// for(int i=0; i < v.size(); i++)
+	// 	cout << " " << v[i]->getJob();
+	// cout << endl;
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
+	// cout << "jobs after: ";
+	// for(int i=0; i < jobs_vec.size(); i++)
+	// 	cout << " " << jobs_vec[i];
+	// cout << endl;
+	// cout << "phases before: ";
+	// for(int i=0; i < v.size(); i++)
+	// 	cout << " " << v[i]->getPhase();
+	// cout << endl;
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
+	// 	cout << "phases after: ";
+	// for(int i=0; i < phases_vec.size(); i++)
+	// 	cout << " " << phases_vec[i];
+	// cout << endl << endl;
 
-	cout << "passou" << endl;
-
-	char *jobs = (char*) calloc(v.size()*2, sizeof(int));
-	char *phases = (char*) calloc(v.size()*2, sizeof(int));
-	char *tmp = (char*) calloc(1, sizeof(int));
+	char *jobs = (char*) calloc(v.size() * 2 + 1, sizeof(char));
+	char *phases = (char*) calloc(v.size() * 2 + 1, sizeof(char));
+	char *tmp = (char*) calloc(3, sizeof(char));
 
 	int number_of_jobs = 0;
 	for (number_of_jobs = 0; number_of_jobs < jobs_vec.size()-1; ++number_of_jobs){
 		sprintf(tmp, "%d,", jobs_vec[number_of_jobs]);
 		strcat(jobs, tmp);
 	}
-	sprintf(tmp, "%d", jobs_vec[number_of_jobs]);
+	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
 	strcat(jobs, tmp);
 	int number_of_phases = 0;
 	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
 		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
 		strcat(phases, tmp);
 	}
-	sprintf(tmp, "%d", phases_vec[number_of_phases]);
+	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
 	strcat(phases, tmp);
 
 
-
-	cout << "--------- intevals ---------------------" << endl;
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " phases: " << phases; 
-	cout << " number of phases: " << number_of_phases  << " jobs: " << jobs << " number of jobs: " << number_of_jobs << endl;
+	// cout << " number of phases: " << number_of_phases  << " jobs: " << jobs << " number of jobs: " << number_of_jobs << endl << endl;
+	cout << " jobs: " << jobs << endl << endl;
 	#endif 
 
 	free(jobs);
@@ -109,8 +121,8 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 
 
 int main(int argc, char const *argv[]){
-
-	long int epoch_time = 1325376000;
+	//long int epoch_time = 1325376000;
+	long int epoch_time = 0;
 	Heap *h;
 	h = new Heap(30000);
 
@@ -181,8 +193,7 @@ int main(int argc, char const *argv[]){
 
 
 		#ifdef DUMP
-		printf("start_time: %ld\n",  start_time);
-		printf("end_time: %ld\n",  end_time);
+		cout << "[" << start_time << ", " << end_time << "]" << endl;
 		#endif
 
 		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_time,end_time);
@@ -192,17 +203,18 @@ int main(int argc, char const *argv[]){
 		// free(info);
 		
 	}
+	#ifdef DUMP
+		cout << endl << "heap size: " << h->getSize() << endl << endl;
+	#endif	
 	
 	fclose(f);
 
 	#ifdef DUMP
 	for (int i = 0; i < info_v.size(); ++i)
-		printf("Index: %d = %s\n", i, info_v[i]);
-	
+		cout << "[" << i << "] = " << info_v[i] << endl;
+	cout << endl;
 	for (int i = 0; i < filename_v.size(); ++i)
-		printf("Index: %d = %s\n", i, filename_v[i]);
-
-	cout << "size of heap before: " << h->getSize() << endl;
+		cout << "[" << i << "] = " << filename_v[i] << endl;
 	#endif
 
 	Node* n_current;
@@ -210,7 +222,7 @@ int main(int argc, char const *argv[]){
 	Node* n_next;
 
 	//cout << "funciona " << h->extract()->getEnd() << endl;
-	cout << "-----------------------------------------------" << endl;
+	cout << endl;
 	while(!h->isEmpty()){
 		vector<Node*> nodes;
 		long int new_end = 0;
@@ -218,51 +230,68 @@ int main(int argc, char const *argv[]){
 		n_current = h->extract();
 
 		#ifdef DUMP
-		cout << "--------------------infos --------------------" << endl;
-		cout << "phase " << n_current->getPhase() << endl;
-		cout << "job " << n_current->getJob() << endl;
-		cout << "day " << n_current->getDay() << endl;
-		cout << "start " << n_current->getStart() << endl;
-		cout << "end " << n_current->getEnd() << endl << endl;
+		cout << "phase;  job;  day;  start;  end " << endl;
+		cout << "[ ";
+		for(int i = 0; i < n_current->getPhase().size(); ++i)
+			cout << info_v[n_current->getPhase()[i]] << " ";
+		cout << "] [ ";
+		for(int i = 0; i < n_current->getJob().size(); ++i)
+			cout << n_current->getJob()[i] << " ";
+		cout << "] [ ";
+		for(int i = 0; i < n_current->getDay().size(); ++i)
+			cout << n_current->getDay()[i] << " ";
+		cout << "]  " << n_current->getStart() << " " << n_current->getEnd() << endl;
 		#endif
 
 		if(!h->isEmpty()){
 	 		nodes.push_back(n_current);
-	 	
-		 	do{
-		 		n_temp = h->extract();
-		
-		 		nodes.push_back(n_temp);
-		 	}while(n_temp->getStart() == n_current->getStart());
 
+		 	do{
+		 		//cout << "before if - nodes size = " << nodes.size() << " " << h->getSize() << endl;
+		 		n_temp = h->extract();
+				//cout << "after  if - nodes size = " << nodes.size() << " " << h->getSize() << endl;
+		 		nodes.push_back(n_temp);
+		 		//cout << "botei start " << n_temp->getStart() << " end " << n_temp->getEnd() << " " << info_v[n_temp->getPhase()[0]] << endl;
+		 	}while(n_temp->getStart() == n_current->getStart());
+			
 		
 			// ultimo elemento do nodes é o n_next node 
-
 			n_next = back_pop(nodes);
 
 		
 		 	long int min_end = min_find(nodes);
-			if(n_next->getStart() <= min_end ){ 
-		 	 	new_end = n_next->getStart();
+		 	cout << "min(end) start " << nodes[min_end]->getStart() << " end " << nodes[min_end]->getEnd() << " " << info_v[nodes[min_end]->getPhase()[0]] <<  endl;
+			if(n_next->getStart() < nodes[min_end]->getEnd()){
+				make_new_interval(n_next->getStart(), nodes);
+				vector<int> gamb; gamb.push_back(1);
+		 	 	no  = new Node(n_next->getPhase()[0], nodes[min_end]->getPhase(), n_next->getJob()[0], nodes[min_end]->getJob(), gamb, n_next->getStart(), nodes[min_end]->getEnd());
+		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
+		 	 	h->insert(no);	 	 
+
+			 	if(nodes[min_end]->getEnd() <= n_next->getEnd()){
+			 	 	no  = new Node(n_next->getPhase()[0], n_next->getJob()[0], 1, nodes[min_end]->getEnd(), n_next->getEnd());
+			 	 	cout << "novo2 start " << nodes[min_end]->getEnd() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
+			 	 	h->insert(no);
+			 	 }
+		 	 	// cout << "xxc start " << no->getStart() << " end " << no->getEnd() <<  endl;
 			}else{
-		 		new_end = min_end;
+		 		make_new_interval(nodes[min_end]->getEnd(), nodes);
+		 		h->insert(n_next);
+		 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
 			}
 
-			make_new_interval(new_end, nodes);
+			// make_new_interval(new_end, nodes);
 		
-			h->insert(n_next);
-
 		}else{
-			cout << "aqui" << endl;
-			cout << nodes.size() << endl;
+			//cout << "else - nodes size = " << nodes.size() << endl;
 			nodes.push_back(n_current);
 
 
 
-			for (int i = 0; i < nodes.size(); ++i){
-			 cout << nodes[i]->getStart() << endl;
-			 cout << nodes[i]->getEnd() << endl;
-			}
+			// for (int i = 0; i < nodes.size(); ++i){
+			//  cout << nodes[i]->getStart() << endl;
+			//  cout << nodes[i]->getEnd() << endl;
+			// }
 			
 
 			make_new_interval(n_current->getEnd(), nodes);

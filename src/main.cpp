@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 
+
 using namespace std;
 
 #define DUMP
@@ -31,9 +32,9 @@ int idx_find(char *word, vector<char*>&v){
  vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
- 	for(int i = 0; i < v.size(); i++){
+ 	for(int i = 0; i < v.size(); ++i){
  		vector<int> u = (v[i]->*functionPtr)();
- 		for(int j = 0; j < u.size(); j++)
+ 		for(int j = 0; j < u.size(); ++j)
 			s.insert(u[j]);
  	}
  	vec.assign(s.begin(),s.end()); 
@@ -47,7 +48,7 @@ long int min_find(vector<Node*>&v){
 	// 	cout << v[i]->getEnd() <<  " ";
 	// cout << endl;
     int min = 0;
-    for(int i = 1; i < v.size(); i++)
+    for(int i = 1; i < v.size(); ++i)
         if(v[i]->getEnd() < v[min]->getEnd())
         	min = i;
 
@@ -258,12 +259,11 @@ int main(int argc, char const *argv[]){
 			// ultimo elemento do nodes é o n_next node 
 			n_next = back_pop(nodes);
 
-		
 		 	int min_end = min_find(nodes);
 		 	cout << "min(end) start " << nodes[min_end]->getStart() << " end " << nodes[min_end]->getEnd() << " " << info_v[nodes[min_end]->getPhase()[0]] <<  endl;
 			if(n_next->getStart() < nodes[min_end]->getEnd()){
 				make_new_interval(n_next->getStart(), nodes);
-				//vector<int> gamb; gamb.push_back(1);
+				
 		 	 	no  = new Node(n_next->getPhase()[0], nodes, n_next->getJob()[0], nodes, n_next->getDay()[0], nodes, n_next->getStart(), nodes[min_end]->getEnd());
 		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
 		 	 	h->insert(no);	 	 
@@ -273,40 +273,21 @@ int main(int argc, char const *argv[]){
 			 	 	cout << "novo2 start " << nodes[min_end]->getEnd() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
 			 	 	h->insert(no);
 			 	 }
-		 	 	// cout << "xxc start " << no->getStart() << " end " << no->getEnd() <<  endl;
+		 	 	
 			}else{
 		 		make_new_interval(nodes[min_end]->getEnd(), nodes);
 		 		h->insert(n_next);
 		 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
 			}
-
-			// make_new_interval(new_end, nodes);
 		
 		}else{
-			//cout << "else - nodes size = " << nodes.size() << endl;
-			nodes.push_back(n_current);
-
-
-
-			// for (int i = 0; i < nodes.size(); ++i){
-			//  cout << nodes[i]->getStart() << endl;
-			//  cout << nodes[i]->getEnd() << endl;
-			// }
 			
-
+			nodes.push_back(n_current);
 			make_new_interval(n_current->getEnd(), nodes);
 		}
 
 			 	
 	}
-
-	// n_current = h->extract();
-	// vector<Node*> nodes;
-	// nodes.push_back(n_current);
-	// make_new_interval(n_current->getEnd(), nodes);
-
-
-
 
 	#ifdef DUMP
 	cout << "size of heap after: " << h->getSize() << endl;

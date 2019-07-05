@@ -15,24 +15,24 @@ Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) 
 
 Node::Node(int phase1, vector <Node*> phase2, int job1, vector <Node*> job2, int day1, vector <Node*> day2, long int start, long int end) { /* O(1) */
     this->phase.push_back(phase1);
-    for(int i = 0; i < phase2.size(); i++){
+    for(int i = 0; i < phase2.size(); ++i){
         vector<int> p2 = phase2[i]->getPhase();
-        for (int j = 0; j < p2.size(); j++)
+        for (int j = 0; j < p2.size(); ++j)
             this->phase.push_back(p2[j]);
     }
 
     this->job.push_back(job1);
-    for(int i = 0; i < job2.size(); i++){
+    for(int i = 0; i < job2.size(); ++i){
         vector<int> j2 = job2[i]->getJob();
-        for (int j = 0; j < j2.size(); j++)
+        for (int j = 0; j < j2.size(); ++j)
             this->job.push_back(j2[j]);
     }
 
 
     this->day.push_back(day1);
-    for(int i = 0; i < day2.size(); i++){
+    for(int i = 0; i < day2.size(); ++i){
         vector<int> d2 = day2[i]->getDay();
-        for (int j = 0; j < d2.size(); j++)
+        for (int j = 0; j < d2.size(); ++j)
             this->day.push_back(d2[j]);
     }
     

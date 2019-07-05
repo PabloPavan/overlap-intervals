@@ -1,6 +1,7 @@
 #include "node.h"
 #include "heap.h"
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <vector>
 #include <set>
@@ -43,10 +44,6 @@ int idx_find(char *word, vector<char*>&v){
 
 
 long int min_find(vector<Node*>&v){
-	// cout << "aaa ";
-	// for(int i=0; i < v.size(); i++)
-	// 	cout << v[i]->getEnd() <<  " ";
-	// cout << endl;
     int min = 0;
     for(int i = 1; i < v.size(); ++i)
         if(v[i]->getEnd() < v[min]->getEnd())
@@ -68,25 +65,10 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
-	// printf("%p\n xxx %p\n", v, &Node::getJob);
-	// cout << endl << "jobs before: ";
-	// for(int i=0; i < v.size(); i++)
-	// 	cout << " " << v[i]->getJob();
-	// cout << endl;
+	char path_save[] = "../data/final.csv";
+
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
-	// cout << "jobs after: ";
-	// for(int i=0; i < jobs_vec.size(); i++)
-	// 	cout << " " << jobs_vec[i];
-	// cout << endl;
-	// cout << "phases before: ";
-	// for(int i=0; i < v.size(); i++)
-	// 	cout << " " << v[i]->getPhase();
-	// cout << endl;
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
-	// 	cout << "phases after: ";
-	// for(int i=0; i < phases_vec.size(); i++)
-	// 	cout << " " << phases_vec[i];
-	// cout << endl << endl;
 
 	char *jobs = (char*) calloc(v.size() * 2 + 1, sizeof(char));
 	char *phases = (char*) calloc(v.size() * 2 + 1, sizeof(char));
@@ -114,6 +96,30 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	cout << " jobs: " << jobs << endl << endl;
 	#endif 
 
+	fstream save_file;
+
+	save_file.open(path_save, fstream::app);
+
+
+	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs << endl;
+
+	save_file.close();
+
+	// // If file does not exist, Create new file
+	// if (!save_file) {
+	// 	cout << "Cannot open file, file does not exist. Creating new file..";
+	// 	save_file.open(filename,  fstream::in | fstream::out | fstream::app);
+	// 	save_file <<"create \n";
+	// 	save_file.close();
+	// } else {    // use existing file
+	// 	cout<<"success "<<filename <<" found. \n";
+	// 	cout<<"\nAppending writing and working with existing file"<<"\n---\n";
+	// 	save_file << "Appending writing and working with existing file"<<"\n---\n";
+	// 	save_file.close();
+	// 	cout<<"\n";
+	// }
+
+
 	free(jobs);
 	free(phases);
 	free(tmp);
@@ -126,6 +132,14 @@ int main(int argc, char const *argv[]){
 	long int epoch_time = 0;
 	Heap *h;
 	h = new Heap(30000);
+
+	char path_save[] = "../data/final.csv";
+	fstream save_file;
+	save_file.open(path_save, fstream::out);
+
+	save_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs" << endl; 
+
+	save_file.close();
 
 	FILE *f = fopen("../data/intervals.small.csv", "r");
 	char line[BUFFER_SIZE];
@@ -247,14 +261,17 @@ int main(int argc, char const *argv[]){
 		if(!h->isEmpty()){
 	 		nodes.push_back(n_current);
 
+	 		//cout << "entrei " << endl;
+
 		 	do{
-		 		//cout << "before if - nodes size = " << nodes.size() << " " << h->getSize() << endl;
+		 		//cout << "before if - " << h->getSize() << endl;
 		 		n_temp = h->extract();
-				//cout << "after  if - nodes size = " << nodes.size() << " " << h->getSize() << endl;
+				//cout << "after  if - " << h->getSize() << endl;
 		 		nodes.push_back(n_temp);
 		 		//cout << "botei start " << n_temp->getStart() << " end " << n_temp->getEnd() << " " << info_v[n_temp->getPhase()[0]] << endl;
-		 	}while(n_temp->getStart() == n_current->getStart());
+		 	}while(h->getSize() >=1 && n_temp->getStart() == n_current->getStart());
 			
+			//cout << "passei aq" << endl;
 		
 			// ultimo elemento do nodes é o n_next node 
 			n_next = back_pop(nodes);

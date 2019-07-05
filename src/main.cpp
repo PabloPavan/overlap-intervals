@@ -263,8 +263,8 @@ int main(int argc, char const *argv[]){
 		 	cout << "min(end) start " << nodes[min_end]->getStart() << " end " << nodes[min_end]->getEnd() << " " << info_v[nodes[min_end]->getPhase()[0]] <<  endl;
 			if(n_next->getStart() < nodes[min_end]->getEnd()){
 				make_new_interval(n_next->getStart(), nodes);
-				vector<int> gamb; gamb.push_back(1);
-		 	 	no  = new Node(n_next->getPhase()[0], nodes, n_next->getJob()[0], nodes, 1, gamb, n_next->getStart(), nodes[min_end]->getEnd());
+				//vector<int> gamb; gamb.push_back(1);
+		 	 	no  = new Node(n_next->getPhase()[0], nodes, n_next->getJob()[0], nodes, n_next->getDay()[0], nodes, n_next->getStart(), nodes[min_end]->getEnd());
 		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
 		 	 	h->insert(no);	 	 
 

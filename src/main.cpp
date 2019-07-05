@@ -31,9 +31,9 @@ int idx_find(char *word, vector<char*>&v){
  vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
- 	for(int i = 0; i < v.size(); ++i){
+ 	for(int i = 0; i < v.size(); i++){
  		vector<int> u = (v[i]->*functionPtr)();
- 		for(int j = 0; j < u.size(); ++j)
+ 		for(int j = 0; j < u.size(); j++)
 			s.insert(u[j]);
  	}
  	vec.assign(s.begin(),s.end()); 
@@ -264,7 +264,7 @@ int main(int argc, char const *argv[]){
 			if(n_next->getStart() < nodes[min_end]->getEnd()){
 				make_new_interval(n_next->getStart(), nodes);
 				vector<int> gamb; gamb.push_back(1);
-		 	 	no  = new Node(n_next->getPhase()[0], nodes[min_end]->getPhase(), n_next->getJob()[0], nodes[min_end]->getJob(), 1, gamb, n_next->getStart(), nodes[min_end]->getEnd());
+		 	 	no  = new Node(n_next->getPhase()[0], nodes, n_next->getJob()[0], nodes, 1, gamb, n_next->getStart(), nodes[min_end]->getEnd());
 		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
 		 	 	h->insert(no);	 	 
 

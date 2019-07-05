@@ -4,8 +4,8 @@ library(ggplot2)
 df<- as.data.frame(read.csv('../data/intervals.small.csv', dec = '.', sep = ';'))
 str(df)
 
-epoch_time <- 1325376000
-
+#epoch_time <- 1325376000
+epoch_time <- 0
 df$start  = df$start * 1000
 df$start_time = df$start_time - epoch_time
 df$start_time = df$start_time * 1000

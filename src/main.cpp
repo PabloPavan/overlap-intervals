@@ -46,7 +46,7 @@ long int min_find(vector<Node*>&v){
 	// for(int i=0; i < v.size(); i++)
 	// 	cout << v[i]->getEnd() <<  " ";
 	// cout << endl;
-    long int min = 0;
+    int min = 0;
     for(int i = 1; i < v.size(); i++)
         if(v[i]->getEnd() < v[min]->getEnd())
         	min = i;
@@ -259,12 +259,12 @@ int main(int argc, char const *argv[]){
 			n_next = back_pop(nodes);
 
 		
-		 	long int min_end = min_find(nodes);
+		 	int min_end = min_find(nodes);
 		 	cout << "min(end) start " << nodes[min_end]->getStart() << " end " << nodes[min_end]->getEnd() << " " << info_v[nodes[min_end]->getPhase()[0]] <<  endl;
 			if(n_next->getStart() < nodes[min_end]->getEnd()){
 				make_new_interval(n_next->getStart(), nodes);
 				vector<int> gamb; gamb.push_back(1);
-		 	 	no  = new Node(n_next->getPhase()[0], nodes[min_end]->getPhase(), n_next->getJob()[0], nodes[min_end]->getJob(), gamb, n_next->getStart(), nodes[min_end]->getEnd());
+		 	 	no  = new Node(n_next->getPhase()[0], nodes[min_end]->getPhase(), n_next->getJob()[0], nodes[min_end]->getJob(), 1, gamb, n_next->getStart(), nodes[min_end]->getEnd());
 		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
 		 	 	h->insert(no);	 	 
 

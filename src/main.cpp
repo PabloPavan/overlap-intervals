@@ -43,13 +43,22 @@ int idx_find(char *word, vector<char*>&v){
 }
 
 
-long int min_find(vector<Node*>&v){
+int min_find(vector<Node*>&v){
     int min = 0;
     for(int i = 1; i < v.size(); ++i)
         if(v[i]->getEnd() < v[min]->getEnd())
         	min = i;
 
     return min;
+}
+
+int max_find(vector<Node*>&v){
+    int max = 0;
+    for(int i = 1; i < v.size(); ++i)
+        if(v[i]->getEnd() > v[max]->getEnd())
+        	max = i;
+
+    return max;
 }
 
 Node* back_pop(vector<Node*>&v){
@@ -266,40 +275,61 @@ int main(int argc, char const *argv[]){
 
 		 	do{
 		 		//cout << "before if - " << h->getSize() << endl;
-		 		n_temp = h->extract();
-				//cout << "after  if - " << h->getSize() << endl;
-		 		nodes.push_back(n_temp);
+			 		n_temp = h->extract();
+					//cout << "after  if - " << h->getSize() << endl;
+			 		nodes.push_back(n_temp);
+
 		 		//cout << "botei start " << n_temp->getStart() << " end " << n_temp->getEnd() << " " << info_v[n_temp->getPhase()[0]] << endl;
 		 	}while(h->getSize() >=1 && n_temp->getStart() == n_current->getStart());
 			
 			//cout << "passei aq" << endl;
 		
 			// ultimo elemento do nodes é o n_next node 
-			n_next = back_pop(nodes);
+			if (!h->isEmpty()){ // se no do while todos os nodes comesavam no mesmo momento, nao tem next, precisa ver internamente no nodes.
 
-		 	int idx_min = min_find(nodes);
-		 	//cout << "min(end) start " << nodes[idx_min]->getStart() << " end " << nodes[idx_min]->getEnd() << " " << info_v[nodes[idx_min]->getPhase()[0]] <<  endl;
-			if(n_next->getStart() < nodes[idx_min]->getEnd()){
+				n_next = back_pop(nodes);
 
-				make_new_interval(n_next->getStart(), nodes);
-				
-		 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
-		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[idx_min]->getEnd() <<  endl;
-		 	 	h->insert(no);	 	 
+			 	int idx_min = min_find(nodes);
+			 	//cout << "min(end) start " << nodes[idx_min]->getStart() << " end " << nodes[idx_min]->getEnd() << " " << info_v[nodes[idx_min]->getPhase()[0]] <<  endl;
+				if(n_next->getStart() < nodes[idx_min]->getEnd()){
 
-			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
-			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
-			 	 	cout << "novo2 start " << nodes[idx_min]->getEnd() << " end " <<  n_next->getEnd() <<  endl;
-			 	 	h->insert(no);
-			 	 }
-		 	 	
+					make_new_interval(n_next->getStart(), nodes);
+					
+			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
+			 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[idx_min]->getEnd() <<  endl;
+			 	 	h->insert(no);	 	 
+
+				 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
+				 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
+				 	 	cout << "novo2 start " << nodes[idx_min]->getEnd() << " end " <<  n_next->getEnd() <<  endl;
+				 	 	h->insert(no);
+				 	 }
+			 	 	
+				}else{
+
+			 		make_new_interval(nodes[idx_min]->getEnd(), nodes);
+			 		h->insert(n_next);
+			 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() << endl;
+				}
+
 			}else{
-		 		make_new_interval(nodes[idx_min]->getEnd(), nodes);
-		 		h->insert(n_next);
-		 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() << endl;
+
+				cout << "else fim! anterior" << endl;
+				make_new_interval(n_current->getEnd(), nodes);
+
+				// aqui precisa criar um novo no com o comeco do min dodes e max nodes com os valores do max
+
+				int idx_max = max_find(nodes);
+				int idx_min = min_find(nodes);
+				if (nodes[idx_min]->getEnd() < nodes[idx_max]->getEnd()){
+					no  = new Node(nodes[idx_max]->getPhase(), nodes[idx_max]->getJob(), nodes[idx_max]->getDay(), nodes[idx_min]->getEnd(), nodes[idx_max]->getEnd());
+					cout << "novo3 start " << nodes[idx_min]->getEnd() << " end " <<  nodes[idx_max]->getEnd() <<  endl;
+					h->insert(no);
+				}
 			}
-		
+
 		}else{
+
 			cout << "else fim!" << endl;
 			nodes.push_back(n_current);
 			make_new_interval(n_current->getEnd(), nodes);

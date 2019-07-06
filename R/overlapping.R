@@ -6,29 +6,27 @@ str(df)
 
 #epoch_time <- 1325376000
 epoch_time <- 0
-df$start  = df$start * 1000
+df$start  = df$start * 100
 df$start_time = df$start_time - epoch_time
-df$start_time = df$start_time * 1000
+df$start_time = df$start_time * 100
 # df$final_start_time = df$start_time + df$start
 
-df$end  = df$end * 1000
+df$end  = df$end * 100
 df$end_time = df$end_time - epoch_time
-df$end_time = df$end_time * 1000
+df$end_time = df$end_time * 100
 # df$final_end_time = df$end_time + df$end
 
 
 
-df$final_start_time = (df$start_time + df$start)# -epoch_time
-df$final_end_time = (df$end_time + df$end) #- epoch_time
+df$start_ = (df$start_time + df$start)# -epoch_time
 
 
-df$duration <- df$final_end_time-df$final_start_time
+df$duration <- df$end - df$start
 
-summary(df$duration)
 
-min(df$duration)
+df$end_ = df$start_ + df$duration #- epoch_time
 
-granges <- GRanges(ranges = IRanges(start = df$final_start_time, end = df$final_start_time+df$duration), seqnames = 'IO', phase = as.character(df$info), job=as.character(df$filename))
+granges <- GRanges(ranges = IRanges(start = df$start_, end = df$start_+df$duration), seqnames = 'IO', phase = as.character(df$info), job=as.character(df$filename))
 granges
 
 goverlaps <- disjoin(granges, with.revmap = TRUE)

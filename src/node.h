@@ -15,7 +15,8 @@ private:
 public:
     
     Node(int phase, int job, int day, long int start, long int end);
-    Node(int phase1, vector <Node*> phase2, int job1, vector <Node*> job2, int day1, vector <Node*> day2, long int start, long int end);
+    Node(vector <int> phase, vector <int> job, vector <int> day, long int start, long int end);
+    Node(vector <int> phase1,  vector <int> job1, vector <int> day1, vector <Node*> nodes, long int start, long int end);
     
     void destroy();
     vector<int> getPhase();

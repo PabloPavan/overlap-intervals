@@ -248,7 +248,7 @@ int main(int argc, char const *argv[]){
 		cout << "phase;  job;  day;  start;  end " << endl;
 		cout << "[ ";
 		for(int i = 0; i < n_current->getPhase().size(); ++i)
-			cout << info_v[n_current->getPhase()[i]] << " ";
+			cout << n_current->getPhase()[i] << " ";
 		cout << "] [ ";
 		for(int i = 0; i < n_current->getJob().size(); ++i)
 			cout << n_current->getJob()[i] << " ";
@@ -259,9 +259,10 @@ int main(int argc, char const *argv[]){
 		#endif
 
 		if(!h->isEmpty()){
+
 	 		nodes.push_back(n_current);
 
-	 		//cout << "entrei " << endl;
+	 		//1cout << "entrei " << endl;
 
 		 	do{
 		 		//cout << "before if - " << h->getSize() << endl;
@@ -276,29 +277,30 @@ int main(int argc, char const *argv[]){
 			// ultimo elemento do nodes é o n_next node 
 			n_next = back_pop(nodes);
 
-		 	int min_end = min_find(nodes);
-		 	cout << "min(end) start " << nodes[min_end]->getStart() << " end " << nodes[min_end]->getEnd() << " " << info_v[nodes[min_end]->getPhase()[0]] <<  endl;
-			if(n_next->getStart() < nodes[min_end]->getEnd()){
+		 	int idx_min = min_find(nodes);
+		 	//cout << "min(end) start " << nodes[idx_min]->getStart() << " end " << nodes[idx_min]->getEnd() << " " << info_v[nodes[idx_min]->getPhase()[0]] <<  endl;
+			if(n_next->getStart() < nodes[idx_min]->getEnd()){
+
 				make_new_interval(n_next->getStart(), nodes);
 				
-		 	 	no  = new Node(n_next->getPhase()[0], nodes, n_next->getJob()[0], nodes, n_next->getDay()[0], nodes, n_next->getStart(), nodes[min_end]->getEnd());
-		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[min_end]->getEnd() <<  endl;
+		 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
+		 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[idx_min]->getEnd() <<  endl;
 		 	 	h->insert(no);	 	 
 
-			 	if(nodes[min_end]->getEnd() <= n_next->getEnd()){
-			 	 	no  = new Node(n_next->getPhase()[0], n_next->getJob()[0], 1, nodes[min_end]->getEnd(), n_next->getEnd());
-			 	 	cout << "novo2 start " << nodes[min_end]->getEnd() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
+			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
+			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
+			 	 	cout << "novo2 start " << nodes[idx_min]->getEnd() << " end " <<  n_next->getEnd() <<  endl;
 			 	 	h->insert(no);
 			 	 }
 		 	 	
 			}else{
-		 		make_new_interval(nodes[min_end]->getEnd(), nodes);
+		 		make_new_interval(nodes[idx_min]->getEnd(), nodes);
 		 		h->insert(n_next);
-		 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() <<  " " << info_v[n_next->getPhase()[0]] <<  endl;
+		 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() << endl;
 			}
 		
 		}else{
-			
+			cout << "else fim!" << endl;
 			nodes.push_back(n_current);
 			make_new_interval(n_current->getEnd(), nodes);
 		}

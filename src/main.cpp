@@ -114,7 +114,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
-	cout << " phases: " ; //<< phases << " number of phases: " << number_of_phases; 
+	cout << " phases: " << phases; //<< phases << " number of phases: " << number_of_phases; 
 	cout << " jobs: " << jobs;//<< " number of jobs: " << number_of_jobs;
 	cout << endl << endl;
 	#endif 

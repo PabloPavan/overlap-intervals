@@ -52,14 +52,14 @@ int min_find(vector<Node*>&v){
     return min;
 }
 
-int max_find(vector<Node*>&v){
-    int max = 0;
-    for(int i = 1; i < v.size(); ++i)
-        if(v[i]->getEnd() > v[max]->getEnd())
-        	max = i;
+// int max_find(vector<Node*>&v){
+//     int max = 0;
+//     for(int i = 1; i < v.size(); ++i)
+//         if(v[i]->getEnd() > v[max]->getEnd())
+//         	max = i;
 
-    return max;
-}
+//     return max;
+//}
 
 Node* back_pop(vector<Node*>&v){
 	Node *no;
@@ -201,14 +201,14 @@ int main(int argc, char const *argv[]){
 		token = strtok(NULL,delim); //write_bytes
 
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1000000; 
+		start  = start * 1; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1000000;
+		start_time = start_time * 1;
 		long int starti = (long int) start;
 
 		start_time = start_time + starti;
 
-		end = end * 1000000;
+		end = end * 1;
 		// end_time = end_time - epoch_time; 
 		// end_time = end_time * 1000000;
 		long int endi = (long int) end;
@@ -285,7 +285,7 @@ int main(int argc, char const *argv[]){
 			//cout << "passei aq" << endl;
 		
 			// ultimo elemento do nodes é o n_next node 
-			if (!h->isEmpty()){ // se no do while todos os nodes comesavam no mesmo momento, nao tem next, precisa ver internamente no nodes.
+			if (!h->isEmpty()){ // se no do while todos os nodes comesavam no mesmo momento, nao tem next.
 
 				n_next = back_pop(nodes);
 
@@ -303,6 +303,9 @@ int main(int argc, char const *argv[]){
 				 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
 				 	 	cout << "novo2 start " << nodes[idx_min]->getEnd() << " end " <<  n_next->getEnd() <<  endl;
 				 	 	h->insert(no);
+				 	 }else{
+				 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());
+				 	 	cout << "novo3 start " << n_next->getEnd() << " end " <<  nodes[idx_min]->getEnd() <<  endl;	
 				 	 }
 			 	 	
 				}else{
@@ -317,15 +320,13 @@ int main(int argc, char const *argv[]){
 				cout << "else fim! anterior" << endl;
 				make_new_interval(n_current->getEnd(), nodes);
 
-				// aqui precisa criar um novo no com o comeco do min dodes e max nodes com os valores do max
-
-				int idx_max = max_find(nodes);
-				int idx_min = min_find(nodes);
-				if (nodes[idx_min]->getEnd() < nodes[idx_max]->getEnd()){
-					no  = new Node(nodes[idx_max]->getPhase(), nodes[idx_max]->getJob(), nodes[idx_max]->getDay(), nodes[idx_min]->getEnd(), nodes[idx_max]->getEnd());
-					cout << "novo3 start " << nodes[idx_min]->getEnd() << " end " <<  nodes[idx_max]->getEnd() <<  endl;
-					h->insert(no);
-				}
+				// int idx_max = max_find(nodes);
+				// int idx_min = min_find(nodes);
+				// if (nodes[idx_min]->getEnd() < nodes[idx_max]->getEnd()){
+				// 	no  = new Node(nodes[idx_max]->getPhase(), nodes[idx_max]->getJob(), nodes[idx_max]->getDay(), nodes[idx_min]->getEnd(), nodes[idx_max]->getEnd());
+				// 	cout << "novo3 start " << nodes[idx_min]->getEnd() << " end " <<  nodes[idx_max]->getEnd() <<  endl;
+				// 	h->insert(no);
+				// }
 			}
 
 		}else{

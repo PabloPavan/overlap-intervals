@@ -63,6 +63,26 @@ Node::Node(vector <int> phase1, vector <int> job1, vector <int> day1, vector <No
     this->end = end;
 }
 
+Node::Node(vector <Node*> nodes, long int start, long int end) { /* O(1) */
+    
+    for(int i = 0; i < nodes.size(); ++i){
+        vector<int> p2 = nodes[i]->getPhase();
+        for (int j = 0; j < p2.size(); ++j)
+            this->phase.push_back(p2[j]);
+
+        vector<int> j2 = nodes[i]->getJob();
+        for (int j = 0; j < j2.size(); ++j)
+            this->job.push_back(j2[j]);
+        
+        vector<int> d2 = nodes[i]->getDay();
+        for (int j = 0; j < d2.size(); ++j)
+            this->day.push_back(d2[j]);
+    }
+
+
+    this->start = start;
+    this->end = end;
+}
 
 void Node::destroy() { /* O(n lg n) */
     delete this;

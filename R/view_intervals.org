@@ -18,12 +18,6 @@ library(cowplot)
 #+end_src
 
 #+RESULTS:
-: 
-: Attaching package: ‘cowplot’
-: 
-: The following object is masked from ‘package:ggplot2’:
-: 
-:     ggsave
 
 * Analysis of raw data
 
@@ -36,26 +30,14 @@ str(df)
 #+end_src
 
 #+RESULTS:
-#+begin_example
-
-'data.frame':	7 obs. of  16 variables:
- $ filename       : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 4
- $ jobid          : int  45 45 45 13 45 45 45
- $ uid            : int  41 41 41 41 41 41 41
- $ runtime        : int  748 220 500 3578 1000 500 500
- $ start_time     : int  3761 3761 3761 3777 3777 4470 4508
- $ end_time       : int  4508 4508 4508 8354 8354 4508 4508
- $ exec           : int  21 21 21 15 21 21 21
- $ file           : num  1.7 1.5 1.5 1 1.5 1.5 1.5
- $ interval.id    : int  1 2 2 1 2 2 2
- $ start          : num  2.3 696.5 696.5 2.7 120 ...
- $ end            : num  49.8 747.4 747.4 37.2 747.4 ...
- $ info           : Factor w/ 6 levels "posix read consecutive sequential unique file",..: 2 4 1 6 5 3 1
- $ X1_access_count: int  4 4 4 4 4 4 4
- $ X1_access_size : int  4 4 4 4 4 4 4
- $ read_bytes     : int  14 0 0 20 0 0 0
- $ write_bytes    : int  0 14 14 0 14 14 14
-#+end_example
+: 
+: 'data.frame':	7 obs. of  6 variables:
+:  $ filename  : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 4
+:  $ start_time: int  3761 3761 3761 3777 3777 4470 4508
+:  $ end_time  : int  4508 4508 4508 8354 8354 4508 4508
+:  $ start     : num  2.3 696.5 696.5 2.7 120 ...
+:  $ end       : num  49.8 747.4 747.4 37.2 747.4 ...
+:  $ info      : Factor w/ 6 levels "posix read consecutive sequential unique file",..: 2 4 1 6 5 3 1
 
 ** Pre-processig
 
@@ -90,26 +72,16 @@ str(df)
 #+RESULTS:
 #+begin_example
 
-'data.frame':	7 obs. of  19 variables:
- $ filename       : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 4
- $ jobid          : int  45 45 45 13 45 45 45
- $ uid            : int  41 41 41 41 41 41 41
- $ runtime        : int  748 220 500 3578 1000 500 500
- $ start_time     : num  3.76e+09 3.76e+09 3.76e+09 3.78e+09 3.78e+09 ...
- $ end_time       : num  4.51e+09 4.51e+09 4.51e+09 8.35e+09 8.35e+09 ...
- $ exec           : int  21 21 21 15 21 21 21
- $ file           : num  1.7 1.5 1.5 1 1.5 1.5 1.5
- $ interval.id    : int  1 2 2 1 2 2 2
- $ start          : num  2.30e+06 6.96e+08 6.96e+08 2.70e+06 1.20e+08 ...
- $ end            : num  4.98e+07 7.47e+08 7.47e+08 3.72e+07 7.47e+08 ...
- $ info           : Factor w/ 6 levels "posix read consecutive sequential unique file",..: 2 4 1 6 5 3 1
- $ X1_access_count: int  4 4 4 4 4 4 4
- $ X1_access_size : int  4 4 4 4 4 4 4
- $ read_bytes     : int  14 0 0 20 0 0 0
- $ write_bytes    : int  0 14 14 0 14 14 14
- $ start_         : num  3.76e+09 4.46e+09 4.46e+09 3.78e+09 3.90e+09 ...
- $ duration       : num  4.75e+07 5.09e+07 5.09e+07 3.45e+07 6.27e+08 ...
- $ end_           : num  3.81e+09 4.51e+09 4.51e+09 3.81e+09 4.52e+09 ...
+'data.frame':	7 obs. of  9 variables:
+ $ filename  : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 4
+ $ start_time: num  3.76e+09 3.76e+09 3.76e+09 3.78e+09 3.78e+09 ...
+ $ end_time  : num  4.51e+09 4.51e+09 4.51e+09 8.35e+09 8.35e+09 ...
+ $ start     : num  2.30e+06 6.96e+08 6.96e+08 2.70e+06 1.20e+08 ...
+ $ end       : num  4.98e+07 7.47e+08 7.47e+08 3.72e+07 7.47e+08 ...
+ $ info      : Factor w/ 6 levels "posix read consecutive sequential unique file",..: 2 4 1 6 5 3 1
+ $ start_    : num  3.76e+09 4.46e+09 4.46e+09 3.78e+09 3.90e+09 ...
+ $ duration  : num  4.75e+07 5.09e+07 5.09e+07 3.45e+07 6.27e+08 ...
+ $ end_      : num  3.81e+09 4.51e+09 4.51e+09 3.81e+09 4.52e+09 ...
 #+end_example
 
 

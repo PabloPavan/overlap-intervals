@@ -145,18 +145,18 @@ int main(int argc, char const *argv[]){
 		strcpy(filename, token);
 		filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
 		//cout << filename << endl;
-		token = strtok(NULL,delim);// joid 
-		token = strtok(NULL,delim); //uid
-		token = strtok(NULL,delim); //runtime
+		// token = strtok(NULL,delim);// joid 
+		// token = strtok(NULL,delim); //uid
+		// token = strtok(NULL,delim); //runtime
 		token = strtok(NULL,delim); //start_time
 		start_time = atoi(token);
 		//cout << start_time << endl;
 		token = strtok(NULL,delim); //end_time
 		end_time = atoi(token);
 		//cout << end_time << endl;
-		token = strtok(NULL,delim); //exec
-		token = strtok(NULL,delim); //file
-		token = strtok(NULL,delim); //interval-id
+		// token = strtok(NULL,delim); //exec
+		// token = strtok(NULL,delim); //file
+		// token = strtok(NULL,delim); //interval-id
 		token = strtok(NULL,delim); //start
 		start = atof(token);
 		//printf("%f\n",  start);
@@ -167,10 +167,10 @@ int main(int argc, char const *argv[]){
 		strcpy(info, token);
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		//cout << info << endl;
-		token = strtok(NULL,delim); //X1_access_count
-		token = strtok(NULL,delim); //X1_access_size
-		token = strtok(NULL,delim); //read_bytes
-		token = strtok(NULL,delim); //write_bytes
+		// token = strtok(NULL,delim); //X1_access_count
+		// token = strtok(NULL,delim); //X1_access_size
+		// token = strtok(NULL,delim); //read_bytes
+		// token = strtok(NULL,delim); //write_bytes
 
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1; 

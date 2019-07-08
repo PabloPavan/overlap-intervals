@@ -12,6 +12,9 @@ using namespace std;
 #define DUMP
 #define BUFFER_SIZE 4096
 
+bool first_write = false;
+long int last_end = 0;
+
 int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
 	for (idx = 0; idx < v.size(); ++idx)
@@ -61,7 +64,30 @@ void dump_file(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
+	if(!first_write){
+		first_write = true;
+		last_end = new_end;
+	}
+
 	char path_save[] = "../data/final.csv";
+
+	if (v[0]->getStart() > last_end){
+		#ifdef DUMP
+		cout << "start: " << last_end << " end: " << v[0]->getStart()  << " duration: " << v[0]->getStart()-last_end; 
+		cout << " phases: " << -1; 
+		cout << " jobs: " << -1 << endl << endl;
+		#endif
+
+		fstream save_file;
+
+		save_file.open(path_save, fstream::app);
+
+		save_file <<  last_end <<";"<< v[0]->getStart() <<";"<< v[0]->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 << endl;
+
+		save_file.close();
+	}
+	
+	last_end = new_end;
 
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
@@ -87,15 +113,15 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 
 	#ifdef DUMP
-	cout << "start: " << v[0]->getStart() << " end: " << new_end << " phases: " << phases; 
-	// cout << " number of phases: " << number_of_phases  << " jobs: " << jobs << " number of jobs: " << number_of_jobs << endl << endl;
-	cout << " jobs: " << jobs << endl << endl;
+	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
+	cout << " phases: " ; //<< phases << " number of phases: " << number_of_phases; 
+	cout << " jobs: " << jobs;//<< " number of jobs: " << number_of_jobs;
+	cout << endl << endl;
 	#endif 
 
 	fstream save_file;
 
 	save_file.open(path_save, fstream::app);
-
 
 	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs << endl;
 
@@ -104,6 +130,8 @@ void dump_file(int long new_end, vector<Node*>&v){
 	free(jobs);
 	free(phases);
 	free(tmp);
+
+	
 }
 	
 
@@ -111,6 +139,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
+
 	Heap *h;
 	h = new Heap(30000);
 
@@ -231,25 +260,25 @@ int main(int argc, char const *argv[]){
 		 	int idx_min = min_find(nodes);
 			if(n_next->getStart() < nodes[idx_min]->getEnd()){
 				dump_file(n_next->getStart(), nodes);	 
-				cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
+				// cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
 		 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
 		 	 	h->insert(no);	 	 
 			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
-			 		cout << "novo 2 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
+			 		// cout << "novo 2 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
 			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
 			 	 	h->insert(no);
 			 	 }else{
-			 	 	cout << "novo 3 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
+			 	 	// cout << "novo 3 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
 			 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());	
 			 	 	h->insert(no);
 			 	 }	
 			}else{
-				cout << "else 1" << endl;
+				// cout << "else 1" << endl;
 				h->insert(n_next);
 		 		dump_file(nodes[idx_min]->getEnd(), nodes);		 		
 			}
 		}else{
-			cout << "else 3" << endl;
+			// cout << "else 3" << endl;
 			nodes.push_back(n_current);
 			dump_file(n_current->getEnd(), nodes);
 		}		 	

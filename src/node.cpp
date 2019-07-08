@@ -35,11 +35,8 @@ Node::Node(vector <int> phase1, vector <int> job1, vector <int> day1, vector <No
     for (int i = 0; i < phase1.size(); ++i)
         this->phase.push_back(phase1[i]);
     
-
-
     for (int i = 0; i < job1.size(); ++i)
         this->job.push_back(job1[i]);
-
 
     for (int i = 0; i < day1.size(); ++i)
         this->job.push_back(day1[i]);

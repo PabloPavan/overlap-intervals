@@ -17,10 +17,8 @@ int idx_find(char *word, vector<char*>&v){
 	for (idx = 0; idx < v.size(); ++idx)
 		if(strcmp(v[idx],word) == 0) 
 			break;
-
 	if(idx == v.size())
 		v.push_back(word);	
-	
 	return idx;	
 
 }
@@ -42,24 +40,13 @@ int idx_find(char *word, vector<char*>&v){
  	return vec;
 }
 
-
 int min_find(vector<Node*>&v){
     int min = 0;
     for(int i = 1; i < v.size(); ++i)
         if(v[i]->getEnd() < v[min]->getEnd())
         	min = i;
-
     return min;
 }
-
-// int max_find(vector<Node*>&v){
-//     int max = 0;
-//     for(int i = 1; i < v.size(); ++i)
-//         if(v[i]->getEnd() > v[max]->getEnd())
-//         	max = i;
-
-//     return max;
-//}
 
 Node* back_pop(vector<Node*>&v){
 	Node *no;
@@ -68,7 +55,7 @@ Node* back_pop(vector<Node*>&v){
 	return no;
 }
 
-void make_new_interval(int long new_end, vector<Node*>&v){
+void dump_file(int long new_end, vector<Node*>&v){
 	// open csv final file and add new line
 	// start and end 
 	// phase and jobs sep by ,
@@ -113,21 +100,6 @@ void make_new_interval(int long new_end, vector<Node*>&v){
 	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs << endl;
 
 	save_file.close();
-
-	// // If file does not exist, Create new file
-	// if (!save_file) {
-	// 	cout << "Cannot open file, file does not exist. Creating new file..";
-	// 	save_file.open(filename,  fstream::in | fstream::out | fstream::app);
-	// 	save_file <<"create \n";
-	// 	save_file.close();
-	// } else {    // use existing file
-	// 	cout<<"success "<<filename <<" found. \n";
-	// 	cout<<"\nAppending writing and working with existing file"<<"\n---\n";
-	// 	save_file << "Appending writing and working with existing file"<<"\n---\n";
-	// 	save_file.close();
-	// 	cout<<"\n";
-	// }
-
 
 	free(jobs);
 	free(phases);
@@ -222,11 +194,8 @@ int main(int argc, char const *argv[]){
 
 		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_time,end_time);
 		h->insert(no);
-
-		// free(filename);
-		// free(info);
-		
 	}
+
 	#ifdef DUMP
 		cout << endl << "heap size: " << h->getSize() << endl << endl;
 	#endif	
@@ -244,105 +213,52 @@ int main(int argc, char const *argv[]){
 	Node* n_current;
 	Node* n_temp;
 	Node* n_next;
-
 	//cout << "funciona " << h->extract()->getEnd() << endl;
 	cout << endl;
 	while(!h->isEmpty()){
 		vector<Node*> nodes;
 		long int new_end = 0;
-
 		n_current = h->extract();
-
-		#ifdef DUMP
-		cout << "phase;  job;  day;  start;  end " << endl;
-		cout << "[ ";
-		for(int i = 0; i < n_current->getPhase().size(); ++i)
-			cout << n_current->getPhase()[i] << " ";
-		cout << "] [ ";
-		for(int i = 0; i < n_current->getJob().size(); ++i)
-			cout << n_current->getJob()[i] << " ";
-		cout << "] [ ";
-		for(int i = 0; i < n_current->getDay().size(); ++i)
-			cout << n_current->getDay()[i] << " ";
-		cout << "]  " << n_current->getStart() << " " << n_current->getEnd() << endl;
-		#endif
-
 		if(!h->isEmpty()){
-
 	 		nodes.push_back(n_current);
-
-	 		//1cout << "entrei " << endl;
-
-		 	do{
-		 		//cout << "before if - " << h->getSize() << endl;
+		 	do{ 		
 			 		n_temp = h->extract();
-					//cout << "after  if - " << h->getSize() << endl;
 			 		nodes.push_back(n_temp);
 
-		 		//cout << "botei start " << n_temp->getStart() << " end " << n_temp->getEnd() << " " << info_v[n_temp->getPhase()[0]] << endl;
 		 	}while(h->getSize() >=1 && n_temp->getStart() == n_current->getStart());
 			
-			//cout << "passei aq" << endl;
-		
-			// ultimo elemento do nodes é o n_next node 
 			if (!h->isEmpty()){ // se no do while todos os nodes comesavam no mesmo momento, nao tem next.
-
-				n_next = back_pop(nodes);
-
+				n_next = back_pop(nodes); // ultimo elemento do nodes é o n_next node 
 			 	int idx_min = min_find(nodes);
-			 	//cout << "min(end) start " << nodes[idx_min]->getStart() << " end " << nodes[idx_min]->getEnd() << " " << info_v[nodes[idx_min]->getPhase()[0]] <<  endl;
 				if(n_next->getStart() < nodes[idx_min]->getEnd()){
-
-					make_new_interval(n_next->getStart(), nodes);
-					
+					dump_file(n_next->getStart(), nodes);
 			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
-			 	 	cout << "novo1 start " << n_next->getStart() << " end " << nodes[idx_min]->getEnd() <<  endl;
 			 	 	h->insert(no);	 	 
-
 				 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
 				 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
-				 	 	cout << "novo2 start " << nodes[idx_min]->getEnd() << " end " <<  n_next->getEnd() <<  endl;
 				 	 	h->insert(no);
 				 	 }else{
-				 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());
-				 	 	cout << "novo3 start " << n_next->getEnd() << " end " <<  nodes[idx_min]->getEnd() <<  endl;	
-				 	 }
-			 	 	
+				 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());	
+				 	 	h->insert(no);
+				 	 }		 	 	
 				}else{
-
-			 		make_new_interval(nodes[idx_min]->getEnd(), nodes);
-			 		h->insert(n_next);
-			 		cout << "else start " << n_next->getStart() << " end " <<  n_next->getEnd() << endl;
+					h->insert(n_next);
+			 		dump_file(nodes[idx_min]->getEnd(), nodes);		 		
 				}
-
 			}else{
-
-				cout << "else fim! anterior" << endl;
-				make_new_interval(n_current->getEnd(), nodes);
-
-				// int idx_max = max_find(nodes);
-				// int idx_min = min_find(nodes);
-				// if (nodes[idx_min]->getEnd() < nodes[idx_max]->getEnd()){
-				// 	no  = new Node(nodes[idx_max]->getPhase(), nodes[idx_max]->getJob(), nodes[idx_max]->getDay(), nodes[idx_min]->getEnd(), nodes[idx_max]->getEnd());
-				// 	cout << "novo3 start " << nodes[idx_min]->getEnd() << " end " <<  nodes[idx_max]->getEnd() <<  endl;
-				// 	h->insert(no);
-				// }
+				n_next = back_pop(nodes);
+				h->insert(n_next);
+				dump_file(n_current->getEnd(), nodes);
 			}
-
 		}else{
-
-			cout << "else fim!" << endl;
 			nodes.push_back(n_current);
-			make_new_interval(n_current->getEnd(), nodes);
-		}
-
-			 	
+			dump_file(n_current->getEnd(), nodes);
+		}		 	
 	}
 
 	#ifdef DUMP
 	cout << "size of heap after: " << h->getSize() << endl;
 	#endif
 
-   
 	return 0;
 }

@@ -1,0 +1,24 @@
+#+TITLE: Overlap Intervals
+#+AUTHOR: Pablo Pavan
+#+LATEX_HEADER: \usepackage[margin=2cm,a4paper]{geometry}
+#+TAGS: Pablo(P) noexport(n) deprecated(d) success(s) failed(f) pending(p)
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) REVIEW(r!) PENDING(p!) ON-HOLD(o!) | DONE(d!) CANCELLED(c!) DEFERRED(f!) DEPRECATED(x!)
+#+STARTUP: overview indent
+#+OPTIONS: ^:nil
+#+OPTIONS: _:nil
+#+PROPERTY: header-args :eval never-export
+
+* Input data
+
+Example from [[file:data/intervals.small.csv][intervals.small.csv]]
+
+[[file:R/interval_small.png]]
+
+* Output data
+
+Output from [[file:data/final.csv][final.csv]]
+
+[[file:R/saida_final.png]]
+

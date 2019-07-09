@@ -134,8 +134,6 @@ void dump_file(int long new_end, vector<Node*>&v){
 	
 }
 	
-
-
 int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
@@ -170,37 +168,19 @@ int main(int argc, char const *argv[]){
 		char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
 
 		char *token = strtok(line,delim); //filename
-		//strcpy (filename,token);
 		strcpy(filename, token);
 		filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
-		//cout << filename << endl;
-		// token = strtok(NULL,delim);// joid 
-		// token = strtok(NULL,delim); //uid
-		// token = strtok(NULL,delim); //runtime
 		token = strtok(NULL,delim); //start_time
 		start_time = atoi(token);
-		//cout << start_time << endl;
 		token = strtok(NULL,delim); //end_time
 		end_time = atoi(token);
-		//cout << end_time << endl;
-		// token = strtok(NULL,delim); //exec
-		// token = strtok(NULL,delim); //file
-		// token = strtok(NULL,delim); //interval-id
 		token = strtok(NULL,delim); //start
 		start = atof(token);
-		//printf("%f\n",  start);
 		token = strtok(NULL,delim); //end
 		end = atof(token);
-		//printf("%f\n",  end);
 		token = strtok(NULL,delim); //info
 		strcpy(info, token);
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
-		//cout << info << endl;
-		// token = strtok(NULL,delim); //X1_access_count
-		// token = strtok(NULL,delim); //X1_access_size
-		// token = strtok(NULL,delim); //read_bytes
-		// token = strtok(NULL,delim); //write_bytes
-
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1; 
 		start_time = start_time - epoch_time; 
@@ -214,8 +194,6 @@ int main(int argc, char const *argv[]){
 		// end_time = end_time * 1000000;
 		long int endi = (long int) end;
 		end_time = start_time + (endi - starti);
-
-
 
 		#ifdef DUMP
 		cout << "[" << start_time << ", " << end_time << "]" << endl;
@@ -287,6 +265,33 @@ int main(int argc, char const *argv[]){
 	#ifdef DUMP
 	cout << "size of heap after: " << h->getSize() << endl;
 	#endif
+
+	char path_save_phases[] = "../data/phases.csv";
+
+	fstream save_file_phases;
+	save_file_phases.open(path_save_phases, fstream::out);
+
+	save_file_phases << "id;" << "name" << endl; 
+
+	for (int i = 0; i < info_v.size(); ++i){
+		save_file_phases << i << ";" << info_v[i];
+	}
+
+	save_file_phases.close();
+
+	char path_save_jobs[] = "../data/jobs.csv";
+
+	fstream save_file_jobs;
+	save_file_jobs.open(path_save_jobs, fstream::out);
+
+	save_file_jobs << "id;" << "name" << endl; 
+
+	for (int i = 0; i < filename_v.size(); ++i){
+		save_file_jobs << i << ";" << filename_v[i] << endl;;
+	}
+
+	save_file_jobs.close();
+
 
 	return 0;
 }

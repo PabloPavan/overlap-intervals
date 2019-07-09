@@ -238,25 +238,25 @@ int main(int argc, char const *argv[]){
 		 	int idx_min = min_find(nodes);
 			if(n_next->getStart() < nodes[idx_min]->getEnd()){
 				dump_file(n_next->getStart(), nodes);	 
-				// cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
+				cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
 		 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
 		 	 	h->insert(no);	 	 
 			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
-			 		// cout << "novo 2 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
+			 		cout << "novo 2 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
 			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
 			 	 	h->insert(no);
 			 	 }else{
-			 	 	// cout << "novo 3 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
+			 	 	cout << "novo 3 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
 			 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());	
 			 	 	h->insert(no);
 			 	 }	
 			}else{
-				// cout << "else 1" << endl;
+				cout << "else 1" << endl;
 				h->insert(n_next);
 		 		dump_file(nodes[idx_min]->getEnd(), nodes);		 		
 			}
 		}else{
-			// cout << "else 3" << endl;
+			cout << "else 3" << endl;
 			nodes.push_back(n_current);
 			dump_file(n_current->getEnd(), nodes);
 		}		 	

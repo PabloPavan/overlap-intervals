@@ -4,4 +4,5 @@ id;name
 2;posix read consecutive sequential unique file
 3;posix write unique file
 4;posix write sequential unique file
-5;posix write unique file
+5;posix read sequential unique file
+6;mpi-io read unique file

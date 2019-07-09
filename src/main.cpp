@@ -64,12 +64,12 @@ void dump_file(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
+	char path_save[] = "../data/final.csv";
+
 	if(!first_write){
 		first_write = true;
 		last_end = new_end;
 	}
-
-	char path_save[] = "../data/final.csv";
 
 	if (v[0]->getStart() > last_end){
 		#ifdef DUMP
@@ -187,19 +187,19 @@ int main(int argc, char const *argv[]){
 		start_time = start_time * 1;
 		long int starti = (long int) start;
 
-		start_time = start_time + starti;
+		long int start_ = start_time + starti;
 
 		end = end * 1;
 		// end_time = end_time - epoch_time; 
 		// end_time = end_time * 1000000;
 		long int endi = (long int) end;
-		end_time = start_time + (endi - starti);
+		long int end_ = start_ + (endi - starti);
 
 		#ifdef DUMP
-		cout << "[" << start_time << ", " << end_time << "]" << endl;
+		cout << "[" << start_ << ", " << end_ << "]" << endl;
 		#endif
 
-		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_time,end_time);
+		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_);
 		h->insert(no);
 	}
 
@@ -238,25 +238,33 @@ int main(int argc, char const *argv[]){
 		 	int idx_min = min_find(nodes);
 			if(n_next->getStart() < nodes[idx_min]->getEnd()){
 				dump_file(n_next->getStart(), nodes);	 
-				cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
-		 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
-		 	 	h->insert(no);	 	 
+		
+				if (nodes[idx_min]->getEnd() < n_next->getEnd()){
+					cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
+			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
+			 	 	h->insert(no);	
+			 	}else{
+			 		cout << "novo 2 " << n_next->getStart() << " ; " << n_next->getEnd() << endl;
+			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), n_next->getEnd());
+			 	 	h->insert(no);	
+			 	} 	 
 			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
-			 		cout << "novo 2 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
+			 		cout << "novo 3 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
 			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
 			 	 	h->insert(no);
+
 			 	 }else{
-			 	 	cout << "novo 3 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
+			 	 	cout << "novo 4 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
 			 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());	
 			 	 	h->insert(no);
 			 	 }	
 			}else{
 				cout << "else 1" << endl;
-				h->insert(n_next);
+			 	h->insert(n_next);
 		 		dump_file(nodes[idx_min]->getEnd(), nodes);		 		
 			}
 		}else{
-			cout << "else 3" << endl;
+			cout << "else 2" << endl;
 			nodes.push_back(n_current);
 			dump_file(n_current->getEnd(), nodes);
 		}		 	

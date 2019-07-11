@@ -224,47 +224,92 @@ int main(int argc, char const *argv[]){
 	cout << endl;
 	while(!h->isEmpty()){
 		vector<Node*> nodes;
-		long int new_end = 0;
+		vector<Node*> nexts;
 		n_current = h->extract();
 		if(!h->isEmpty()){
-	 		nodes.push_back(n_current);
-		 	do{ 		
-			 	n_temp = h->extract();
-			 	nodes.push_back(n_temp);
+	 		// nodes.push_back(n_current);
 
-		 	}while(h->getSize() >=1 && n_temp->getStart() == n_current->getStart());
+	 		// n_temp = n_current;
+
+	 		// nodes.push_back(n_current);
+	 		// while(1){
+	 		// 	if(n_temp->getStart() == n_current->getStart()){
+	 		// 		n_temp = h->extract();
+	 		// 		nodes.push_back(n_temp);
+	 		// 	}else{
+	 		// 		break;
+	 		// 	}
+	 		// } 
+
+		 	// if(!h->isEmpty()){
+
+		 	// 	n_next = h->extract(); 
+
+		 	// 	n_temp = n_next;
+
+		 	// 	nexts.push_back(n_next);
+		 	// 	while(1){
+		 	// 		if(n_temp->getStart() == n_next->getStart()){
+		 	// 			n_temp = h->extract();
+		 	// 			nexts.push_back(n_temp);
+		 	// 		}else{
+		 	// 			break;
+		 	// 		}
+		 	// 	}
+
+		 		// aqui precisa ver um conceito 
+
+			 	int idx_min_nodes = min_find(nodes);
+			 	int idx_min_nexts = min_find(nexts);
+
+				if(nexts[idx_min_nexts]->getStart() < nodes[idx_min_nodes]->getEnd()){
+					dump_file(nexts[idx_min_nexts]->getStart(), nodes);	 
 			
-			n_next = back_pop(nodes); // ultimo elemento do nodes é o n_next node 
-		 	int idx_min = min_find(nodes);
-			if(n_next->getStart() < nodes[idx_min]->getEnd()){
-				dump_file(n_next->getStart(), nodes);	 
-		
-				if (nodes[idx_min]->getEnd() < n_next->getEnd()){
-					cout << "novo 1 " << n_next->getStart() << " ; " << nodes[idx_min]->getEnd() << endl;
-			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), nodes[idx_min]->getEnd());
-			 	 	h->insert(no);	
-			 	}else{
-			 		cout << "novo 2 " << n_next->getStart() << " ; " << n_next->getEnd() << endl;
-			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes, n_next->getStart(), n_next->getEnd());
-			 	 	h->insert(no);	
-			 	} 	 
-			 	if(nodes[idx_min]->getEnd() < n_next->getEnd()){
-			 		cout << "novo 3 " << nodes[idx_min]->getEnd() << " ; " << n_next->getEnd() << endl;
-			 	 	no  = new Node(n_next->getPhase(), n_next->getJob(), n_next->getDay(), nodes[idx_min]->getEnd(), n_next->getEnd());
-			 	 	h->insert(no);
+					if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
+						cout << "novo 1 " << nexts[idx_min_nexts]->getStart() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
+				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
+				 	 	h->insert(no);	
+				 	}else{
+				 		cout << "novo 2 " << nexts[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
+				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nexts[idx_min_nexts]->getEnd());
+				 	 	h->insert(no);	
+				 	} 	 
+				 	if(nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
+				 		cout << "novo 3 " << nodes[idx_min_nodes]->getEnd() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
+				 	 	no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
+				 	 	h->insert(no);
 
-			 	 }else{
-			 	 	cout << "novo 4 " << n_next->getEnd() << " ; " << nodes[idx_min]->getEnd() << endl;
-			 	 	no  = new Node(nodes, n_next->getEnd(), nodes[idx_min]->getEnd());	
-			 	 	h->insert(no);
-			 	 }	
-			}else{
+				 	 }else{
+				 	 	cout << "novo 4 " << nexts[idx_min_nexts]->getEnd() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
+				 	 	no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
+				 	 	h->insert(no);
+				 	 }	
+				}else{
+
 				cout << "else 1" << endl;
-			 	h->insert(n_next);
-		 		dump_file(nodes[idx_min]->getEnd(), nodes);		 		
+				for (int i = 0; i < nexts.size(); ++i){
+					h->insert(nexts[i]);
+				}
+			 	
+		 		dump_file(nodes[idx_min_nodes]->getEnd(), nodes);	
+				} 	 
+			}else{
+	 		
+	 			cout << "else 2  do something" << endl;
+
+	 			for (int i = 0; i < nodes.size(); ++i)
+	 			{
+	 				cout << nodes[i]->getStart() << endl;
+	 			}
+	 			// precisa ver dentro do nodes se eles tem alguma fase e job diferente
+	 			// se sim
+	 			// fazer os intervalos internos
+	 			// se nao
+	 			// grava todos com o fim do maior 
+
 			}
 		}else{
-			cout << "else 2" << endl;
+			cout << "else 3" << endl;
 			nodes.push_back(n_current);
 			dump_file(n_current->getEnd(), nodes);
 		}		 	

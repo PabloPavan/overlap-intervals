@@ -19,6 +19,7 @@ public:
     ~Heap();
     /* Extract-min*/
     Node* extract();
+    Node* top();
     unsigned int getSize();
     bool insert(Node *no);
     bool isEmpty();

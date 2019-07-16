@@ -61,8 +61,18 @@ Node* Heap::extract() { /* O(lg n) */
         heapifydown();
         return min;
     }
+    cout << "!PANIC - the heap is empty" << endl;
     return (Node*) 0;
 }
+
+Node* Heap::top(){ /* O(1) */
+    if (isEmpty() == false) {
+        return this->heap[0];
+    }
+    cout << "!PANIC - the heap is empty" << endl;
+    return (Node*) 0;
+}
+
 
 unsigned int Heap::getSize() { /* O(1) */
     return this->size;
@@ -75,6 +85,7 @@ bool Heap::insert(Node *no) { /* O(lg n) */
         this->size++;
         return true;
     }
+    cout << "!PANIC - the heap is full" << endl;
     return false;
 }
 

@@ -249,10 +249,8 @@ int main(int argc, char const *argv[]){
 
 	 			nexts.push_back(n_next);
 
-	 			if(!h->isEmpty()){
-		 			while(n_next->getStart() == h->top()->getStart() && h->isEmpty()){
-		 				nexts.push_back(h->extract());
-		 			}
+		 		while(n_next->getStart() == h->top()->getStart() && h->isEmpty()){
+		 			nexts.push_back(h->extract());	
 		 		}	
 	 			#ifdef DUMP
 	 			for (int i = 0; i < nexts.size(); ++i){

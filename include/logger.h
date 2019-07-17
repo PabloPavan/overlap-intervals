@@ -6,14 +6,29 @@
 
 using namespace std;
 
-namespace logger{
+enum typelog {
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR
+};
 
-    fstream file;
+struct structlog {
+    cost char path[];
+    typelog level = WARN;
+};
+
+extern structlog LOGCFG;
+
+class Logger{
+
+private:
     char *timestamp();
+   
+public:
 
-    void start(const char path[]);
-    void end();
-    
-  	void dump(const char type[], const char message[]);
-}
+	Logger(typelog type, const char message[]);
+    ~Logger();
+
+};
 #endif	/* LOGGER_H */

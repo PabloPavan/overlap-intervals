@@ -15,10 +15,6 @@ using namespace std;
 
 
 
-logger::start("log.log");
-
-
-
 bool first_write = false;
 long int last_end = 0;
 
@@ -145,11 +141,15 @@ int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
 
-	logger::start("log.log");
+	Logger *logger;
 
-	logger::dump("info", "test");
+	logger = new Logger("log.log");
 
-	logger::end();
+	// logger::start("log.log");
+
+	Logger::dump("info", "test");
+
+	// logger::end();
 	Heap *h;
 	h = new Heap(30000);
 
@@ -243,17 +243,17 @@ int main(int argc, char const *argv[]){
 
 	 		nodes.push_back(n_current);
 
-	 		while(n_current->getStart() == h->top()->getStart() && h->isEmpty() ){
+	 		while(n_current->getStart() == h->top()->getStart()){
 	 			nodes.push_back(h->extract());
 	 		}
 
 	 		#ifdef DUMP
 	 		for (int i = 0; i < nodes.size(); ++i){
-	 			cout << interation << " nodes:  " <<  nodes[i]->getStart() << endl << endl;
+	 			cout << interation << " nodes:  " << i << " " << nodes[i]->getStart() << endl << endl;
 	 		}
 	 		#endif
 
-	 		cout << "size : " << h->getSize() << endl;
+	 		//cout << "size : " << h->getSize() << endl;
 
 	 		if(!h->isEmpty()){
 
@@ -261,12 +261,12 @@ int main(int argc, char const *argv[]){
 
 	 			nexts.push_back(n_next);
 	 			if(!h->isEmpty())
-			 		while(n_next->getStart() == h->top()->getStart() && h->isEmpty()){
+			 		while(n_next->getStart() == h->top()->getStart()){
 			 			nexts.push_back(h->extract());	
 			 		}	
 	 			#ifdef DUMP
 	 			for (int i = 0; i < nexts.size(); ++i){
-	 				cout << interation << " nexts:  " <<  nexts[i]->getStart() << endl << endl;
+	 				cout << interation << " nexts:  " << i << " " <<  nexts[i]->getStart() << endl << endl;
 	 			}
 	 			#endif
 
@@ -300,6 +300,8 @@ int main(int argc, char const *argv[]){
 					for (int i = 0; i < nexts.size(); ++i){
 						h->insert(nexts[i]);
 					}
+
+					// fazer o mesmo que no else 2 caso o nodes for maior que 1
 			 		dump_file(nodes[idx_min_nodes]->getEnd(), nodes);	
 				} 				
 	 		

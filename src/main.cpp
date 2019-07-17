@@ -1,5 +1,6 @@
 #include "node.h"
 #include "heap.h"
+#include "../include/logger.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -11,6 +12,12 @@ using namespace std;
 
 #define DUMP
 #define BUFFER_SIZE 4096
+
+
+
+logger::start("log.log");
+
+
 
 bool first_write = false;
 long int last_end = 0;
@@ -138,6 +145,11 @@ int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
 
+	logger::start("log.log");
+
+	logger::dump("info", "test");
+
+	logger::end();
 	Heap *h;
 	h = new Heap(30000);
 
@@ -248,10 +260,10 @@ int main(int argc, char const *argv[]){
 	 			n_next = h->extract();
 
 	 			nexts.push_back(n_next);
-
-		 		while(n_next->getStart() == h->top()->getStart() && h->isEmpty()){
-		 			nexts.push_back(h->extract());	
-		 		}	
+	 			if(!h->isEmpty())
+			 		while(n_next->getStart() == h->top()->getStart() && h->isEmpty()){
+			 			nexts.push_back(h->extract());	
+			 		}	
 	 			#ifdef DUMP
 	 			for (int i = 0; i < nexts.size(); ++i){
 	 				cout << interation << " nexts:  " <<  nexts[i]->getStart() << endl << endl;

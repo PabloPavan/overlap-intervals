@@ -1,5 +1,6 @@
 CC = g++
-CFLAGS = -c -g
+CFLAGS = -c -g 
+LIBS = -L ../include/ -llogger
 SOURCES =  $(shell find -type f -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = intervals.x
@@ -7,7 +8,7 @@ EXECUTABLE = intervals.x
 all: $(OBJECTS) $(EXECUTABLE)
 
 $(EXECUTABLE) : $(OBJECTS)
-		$(CC) $(OBJECTS) -o $@  
+		$(CC) $(OBJECTS) $(LIBS) -o $@ 
 
 .cpp.o: *.h
 	$(CC) $(CFLAGS) $< -o $@

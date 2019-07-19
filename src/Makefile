@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -c -g 
-LIBS = -L ../include/ -llogger
+LIBS = #-L ../include/ -llogger
 SOURCES =  $(shell find -type f -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = intervals.x

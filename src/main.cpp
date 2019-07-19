@@ -366,37 +366,11 @@ int main(int argc, char const *argv[]){
 									no  = new Node(nexts, nodes, nodes[idx_min_nodes]->getStart(), nexts[idx_min_nexts]->getEnd());
 									aux_heap->insert(no);
 
-									
-										//dump_file(nodes[idx_min_nexts]->getEnd(), nodes);	
-
-										
-
-
-								
-										// if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-										// 	cout << "novo 1 interno " << nexts[idx_min_nexts]->getStart() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
-									 // 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
-									 // 	 	aux_heap->insert(no);	
-									 // 	}else{
-									 // 		cout << "novo 2 interno " << nexts[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
-									 // 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nexts[idx_min_nexts]->getEnd());
-									 // 	 	aux_heap->insert(no);	
-									 // 	} 	 
-									 // 	if(nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-									 // 		cout << "novo 3 interno " << nodes[idx_min_nodes]->getEnd() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
-									 // 	 	no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
-									 // 	 	aux_heap->insert(no);
-
-									 // 	}else{
-									 // 	 	cout << "novo 4 interno " << nexts[idx_min_nexts]->getEnd() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
-									 // 	 	no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
-									 // 	 	aux_heap->insert(no);
-									 // 	}
-								 	}else{
-								 		cout << "else 1 interno" << endl;	
 								 	}
 								}else{
 									cout << "else 2 interno" << endl;	
+									//salva no arquiv os nodes
+									//dump_file(nodes[idx_min_nodes]->getEnd(), nodes);
 								}
 							}else{
 								cout << "else 3 interno" << endl;	

@@ -137,13 +137,14 @@ void dump_file(int long new_end, vector<Node*>&v){
 	free(phases);
 	free(tmp);
 
+}
 
-vector<Node*> swap_start_end(vector<Node*>&v){
+vector<Node*> swap_start_end(vector<Node*>v){
 	vector<Node*> ret; 
 
-	for (int i = 0; i < v.size(); ++i){
+	for (int i = 0; i < v.size(); ++i)
 		ret.push_back(new Node(v[i]->getPhase(), v[i]->getJob(), v[i]->getDay(), v[i]->getStart(), v[i]->getEnd()));
-	}
+	
 	return ret;
 
 }
@@ -309,10 +310,11 @@ int main(int argc, char const *argv[]){
 				 	 	h->insert(no);
 				 	 }	
 				}else{
+
 					cout << "else 1" << endl;
-					for (int i = 0; i < nexts.size(); ++i){
+					for (int i = 0; i < nexts.size(); ++i)
 						h->insert(nexts[i]);
-					}
+					
 					if(nodes.size() > 1){
 						
 						Heap *aux_heap = new Heap(nodes.size()+1);
@@ -378,8 +380,8 @@ int main(int argc, char const *argv[]){
 										cout << endl << endl;
 										#endif 
 
-										stack_dump.pop(nodes);
-										stack_end.pop(nexts[idx_min_nodes]->getStart());
+										stack_dump.push(nodes);
+										stack_end.push(nexts[idx_min_nodes]->getStart());
 
 										//dump_file(nodes[idx_min_nodes]->getStart(), nodes);
 
@@ -390,8 +392,8 @@ int main(int argc, char const *argv[]){
 								 	}
 								}else{
 									cout << "else 2 interno" << endl;	
-										stack_dump.push_back(nodes);
-										stack_end.push_back(nodes[idx_min_nodes]->getEnd());
+										stack_dump.push(nodes);
+										stack_end.push(nodes[idx_min_nodes]->getEnd());
 
 									//salva no arquiv os nodes
 									//dump_file(nodes[idx_min_nodes]->getEnd(), nodes);

@@ -139,7 +139,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 }
 
-vector<Node*> swap_start_end(vector<Node*>v){
+vector<Node*> swap_start_end(vector<Node*>&v){
 	vector<Node*> ret; 
 
 	for (int i = 0; i < v.size(); ++i)
@@ -385,15 +385,15 @@ int main(int argc, char const *argv[]){
 
 										//dump_file(nodes[idx_min_nodes]->getStart(), nodes);
 
-										cout << "novo 1 interno " << nexts[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
-										no  = new Node(nexts,nodes, nexts[idx_min_nodes]->getStart(), nexts[idx_min_nexts]->getEnd());
+										cout << "novo 1 interno " << nodes[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
+										no  = new Node(nexts,nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getStart());
 										aux_heap->insert(no);
 
 								 	}
 								}else{
 									cout << "else 2 interno" << endl;	
-										stack_dump.push(nodes);
-										stack_end.push(nodes[idx_min_nodes]->getEnd());
+									stack_dump.push(nodes);
+									stack_end.push(nodes[idx_min_nodes]->getEnd());
 
 									//salva no arquiv os nodes
 									//dump_file(nodes[idx_min_nodes]->getEnd(), nodes);
@@ -406,12 +406,12 @@ int main(int argc, char const *argv[]){
 								cout << endl << endl;
 								#endif 
 
+								stack_dump.push(nodes);
+								stack_end.push(nodes[0]->getEnd());
 								/// inverter aqui o nodes start, end
 
-
-
-
-								dump_file(nodes[0]->getEnd(), swap_start_end(nodes));
+								// vector<Node*> tmp =  swap_start_end(nodes);
+								// dump_file(nodes[0]->getEnd(), tmp);
 							}
 						}
 
@@ -419,7 +419,8 @@ int main(int argc, char const *argv[]){
 
 						while (!stack_dump.empty()) { 
 
-							dump_file(stack_end.top(), swap_start_end(stack_dump.top()));
+							vector<Node*> tmp =  swap_start_end(stack_dump.top());
+							dump_file(stack_end.top(),tmp);
 							stack_end.pop();
 							stack_dump.pop(); 
 						} 

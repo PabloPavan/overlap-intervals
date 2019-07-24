@@ -139,18 +139,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 }
 
-vector<Node*> swap_start_end(vector<Node*>&v){
-	vector<Node*> ret; 
 
-	for (int i = 0; i < v.size(); ++i)
-		ret.push_back(new Node(v[i]->getPhase(), v[i]->getJob(), v[i]->getDay(), v[i]->getStart(), v[i]->getEnd()));
-	
-	return ret;
-
-}
-	
-
-	
 int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
@@ -322,7 +311,7 @@ int main(int argc, char const *argv[]){
 						for (int i = 0; i < nodes.size(); ++i){
 						 	cout <<  " nodes interno start:  " << i << " " << nodes[i]->getStart() << endl << endl;
 						 	cout <<  " nodes interno end:  " << i << " " << nodes[i]->getEnd() << endl << endl;
-						 }
+						}
 
 
 						for (int i = 0; i < nodes.size(); ++i)
@@ -373,71 +362,134 @@ int main(int argc, char const *argv[]){
 									int idx_min_nexts = min_find(nexts);
 
 									if(nodes[idx_min_nodes]->getStart() < nexts[idx_min_nexts]->getStart()){
+										vector<Node*> tmp;
+										for (int i = 0; i < nexts.size(); ++i)
+											tmp.push_back(new Node(nexts[i]->getPhase(), nexts[i]->getJob(), nexts[i]->getDay(), nodes[idx_min_nodes]->getStart(), nexts[i]->getEnd()));
+									
+										stack_dump.push(tmp);
+										stack_end.push(nexts[idx_min_nexts]->getStart());
 
-										cout << "entrei " << endl;
-										#ifdef DUMP
-										cout << "XXXXXXXX start: " << nodes[idx_min_nodes]->getStart() << " end: " <<  nexts[idx_min_nexts]->getStart() << " duration: " << nexts[idx_min_nexts]->getStart()-nodes[0]->getEnd(); 
-										cout << endl << endl;
-										#endif 
 
-										stack_dump.push(nodes);
-										stack_end.push(nexts[idx_min_nodes]->getStart());
-
-										//dump_file(nodes[idx_min_nodes]->getStart(), nodes);
-
-										cout << "novo 1 interno " << nodes[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
+										cout << "novo 1 interno " << nodes[idx_min_nodes]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
 										no  = new Node(nexts,nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getStart());
 										aux_heap->insert(no);
-
 								 	}
 								}else{
 									cout << "else 2 interno" << endl;	
 									stack_dump.push(nodes);
+									int idx_min_nodes = min_find(nodes);
 									stack_end.push(nodes[idx_min_nodes]->getEnd());
-
-									//salva no arquiv os nodes
-									//dump_file(nodes[idx_min_nodes]->getEnd(), nodes);
 								}
 							}else{
 								cout << "else 3 interno" << endl;	
 								nodes.push_back(n_current);
-								#ifdef DUMP
-								cout << "XXXXXXX start: " <<  nodes[0]->getStart()  << " end: " <<  nodes[0]->getEnd() << " duration: " << nodes[0]->getEnd()-nodes[0]->getStart(); 
-								cout << endl << endl;
-								#endif 
-
 								stack_dump.push(nodes);
 								stack_end.push(nodes[0]->getEnd());
-								/// inverter aqui o nodes start, end
 
-								// vector<Node*> tmp =  swap_start_end(nodes);
-								// dump_file(nodes[0]->getEnd(), tmp);
 							}
 						}
 
-						// gravar 
-
 						while (!stack_dump.empty()) { 
-
-							vector<Node*> tmp =  swap_start_end(stack_dump.top());
-							dump_file(stack_end.top(),tmp);
+							dump_file(stack_end.top(),stack_dump.top());
 							stack_end.pop();
 							stack_dump.pop(); 
 						} 
 
-
 					}else{
-						cout << "else dump " << endl;
-					//fazer o mesmo que no else 2 caso o nodes for maior que 1
-			 			dump_file(nodes[idx_min_nodes]->getEnd(), nodes);	
-
+						dump_file(nodes[0]->getEnd(), nodes);
 					}
 				} 				
-	 		
 	 		}else{
-	 			cout << "else 2  do something" << endl;
-	 		}
+	 			if(nodes.size() > 1){		
+					Heap *aux_heap = new Heap(nodes.size()+1);
 
+					for (int i = 0; i < nodes.size(); ++i){
+					 	cout <<  " nodes interno start:  " << i << " " << nodes[i]->getStart() << endl << endl;
+					 	cout <<  " nodes interno end:  " << i << " " << nodes[i]->getEnd() << endl << endl;
+					}
+
+					for (int i = 0; i < nodes.size(); ++i)
+						aux_heap->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+					
+					cout << "heap size : " << aux_heap->getSize() << endl;
+				
+					stack <vector<Node*>> stack_dump; 
+					stack <long int> stack_end;
+					while(!aux_heap->isEmpty()){
+					 	vector<Node*> nodes;
+					 	vector<Node*> nexts;
+
+					 	n_current = aux_heap->extract();
+
+					 	if(!aux_heap->isEmpty()){
+
+					 		nodes.push_back(n_current);
+
+					 		while(n_current->getStart() == aux_heap->top()->getStart()){
+					 			nodes.push_back(aux_heap->extract());
+					 		}
+
+					 		#ifdef DUMP
+					 		for (int i = 0; i < nodes.size(); ++i){
+					 			cout <<  " nodes interno:  " << i << " " << nodes[i]->getStart() << endl << endl;
+					 		}
+					 		#endif
+
+					 		if(!aux_heap->isEmpty()){
+
+					 			n_next = aux_heap->extract();
+
+					 			nexts.push_back(n_next);
+					 			if(!aux_heap->isEmpty())
+							 		while(n_next->getStart() == aux_heap->top()->getStart()){
+							 			nexts.push_back(aux_heap->extract());	
+							 		}	
+					 			#ifdef DUMP
+					 			for (int i = 0; i < nexts.size(); ++i){
+					 				cout << " nexts interno:  " << i << " " <<  nexts[i]->getStart() << endl << endl;
+					 			}
+					 			#endif
+
+								int idx_min_nodes = min_find(nodes);
+								int idx_min_nexts = min_find(nexts);
+
+								if(nodes[idx_min_nodes]->getStart() < nexts[idx_min_nexts]->getStart()){
+									vector<Node*> tmp;
+									for (int i = 0; i < nexts.size(); ++i)
+										tmp.push_back(new Node(nexts[i]->getPhase(), nexts[i]->getJob(), nexts[i]->getDay(), nodes[idx_min_nodes]->getStart(), nexts[i]->getEnd()));
+								
+									stack_dump.push(tmp);
+									stack_end.push(nexts[idx_min_nexts]->getStart());
+
+
+									cout << "novo 1 interno " << nodes[idx_min_nodes]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
+									no  = new Node(nexts,nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getStart());
+									aux_heap->insert(no);
+							 	}
+							}else{
+								cout << "else 2 interno" << endl;	
+								stack_dump.push(nodes);
+								int idx_min_nodes = min_find(nodes);
+								stack_end.push(nodes[idx_min_nodes]->getEnd());
+							}
+						}else{
+							cout << "else 3 interno" << endl;	
+							nodes.push_back(n_current);
+							stack_dump.push(nodes);
+							stack_end.push(nodes[0]->getEnd());
+
+						}
+					}
+
+					while (!stack_dump.empty()) { 
+						dump_file(stack_end.top(),stack_dump.top());
+						stack_end.pop();
+						stack_dump.pop(); 
+					} 
+				}else{
+					dump_file(nodes[0]->getEnd(), nodes);
+				}
+	 		}
 	 	}else{
 			cout << "else 3" << endl;
 	 		nodes.push_back(n_current);

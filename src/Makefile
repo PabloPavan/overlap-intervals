@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -c -g 
+CFLAGS = -c -g -O2
 LIBS = #-L ../include/ -llogger
 SOURCES =  $(shell find -type f -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)

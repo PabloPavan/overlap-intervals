@@ -18,6 +18,12 @@ library(cowplot)
 #+end_src
 
 #+RESULTS:
+: 
+: Attaching package: ‘cowplot’
+: 
+: The following object is masked from ‘package:ggplot2’:
+: 
+:     ggsave
 
 * Analysis of raw data
 
@@ -121,12 +127,11 @@ str(df)
  #+end_src
 
  #+RESULTS:
- : 
- : 'data.frame':	14 obs. of  7 variables:
+ : 'data.frame':	15 obs. of  7 variables:
  :  $ start   : int  3763 3779 3810 3814 3897 4001 4100 4300 4320 4445 ...
  :  $ end     : int  3779 3810 3814 3897 4001 4100 4300 4320 4445 4457 ...
  :  $ duration: int  16 31 4 83 104 99 200 20 125 12 ...
- :  $ phases  : Factor w/ 9 levels "-1","0","0,3",..: 2 3 6 1 7 8 7 8 7 8 ...
+ :  $ phases  : Factor w/ 10 levels "-1","0","0,3",..: 2 3 7 1 8 9 8 9 8 9 ...
  :  $ nphases : int  1 2 1 0 1 2 1 2 1 2 ...
  :  $ jobs    : Factor w/ 7 levels "-1","0","0,1",..: 2 3 5 1 5 6 5 6 5 6 ...
  :  $ njobs   : int  1 2 1 0 1 2 1 2 1 2 ...

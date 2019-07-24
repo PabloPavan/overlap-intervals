@@ -139,7 +139,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 }
 
-void create_intervals_whitout_next(vector<Node*> nodes){
+void create_intervals_without_next(vector<Node*> nodes){
 	Node* n_current;
 	Node* n_next;
 	Node* no;
@@ -399,14 +399,14 @@ int main(int argc, char const *argv[]){
 						h->insert(nexts[i]);
 					
 					if(nodes.size() > 1){
-						create_intervals_whitout_next(nodes);
+						create_intervals_without_next(nodes);
 					}else{
 						dump_file(nodes[0]->getEnd(), nodes);
 					}
 				} 				
 	 		}else{
 	 			if(nodes.size() > 1){		
-					create_intervals_whitout_next(nodes);
+					create_intervals_without_next(nodes);
 				}else{
 					dump_file(nodes[0]->getEnd(), nodes);
 				}

@@ -7,4 +7,4 @@ filename;start_time;end_time;start;end;info
 13.parsed.json;3761;4508;32.0;45.0;posix read file
 14.parsed.json;3761;4508;8.0;30.0;posix read file
 14.parsed.json;3761;4508;50.0;55.0;posix read file
-14.parsed.json;3761;4508;50.0;53.0;posix read file
+14.parsed.json;3761;4508;50.0;53.0;posix write file

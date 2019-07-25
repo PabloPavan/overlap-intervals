@@ -49,11 +49,8 @@ void dump_file(int long new_end, vector<Node*>&v){
 	// start and end 
 	// phase and jobs sep by ,
 	// day 
-	cout << "dump" << endl;
 
 	char path_save[] = "../data/final.csv";
-
-	cout << first_write << " " << last_end << endl;
 
 	if(!first_write){
 		first_write = true;
@@ -80,9 +77,11 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
+	vector<int> days_vec = remove_duplicates(v, &Node::getDay);
 
 	char *jobs = (char*) calloc(v.size() * 2 + 1, sizeof(char));
 	char *phases = (char*) calloc(v.size() * 2 + 1, sizeof(char));
+	char *days = (char*) calloc(v.size() * 2 + 1, sizeof(char));
 	char *tmp = (char*) calloc(3, sizeof(char));
 
 	int number_of_jobs = 0;
@@ -92,6 +91,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 	}
 	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
 	strcat(jobs, tmp);
+
 	int number_of_phases = 0;
 	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
 		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
@@ -100,11 +100,20 @@ void dump_file(int long new_end, vector<Node*>&v){
 	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
 	strcat(phases, tmp);
 
+	int number_of_days = 0;
+	for (number_of_days = 0; number_of_days < days_vec.size()-1; ++number_of_days){
+		sprintf(tmp, "%d,", days_vec[number_of_days]);
+		strcat(days, tmp);
+	}
+	sprintf(tmp, "%d", days_vec[number_of_days++]);
+	strcat(days, tmp);
+
 
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
 	cout << " phases: " << phases; //<< phases << " number of phases: " << number_of_phases; 
 	cout << " jobs: " << jobs;//<< " number of jobs: " << number_of_jobs;
+	cout << " days: " << days;
 	cout << endl << endl;
 	#endif 
 
@@ -112,7 +121,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 	save_file.open(path_save, fstream::app);
 
-	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs << endl;
+	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs <<";"<< days <<";"<< number_of_days << endl;
 
 	save_file.close();
 
@@ -140,16 +149,9 @@ void create_intervals_without_next(vector<Node*> nodes){
 
 	Heap *aux_heap = new Heap(nodes.size()+1);
 
-	for (int i = 0; i < nodes.size(); ++i){
-	 	cout <<  " nodes interno start:  " << i << " " << nodes[i]->getStart() << endl << endl;
-	 	cout <<  " nodes interno end:  " << i << " " << nodes[i]->getEnd() << endl << endl;
-	}
-
-
 	for (int i = 0; i < nodes.size(); ++i)
 		aux_heap->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
 	
-	cout << "heap size : " << aux_heap->getSize() << endl;
 
 	stack <vector<Node*>> stack_dump; 
 	stack <long int> stack_end;
@@ -170,12 +172,6 @@ void create_intervals_without_next(vector<Node*> nodes){
 		 				break;
 		 		}
 
-	 		#ifdef DUMP
-	 		for (int i = 0; i < nodes.size(); ++i){
-	 			cout <<  " nodes interno:  " << i << " " << nodes[i]->getStart() << endl << endl;
-	 		}
-	 		#endif
-
 	 		if(!aux_heap->isEmpty()){
 
 	 			n_next = aux_heap->extract();
@@ -187,11 +183,6 @@ void create_intervals_without_next(vector<Node*> nodes){
 			 			if(aux_heap->isEmpty())
 		 					break;
 			 		}	
-	 			#ifdef DUMP
-	 			for (int i = 0; i < nexts.size(); ++i){
-	 				cout << " nexts interno:  " << i << " " <<  nexts[i]->getStart() << endl << endl;
-	 			}
-	 			#endif
 
 				int idx_min_nodes = min_find(nodes);
 				int idx_min_nexts = min_find(nexts);
@@ -204,13 +195,10 @@ void create_intervals_without_next(vector<Node*> nodes){
 					stack_dump.push(tmp);
 					stack_end.push(nexts[idx_min_nexts]->getStart());
 
-
-					cout << "novo 1 interno " << nodes[idx_min_nodes]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
 					no  = new Node(nexts,nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getStart());
 					aux_heap->insert(no);
 			 	}
 			}else{
-				cout << "else 2 interno" << endl;
 
 				vector<Node*> tmp;
 				for (int i = 0; i < nodes.size(); ++i)
@@ -220,7 +208,6 @@ void create_intervals_without_next(vector<Node*> nodes){
 				stack_end.push(tmp[0]->getEnd());
 			}
 		}else{
-			cout << "else 3 interno" << endl;	
 			nodes.push_back(n_current);
 			stack_dump.push(nodes);
 			stack_end.push(nodes[0]->getEnd());

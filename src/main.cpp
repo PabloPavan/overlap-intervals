@@ -2,19 +2,20 @@
 
 
 #define BUFFER_SIZE 4096
+#define HEAP_SIZE 30000
 
 int main(int argc, char const *argv[]){
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
 
 	Heap *h;
-	h = new Heap(30000);
+	h = new Heap(HEAP_SIZE);
 
 	char path_save[] = "../data/final.csv";
 	fstream save_file;
 	save_file.open(path_save, fstream::out);
 
-	save_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs" << endl; 
+	save_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl; 
 
 	save_file.close();
 
@@ -26,7 +27,7 @@ int main(int argc, char const *argv[]){
 	vector<char*> filename_v;
 	vector<char*> info_v;
 
-	fgets(line, sizeof(line), f); // skip header
+	char *header = fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
 		char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
@@ -109,13 +110,6 @@ int main(int argc, char const *argv[]){
 		 		}
 
 
-	 		#ifdef DUMP
-	 		for (int i = 0; i < nodes.size(); ++i){
-	 			cout << interation << " nodes:  " << i << " " << nodes[i]->getStart() << endl << endl;
-	 		}
-	 		#endif
-
-	 		//cout << "size : " << h->getSize() << endl;
 
 	 		if(!h->isEmpty()){
 
@@ -128,11 +122,6 @@ int main(int argc, char const *argv[]){
 			 			if(h->isEmpty())
 		 					break;
 			 		}	
-	 			#ifdef DUMP
-	 			for (int i = 0; i < nexts.size(); ++i){
-	 				cout << interation << " nexts:  " << i << " " <<  nexts[i]->getStart() << endl << endl;
-	 			}
-	 			#endif
 
 				int idx_min_nodes = min_find(nodes);
 				int idx_min_nexts = min_find(nexts);
@@ -141,30 +130,24 @@ int main(int argc, char const *argv[]){
 					dump_file(nexts[idx_min_nexts]->getStart(), nodes);	 
 			
 					if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-						cout << "novo 1 " << nexts[idx_min_nexts]->getStart() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
 				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
 				 	 	h->insert(no);	
 				 	}else{
-				 		cout << "novo 2 " << nexts[idx_min_nexts]->getStart() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
 				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nexts[idx_min_nexts]->getEnd());
 				 	 	h->insert(no);	
 				 	} 	 
 				 	if(nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-				 		cout << "novo 3 " << nodes[idx_min_nodes]->getEnd() << " ; " << nexts[idx_min_nexts]->getEnd() << endl;
 				 	 	no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
 				 	 	h->insert(no);
 
 				 	 }else{
-				 	 	cout << "novo 4 " << nexts[idx_min_nexts]->getEnd() << " ; " << nodes[idx_min_nodes]->getEnd() << endl;
 				 	 	no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
 				 	 	h->insert(no);
 				 	 }	
 				}else{
-
-					cout << "else 1" << endl;
 					for (int i = 0; i < nexts.size(); ++i)
 						h->insert(nexts[i]);
-					
+
 					if(nodes.size() > 1){
 						create_intervals_without_next(nodes);
 					}else{
@@ -179,7 +162,6 @@ int main(int argc, char const *argv[]){
 				}
 	 		}
 	 	}else{
-			cout << "else 3" << endl;
 	 		nodes.push_back(n_current);
 	 		dump_file(n_current->getEnd(), nodes);
 	 	}	

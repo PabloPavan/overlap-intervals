@@ -1,6 +1,11 @@
 #ifndef HEAP_H
 #define	HEAP_H
 
+#include "node.h"
+#include <iostream>
+
+using namespace std;
+
 /* Min-Heap */
 
 class Heap {

@@ -36,13 +36,14 @@ str(df)
 #+end_src
 
 #+RESULTS:
-: 'data.frame':	9 obs. of  6 variables:
-:  $ filename  : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 3 3 4
-:  $ start_time: int  3761 3761 3761 3777 3777 4000 4000 4000 4700
-:  $ end_time  : int  4508 4508 4508 8354 8354 8354 8354 8354 8354
-:  $ start     : num  2.3 696.5 696.5 2.7 120 ...
-:  $ end       : num  49.8 747.4 747.4 37.2 747.4 ...
-:  $ info      : Factor w/ 7 levels "mpi-io read unique file",..: 4 5 2 7 6 3 3 3 1
+: 
+: 'data.frame':	6 obs. of  6 variables:
+:  $ filename  : Factor w/ 3 levels "11.parsed.json",..: 1 1 2 2 3 3
+:  $ start_time: int  3761 3761 3761 3761 3761 3761
+:  $ end_time  : int  4508 4508 4508 4508 4508 4508
+:  $ start     : num  2.3 2.3 5 5 8 32
+:  $ end       : num  49.8 49.8 40 40 30 45
+:  $ info      : Factor w/ 5 levels "posix read file",..: 3 4 5 2 1 1
 
 ** Pre-processig
 
@@ -76,16 +77,17 @@ str(df)
 
 #+RESULTS:
 #+begin_example
-'data.frame':	9 obs. of  9 variables:
- $ filename  : Factor w/ 4 levels "11.parsed.json",..: 1 1 1 2 2 3 3 3 4
- $ start_time: num  3761 3761 3761 3777 3777 ...
- $ end_time  : num  4508 4508 4508 8354 8354 ...
- $ start     : num  2.3 696.5 696.5 2.7 120 ...
- $ end       : num  49.8 747.4 747.4 37.2 747.4 ...
- $ info      : Factor w/ 7 levels "mpi-io read unique file",..: 4 5 2 7 6 3 3 3 1
- $ start_    : num  3763 4458 4458 3780 3897 ...
- $ duration  : num  47.5 50.9 50.9 34.5 627.4 ...
- $ end_      : num  3811 4508 4508 3814 4524 ...
+
+'data.frame':	6 obs. of  9 variables:
+ $ filename  : Factor w/ 3 levels "11.parsed.json",..: 1 1 2 2 3 3
+ $ start_time: num  3761 3761 3761 3761 3761 ...
+ $ end_time  : num  4508 4508 4508 4508 4508 ...
+ $ start     : num  2.3 2.3 5 5 8 32
+ $ end       : num  49.8 49.8 40 40 30 45
+ $ info      : Factor w/ 5 levels "posix read file",..: 3 4 5 2 1 1
+ $ start_    : num  3763 3763 3766 3766 3769 ...
+ $ duration  : num  47.5 47.5 35 35 22 13
+ $ end_      : num  3811 3811 3801 3801 3791 ...
 #+end_example
 
 
@@ -125,14 +127,15 @@ str(df)
  #+end_src
 
  #+RESULTS:
- : 'data.frame':	15 obs. of  7 variables:
- :  $ start   : int  3763 3779 3810 3814 3897 4001 4100 4300 4320 4445 ...
- :  $ end     : int  3779 3810 3814 3897 4001 4100 4300 4320 4445 4457 ...
- :  $ duration: int  16 31 4 83 104 99 200 20 125 12 ...
- :  $ phases  : Factor w/ 9 levels "-1","0","0,3",..: 2 3 6 1 7 8 7 8 7 8 ...
- :  $ nphases : int  1 2 1 0 1 2 1 2 1 2 ...
- :  $ jobs    : Factor w/ 7 levels "-1","0","0,1",..: 2 3 5 1 5 6 5 6 5 6 ...
- :  $ njobs   : int  1 2 1 0 1 2 1 2 1 2 ...
+ : 
+ : 'data.frame':	7 obs. of  7 variables:
+ :  $ start   : int  3763 3766 3769 3791 3793 3801 3806
+ :  $ end     : int  3766 3769 3791 3793 3801 3806 3810
+ :  $ duration: int  3 3 22 2 8 5 4
+ :  $ phases  : Factor w/ 5 levels "0,1","0,1,2,3",..: 1 2 3 2 4 5 1
+ :  $ nphases : int  2 4 5 4 5 3 2
+ :  $ jobs    : Factor w/ 4 levels "0","0,1","0,1,2",..: 1 2 3 2 3 4 1
+ :  $ njobs   : int  1 2 3 2 3 2 1
 
 ** Plot intevals
 
@@ -148,7 +151,7 @@ pal <- c(   "gray",
             "#db818d",
             "#959fe0")
 
-ggplot(df, aes(x = start, y = start+duration, fill = phases)) + 
+ggplot(df, aes(x = start, y = start+duration, fill = as.factor(phases))) + 
     geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = 1)) +
     geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5) +
     geom_vline(xintercept = max(df$end), linetype = 'dashed') +

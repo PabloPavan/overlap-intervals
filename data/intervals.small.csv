@@ -1,10 +1,7 @@
 filename;start_time;end_time;start;end;info
 11.parsed.json;3761;4508;2.3;49.8;posix read unique file
-11.parsed.json;3761;4508;696.5;747.4;posix write consecutive sequential unique file
-11.parsed.json;3761;4508;696.5;747.4;posix read consecutive sequential unique file
-12.parsed.json;3777;8354;2.7;37.2;posix write unique file
-12.parsed.json;3777;8354;120.0;747.4;posix write sequential unique file
-13.parsed.json;4000;8354;1.0;100.4;posix read sequential unique file
-13.parsed.json;4000;8354;300;320.4;posix read sequential unique file
-13.parsed.json;4000;8354;445;490.4;posix read sequential unique file
-14.parsed.json;4700;8354;1.0;20.4;mpi-io read unique file
+11.parsed.json;3761;4508;2.3;49.8;posix write consecutive sequential unique file
+12.parsed.json;3761;4508;5.0;40.0;posix write sequential unique file
+12.parsed.json;3761;4508;5.0;40.0;posix read sequential unique file
+13.parsed.json;3761;4508;8.0;30.0;posix read file
+13.parsed.json;3761;4508;32.0;45.0;posix read file

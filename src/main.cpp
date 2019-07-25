@@ -169,9 +169,12 @@ void create_intervals_without_next(vector<Node*> nodes){
 
 	 		nodes.push_back(n_current);
 
-	 		while(n_current->getStart() == aux_heap->top()->getStart()){
-	 			nodes.push_back(aux_heap->extract());
-	 		}
+	 		if(!aux_heap->isEmpty())
+		 		while(n_current->getStart() == aux_heap->top()->getStart()){
+		 			nodes.push_back(aux_heap->extract());
+		 			if(aux_heap->isEmpty())
+		 				break;
+		 		}
 
 	 		#ifdef DUMP
 	 		for (int i = 0; i < nodes.size(); ++i){
@@ -185,8 +188,10 @@ void create_intervals_without_next(vector<Node*> nodes){
 
 	 			nexts.push_back(n_next);
 	 			if(!aux_heap->isEmpty())
-			 		while(n_next->getStart() == aux_heap->top()->getStart()){
+			 		while(n_next->getStart() == aux_heap->top()->getStart() && !aux_heap->isEmpty()){
 			 			nexts.push_back(aux_heap->extract());	
+			 			if(aux_heap->isEmpty())
+		 					break;
 			 		}	
 	 			#ifdef DUMP
 	 			for (int i = 0; i < nexts.size(); ++i){
@@ -211,10 +216,14 @@ void create_intervals_without_next(vector<Node*> nodes){
 					aux_heap->insert(no);
 			 	}
 			}else{
-				cout << "else 2 interno" << endl;	
-				stack_dump.push(nodes);
-				int idx_min_nodes = min_find(nodes);
-				stack_end.push(nodes[idx_min_nodes]->getEnd());
+				cout << "else 2 interno" << endl;
+
+				vector<Node*> tmp;
+				for (int i = 0; i < nodes.size(); ++i)
+					tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+
+				stack_dump.push(tmp);
+				stack_end.push(tmp[0]->getEnd());
 			}
 		}else{
 			cout << "else 3 interno" << endl;	
@@ -336,13 +345,17 @@ int main(int argc, char const *argv[]){
 	 	vector<Node*> nodes;
 	 	vector<Node*> nexts;
 	 	n_current = h->extract();
+
 	 	if(!h->isEmpty()){
 
 	 		nodes.push_back(n_current);
+	 		if(!h->isEmpty())
+		 		while(n_current->getStart() == h->top()->getStart()){
+		 			nodes.push_back(h->extract());
+		 			if(h->isEmpty())
+		 				break;
+		 		}
 
-	 		while(n_current->getStart() == h->top()->getStart()){
-	 			nodes.push_back(h->extract());
-	 		}
 
 	 		#ifdef DUMP
 	 		for (int i = 0; i < nodes.size(); ++i){
@@ -358,8 +371,10 @@ int main(int argc, char const *argv[]){
 
 	 			nexts.push_back(n_next);
 	 			if(!h->isEmpty())
-			 		while(n_next->getStart() == h->top()->getStart()){
+			 		while(n_next->getStart() == h->top()->getStart() && !h->isEmpty()){
 			 			nexts.push_back(h->extract());	
+			 			if(h->isEmpty())
+		 					break;
 			 		}	
 	 			#ifdef DUMP
 	 			for (int i = 0; i < nexts.size(); ++i){

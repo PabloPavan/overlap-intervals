@@ -109,8 +109,6 @@ int main(int argc, char const *argv[]){
 		 				break;
 		 		}
 
-
-
 	 		if(!h->isEmpty()){
 
 	 			n_next = h->extract();
@@ -166,7 +164,6 @@ int main(int argc, char const *argv[]){
 	 		dump_file(n_current->getEnd(), nodes);
 	 	}	
 	}
-
 
 	#ifdef DUMP
 	cout << "size of heap after: " << h->getSize() << endl;

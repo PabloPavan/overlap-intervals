@@ -1,5 +1,13 @@
 #include "utils.h"
 
+/**
+ * Creating a dict using vector
+ * if word exists in vector return the index
+ * if word doesn't exist create a new value in vector
+ * 
+ * @param word that needs be find, ref for the vector
+ * @return the index of the vector that contains the word
+ */
 
 int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
@@ -12,11 +20,13 @@ int idx_find(char *word, vector<char*>&v){
 
 }
 
-/* remove values duplicates 
-	recive vector pointer of nodes and name of funtion 
-	return values vector
-
+/**
+ * Removing values duplicates using a set
+ * 
+ * @param ref of the nodes vector and functions' ref of class Node
+ * @return a vector with with unique values
  */
+
 vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
@@ -29,6 +39,13 @@ vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)(
  	return vec;
 }
 
+/**
+ * Finding a minimum value from a vector
+ * 
+ * @param ref of the nodes vector
+ * @return the minimum value
+ */
+
 int min_find(vector<Node*>&v){
     int min = 0;
     for(int i = 1; i < v.size(); ++i)
@@ -37,12 +54,28 @@ int min_find(vector<Node*>&v){
     return min;
 }
 
+/**
+ * Return and remove a value from a vector of the nodes
+ * 
+ * @param ref of the nodes vector
+ * @return an object of Node
+ */
+
 Node* back_pop(vector<Node*>&v){
 	Node *no;
 	no = v.back();
 	v.pop_back();
 	return no;
 }
+
+/**
+ * Creating statistics of a vector.
+ * Creating a char with the values of the vector separated by comma
+ * Count the number of values in the vector
+ *
+ * @param ref of the int vector
+ * @return a struct with the number of values and the char
+ */
 
 statistics_data extract_statistics(vector<int> &v){
 
@@ -62,11 +95,17 @@ statistics_data extract_statistics(vector<int> &v){
 	return statistics_data(i, value);
 }
 
+/**
+ * Saving a file with the interval data
+ * If exist a idle time between the before and the current interval 
+ * save this in file
+ * 
+ *
+ * @param time final of the interval, ref of the Node vector that
+ * contains the info about the interval
+ */
+
 void dump_file(int long new_end, vector<Node*>&v){
-	// open csv final file and add new line
-	// start and end 
-	// phase and jobs sep by ,
-	// day 
 
 	char path_save[] = "../data/final.csv";
 
@@ -101,7 +140,6 @@ void dump_file(int long new_end, vector<Node*>&v){
 	statistics_data phases = extract_statistics(phases_vec);
 	statistics_data days = extract_statistics(days_vec);
 
-
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
 	cout << " phases: " << phases.values; //<< phases << " number of phases: " << number_of_phases; 
@@ -124,6 +162,12 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 }
 
+/**
+ * Saving a file with the vector of dict
+ *
+ * @param the file path and the vector
+ */
+
 void dump_dict(const char path[], vector<char*>&v){
 	fstream save_file;
 	save_file.open(path, fstream::out);
@@ -135,11 +179,15 @@ void dump_dict(const char path[], vector<char*>&v){
 	}
 }
 
-
 // void dump_staticstics(vector<Node*>&v){
 
 // }
 
+/**
+ * Creating intervals that not have a next interval
+ *
+ * @param vector of the Nodes
+ */
 void create_intervals_without_next(vector<Node*> nodes){
 	Node* n_current;
 	Node* n_next;

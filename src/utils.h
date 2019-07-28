@@ -19,6 +19,7 @@ static long int last_end = 0;
 struct  statistics_data{
 	int  times;
 	char *values;
+	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
 int idx_find(char *word, vector<char*>&v);

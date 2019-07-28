@@ -45,7 +45,7 @@ Node* back_pop(vector<Node*>&v){
 }
 
 statistics_data extract_statistics(vector<int> &v){
-	statistics_data ret; 
+
 	char *value = (char*) calloc(v.size() * 2 + 1, sizeof(char));
 	char *tmp = (char*) calloc(3, sizeof(char));
 
@@ -59,10 +59,7 @@ statistics_data extract_statistics(vector<int> &v){
 
 	free(tmp);
 
-	ret.times = i;
-	ret.values = value; 
-
-	return ret;
+	return statistics_data(i, value);
 }
 
 void dump_file(int long new_end, vector<Node*>&v){

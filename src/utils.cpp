@@ -44,6 +44,27 @@ Node* back_pop(vector<Node*>&v){
 	return no;
 }
 
+statistics_data extract_statistics(vector<int> &v){
+	statistics_data ret; 
+	char *value = (char*) calloc(v.size() * 2 + 1, sizeof(char));
+	char *tmp = (char*) calloc(3, sizeof(char));
+
+	int i = 0;
+	for (i = 0; i < v.size()-1; ++i){
+		sprintf(tmp, "%d,", v[i]);
+		strcat(value, tmp);
+	}
+	sprintf(tmp, "%d", v[i++]);
+	strcat(value, tmp);
+
+	free(tmp);
+
+	ret.times = i;
+	ret.values = value; 
+
+	return ret;
+}
+
 void dump_file(int long new_end, vector<Node*>&v){
 	// open csv final file and add new line
 	// start and end 
@@ -79,41 +100,16 @@ void dump_file(int long new_end, vector<Node*>&v){
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
 	vector<int> days_vec = remove_duplicates(v, &Node::getDay);
 
-	char *jobs = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *phases = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *days = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *tmp = (char*) calloc(3, sizeof(char));
-
-	int number_of_jobs = 0;
-	for (number_of_jobs = 0; number_of_jobs < jobs_vec.size()-1; ++number_of_jobs){
-		sprintf(tmp, "%d,", jobs_vec[number_of_jobs]);
-		strcat(jobs, tmp);
-	}
-	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
-	strcat(jobs, tmp);
-
-	int number_of_phases = 0;
-	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
-		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
-		strcat(phases, tmp);
-	}
-	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
-	strcat(phases, tmp);
-
-	int number_of_days = 0;
-	for (number_of_days = 0; number_of_days < days_vec.size()-1; ++number_of_days){
-		sprintf(tmp, "%d,", days_vec[number_of_days]);
-		strcat(days, tmp);
-	}
-	sprintf(tmp, "%d", days_vec[number_of_days++]);
-	strcat(days, tmp);
+	statistics_data jobs = extract_statistics(jobs_vec);
+	statistics_data phases = extract_statistics(phases_vec);
+	statistics_data days = extract_statistics(days_vec);
 
 
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
-	cout << " phases: " << phases; //<< phases << " number of phases: " << number_of_phases; 
-	cout << " jobs: " << jobs;//<< " number of jobs: " << number_of_jobs;
-	cout << " days: " << days;
+	cout << " phases: " << phases.values; //<< phases << " number of phases: " << number_of_phases; 
+	cout << " jobs: " << jobs.values;//<< " number of jobs: " << number_of_jobs;
+	cout << " days: " << days.values;
 	cout << endl << endl;
 	#endif 
 
@@ -121,13 +117,13 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 	save_file.open(path_save, fstream::app);
 
-	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs <<";"<< days <<";"<< number_of_days << endl;
+	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 
 	save_file.close();
 
-	free(jobs);
-	free(phases);
-	free(tmp);
+	free(jobs.values);
+	free(phases.values);
+	free(days.values);
 
 }
 
@@ -141,6 +137,11 @@ void dump_dict(const char path[], vector<char*>&v){
 		save_file << i << ";" << v[i] << endl;
 	}
 }
+
+
+// void dump_staticstics(vector<Node*>&v){
+
+// }
 
 void create_intervals_without_next(vector<Node*> nodes){
 	Node* n_current;

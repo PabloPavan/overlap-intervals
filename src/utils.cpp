@@ -50,7 +50,7 @@ void dump_file(int long new_end, vector<Node*>&v){
 	// phase and jobs sep by ,
 	// day 
 
-	char path_save[] = "../data/final.csv";
+	char path_save[] = "../data/final_3_1_2012.csv";
 
 	if(!first_write){
 		first_write = true;

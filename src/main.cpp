@@ -5,13 +5,13 @@
 #define HEAP_SIZE 30000
 
 int main(int argc, char const *argv[]){
-	//long int epoch_time = 1325376000;
-	long int epoch_time = 0;
+	long int epoch_time = 1325376000;
+	//long int epoch_time = 0;
 
 	Heap *h;
 	h = new Heap(HEAP_SIZE);
 
-	char path_save[] = "../data/final.csv";
+	char path_save[] = "../data/final_3_1_2012.csv";
 	fstream save_file;
 	save_file.open(path_save, fstream::out);
 
@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]){
 
 	save_file.close();
 
-	FILE *f = fopen("../data/intervals.small.csv", "r");
+	FILE *f = fopen("../data/final_3_1_2012.csv", "r");
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 

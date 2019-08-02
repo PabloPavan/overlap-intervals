@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]){
 
 	save_file.close();
 
-	FILE *f = fopen("../data/final_3_1_2012.csv", "r");
+	FILE *f = fopen("../data/intervals_3_1_2012.csv", "r");
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 

@@ -49,7 +49,7 @@ Heap::Heap(unsigned int max) { /* O(1) */
 }
 
 Heap::~Heap() { /* O(1) */
-    delete this->heap;
+    delete[] this->heap;
 }
 
 /* Extract-min*/

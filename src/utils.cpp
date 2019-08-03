@@ -1,5 +1,65 @@
 #include "utils.h"
 
+
+/**
+ * Read the input file
+ * 
+ * @param heap pointer, ref vector filename, and ref vector info
+ */
+
+void read_file(Heap *h, vector<char*>&filename_v, vector<char*>&info_v){
+	
+	long int epoch_time = 1325376000;
+	FILE *f = fopen("../data/intervals_3_1_2012.csv", "r");
+	char line[BUFFER_SIZE];
+	char delim[] = ";";
+	Node *no;
+
+	char *header = fgets(line, sizeof(line), f); // skip header
+
+	while(fgets(line, sizeof(line), f)){
+		char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
+		long int start_time;
+		long int end_time;
+		double start;
+		double end;
+		char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
+
+		char *token = strtok(line,delim); //filename
+		strcpy(filename, token);
+		filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
+		token = strtok(NULL,delim); //start_time
+		start_time = atoi(token);
+		token = strtok(NULL,delim); //end_time
+		end_time = atoi(token);
+		token = strtok(NULL,delim); //start
+		start = atof(token);
+		token = strtok(NULL,delim); //end
+		end = atof(token);
+		token = strtok(NULL,delim); //info
+		strcpy(info, token);
+		info[strlen(info)-1] = '\0';
+		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
+		// convert the start_time, end_time, start and end to micro
+		start  = start * 1; 
+		start_time = start_time - epoch_time; 
+		start_time = start_time * 1;
+		long int starti = (long int) start;
+		long int start_ = start_time + starti;
+		end = end * 1;
+		long int endi = (long int) end;
+		long int end_ = start_ + (endi - starti);
+
+		#ifdef DUMP
+		cout << "[" << start_ << ", " << end_ << "]" << endl;
+		#endif
+
+		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_);
+		h->insert(no);
+	}
+	fclose(f);
+}
+
 /**
  * Creating a dict using vector
  * if word exists in vector return the index
@@ -110,6 +170,14 @@ void dump_file(int long new_end, vector<Node*>&v){
 	char path_save[] = "../data/final_3_1_2012.csv";
 
 	if(!first_write){
+
+		fstream save_file;
+		save_file.open(path_save, fstream::out);
+
+		save_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl; 
+
+		save_file.close();
+
 		first_write = true;
 		last_end = new_end;
 	}

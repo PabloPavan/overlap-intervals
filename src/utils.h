@@ -10,18 +10,20 @@
 #include <set>
 #include <stack>
 
+#define BUFFER_SIZE 4096
+
 using namespace std;
 
 static bool first_write = false;
 static long int last_end = 0;
 
-
-struct  statistics_data{
+struct statistics_data{
 	int  times;
 	char *values;
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
+void read_file(Heap *h, vector<char*>&filename_v, vector<char*>&info_v);
 int idx_find(char *word, vector<char*>&v);
 int min_find(vector<Node*>&v);
 Node* back_pop(vector<Node*>&v);

@@ -1,5 +1,13 @@
 #include "utils.h"
 
+/**
+ * Creating a dict using vector
+ * if word exists in vector return the index
+ * if word doesn't exist create a new value in vector
+ * 
+ * @param word that needs be find, ref for the vector
+ * @return the index of the vector that contains the word
+ */
 
 int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
@@ -12,11 +20,13 @@ int idx_find(char *word, vector<char*>&v){
 
 }
 
-/* remove values duplicates 
-	recive vector pointer of nodes and name of funtion 
-	return values vector
-
+/**
+ * Removing values duplicates using a set
+ * 
+ * @param ref of the nodes vector and functions' ref of class Node
+ * @return a vector with with unique values
  */
+
 vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
  	set<int> s;
@@ -29,6 +39,13 @@ vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)(
  	return vec;
 }
 
+/**
+ * Finding a minimum value from a vector
+ * 
+ * @param ref of the nodes vector
+ * @return the minimum value
+ */
+
 int min_find(vector<Node*>&v){
     int min = 0;
     for(int i = 1; i < v.size(); ++i)
@@ -37,6 +54,13 @@ int min_find(vector<Node*>&v){
     return min;
 }
 
+/**
+ * Return and remove a value from a vector of the nodes
+ * 
+ * @param ref of the nodes vector
+ * @return an object of Node
+ */
+
 Node* back_pop(vector<Node*>&v){
 	Node *no;
 	no = v.back();
@@ -44,11 +68,44 @@ Node* back_pop(vector<Node*>&v){
 	return no;
 }
 
+/**
+ * Creating statistics of a vector.
+ * Creating a char with the values of the vector separated by comma
+ * Count the number of values in the vector
+ *
+ * @param ref of the int vector
+ * @return a struct with the number of values and the char
+ */
+
+statistics_data extract_statistics(vector<int> &v){
+
+	char *value = (char*) calloc(v.size() * 2 + 1, sizeof(char));
+	char *tmp = (char*) calloc(3, sizeof(char));
+
+	int i = 0;
+	for (i = 0; i < v.size()-1; ++i){
+		sprintf(tmp, "%d,", v[i]);
+		strcat(value, tmp);
+	}
+	sprintf(tmp, "%d", v[i++]);
+	strcat(value, tmp);
+
+	free(tmp);
+
+	return statistics_data(i, value);
+}
+
+/**
+ * Saving a file with the interval data
+ * If exist a idle time between the before and the current interval 
+ * save this in file
+ * 
+ *
+ * @param time final of the interval, ref of the Node vector that
+ * contains the info about the interval
+ */
+
 void dump_file(int long new_end, vector<Node*>&v){
-	// open csv final file and add new line
-	// start and end 
-	// phase and jobs sep by ,
-	// day 
 
 	char path_save[] = "../data/final_3_1_2012.csv";
 
@@ -79,41 +136,15 @@ void dump_file(int long new_end, vector<Node*>&v){
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
 	vector<int> days_vec = remove_duplicates(v, &Node::getDay);
 
-	char *jobs = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *phases = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *days = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *tmp = (char*) calloc(3, sizeof(char));
-
-	int number_of_jobs = 0;
-	for (number_of_jobs = 0; number_of_jobs < jobs_vec.size()-1; ++number_of_jobs){
-		sprintf(tmp, "%d,", jobs_vec[number_of_jobs]);
-		strcat(jobs, tmp);
-	}
-	sprintf(tmp, "%d", jobs_vec[number_of_jobs++]);
-	strcat(jobs, tmp);
-
-	int number_of_phases = 0;
-	for (number_of_phases = 0; number_of_phases < phases_vec.size()-1; ++number_of_phases){
-		sprintf(tmp, "%d,", phases_vec[number_of_phases]);
-		strcat(phases, tmp);
-	}
-	sprintf(tmp, "%d", phases_vec[number_of_phases++]);
-	strcat(phases, tmp);
-
-	int number_of_days = 0;
-	for (number_of_days = 0; number_of_days < days_vec.size()-1; ++number_of_days){
-		sprintf(tmp, "%d,", days_vec[number_of_days]);
-		strcat(days, tmp);
-	}
-	sprintf(tmp, "%d", days_vec[number_of_days++]);
-	strcat(days, tmp);
-
+	statistics_data jobs = extract_statistics(jobs_vec);
+	statistics_data phases = extract_statistics(phases_vec);
+	statistics_data days = extract_statistics(days_vec);
 
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
-	cout << " phases: " << phases; //<< phases << " number of phases: " << number_of_phases; 
-	cout << " jobs: " << jobs;//<< " number of jobs: " << number_of_jobs;
-	cout << " days: " << days;
+	cout << " phases: " << phases.values; //<< phases << " number of phases: " << number_of_phases; 
+	cout << " jobs: " << jobs.values;//<< " number of jobs: " << number_of_jobs;
+	cout << " days: " << days.values;
 	cout << endl << endl;
 	#endif 
 
@@ -121,15 +152,21 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 	save_file.open(path_save, fstream::app);
 
-	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases <<";"<< number_of_phases <<";"<< jobs <<";"<< number_of_jobs <<";"<< days <<";"<< number_of_days << endl;
+	save_file <<  v[0]->getStart() <<";"<< new_end <<";"<< new_end-v[0]->getStart() <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 
 	save_file.close();
 
-	free(jobs);
-	free(phases);
-	free(tmp);
+	free(jobs.values);
+	free(phases.values);
+	free(days.values);
 
 }
+
+/**
+ * Saving a file with the vector of dict
+ *
+ * @param the file path and the vector
+ */
 
 void dump_dict(const char path[], vector<char*>&v){
 	fstream save_file;
@@ -142,6 +179,15 @@ void dump_dict(const char path[], vector<char*>&v){
 	}
 }
 
+// void dump_staticstics(vector<Node*>&v){
+
+// }
+
+/**
+ * Creating intervals that not have a next interval
+ *
+ * @param vector of the Nodes
+ */
 void create_intervals_without_next(vector<Node*> nodes){
 	Node* n_current;
 	Node* n_next;

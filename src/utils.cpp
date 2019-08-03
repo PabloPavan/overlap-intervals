@@ -8,7 +8,7 @@
  */
 
 void read_file(Heap *h, vector<char*>&filename_v, vector<char*>&info_v){
-	
+
 	long int epoch_time = 1325376000;
 	FILE *f = fopen("../data/intervals_3_1_2012.csv", "r");
 	char line[BUFFER_SIZE];
@@ -41,12 +41,12 @@ void read_file(Heap *h, vector<char*>&filename_v, vector<char*>&info_v){
 		info[strlen(info)-1] = '\0';
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1; 
+		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1;
+		start_time = start_time * 1000000;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1;
+		end = end * 1000000;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 

@@ -22,6 +22,12 @@ library(dplyr)
 #+RESULTS:
 #+begin_example
 
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggplot2’:
+
+    ggsave
+
 Attaching package: ‘dplyr’
 
 The following objects are masked from ‘package:stats’:
@@ -312,22 +318,21 @@ str(df)
 
  #+RESULTS:
  #+begin_example
-
- 'data.frame':	878 obs. of  9 variables:
-  $ start   : int  220152 220152 220153 220165 223076 223076 223100 226930 226930 226955 ...
-  $ end     : int  220152 220153 220165 223076 223076 223100 226930 226930 226955 230406 ...
-  $ duration: int  0 1 12 2911 0 24 3830 0 25 3451 ...
-  $ phases  : Factor w/ 37 levels "-1","0","0,1",..: 30 1 36 1 28 37 1 28 37 1 ...
-  $ nphases : int  1 0 1 0 3 1 0 3 1 0 ...
-  $ jobs    : Factor w/ 24 levels "-1","0","0,2",..: 9 1 9 1 9 9 1 9 9 1 ...
-  $ njobs   : int  1 0 1 0 1 1 0 1 1 0 ...
-  $ days    : int  1 NA 1 NA 1 1 NA 1 1 NA ...
-  $ ndays   : int  1 NA 1 NA 1 1 NA 1 1 NA ...
- #+end_example
+ 'data.frame':	40518 obs. of  9 variables:
+  $ start   : num  2.20e+11 2.20e+11 2.20e+11 2.20e+11 2.23e+11 ...
+  $ end     : num  2.20e+11 2.20e+11 2.20e+11 2.23e+11 2.23e+11 ...
+  $ duration: num  3.99e+05 4.32e+05 1.19e+07 2.91e+09 1.10e+03 ...
+  $ phases  : Factor w/ 49 levels "-1","0","0,1",..: 39 1 48 1 44 1 29 1 49 1 ...
+  $ nphases : int  1 0 1 0 1 0 1 0 1 0 ...
+  $ jobs    : Factor w/ 23 levels "-1","0","0,2",..: 8 1 8 1 8 1 8 1 8 1 ...
+  $ njobs   : int  1 0 1 0 1 0 1 0 1 0 ...
+  $ days    : int  1 NA 1 NA 1 NA 1 NA 1 NA ...
+  $ ndays   : int  1 NA 1 NA 1 NA 1 NA 1 NA ...
+#+end_example
 
 *** Plot intervals
 
- #+begin_src R :results output graphics :file final_3_1_2012.png :exports both :width 1000 :height 250 :session *R* 
+ #+begin_src R :results output graphics :file final_3_1_2012.png :exports both :width 1000 :height 300 :session *R* 
  pal <- c("white","#d5c76d", "#d5936d", "#6dafd5", "#d56d7b","#6dd5c7", "#936dd5",
 "#d56daf", "#db818d", "#959fe0","#9E0142",
 "#D53E4F","#F46D43", "#FDAE61", "#FEE08B", "#FFFFBF", "#E6F598",
@@ -366,7 +371,7 @@ ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) +
 
 *** Plot intevals zoom
 
- #+begin_src R :results output graphics :file final_3_1_2012_zoom.png :exports both :width 1000 :height 250 :session *R* 
+ #+begin_src R :results output graphics :file final_3_1_2012_zoom.png :exports both :width 1000 :height 300 :session *R* 
  pal <- c("white","#d5c76d", "#d5936d", "#6dafd5", "#d56d7b","#6dd5c7", "#936dd5",
 "#d56daf", "#db818d", "#959fe0","#9E0142",
 "#D53E4F","#F46D43", "#FDAE61", "#FEE08B", "#FFFFBF", "#E6F598",
@@ -378,8 +383,8 @@ ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) +
 "#CCCCC4")
 
 
-df %>% filter(end < 259000) %>%
-ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) + 
+#df %>% filter(end < 259000) %>%
+ggplot(df, aes(x = start, y = start+duration, fill = as.factor(phases))) + 
     geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = 1)) +
    # geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5) +
     #geom_vline(xintercept = max(df$end), linetype = 'dashed') +
@@ -388,7 +393,7 @@ ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) +
     ) +
     xlab("Tempo de execução (ms)") +
     ylim(0, 1) +
-    xlim(252500, 259000) +
+    xlim(252500000000, 259000000000) +
     #guides(fill = guide_legend(ncol = 3)) +
     theme_bw() +
     theme(
@@ -410,14 +415,18 @@ unique(df$phases)
 #+end_src
 
 #+RESULTS:
-:  [1] 2           -1          7           1,4,8       8           1,4        
-:  [7] 0,1,2,4     2,4         0,1,2       0           0,2         1,2        
-: [13] 1,2,5       1,2,3,5     0,1,2,3,5   0,1         1           0,3,4      
-: [19] 3           1,5         0,1,5       1,4,5       1,3,5       0,3        
-: [25] 0,1,3,4,6   0,1,3       0,3,6       0,3,5,6     0,1,3,6     0,1,3,5,6  
-: [31] 0,1,3,4,5,6 0,1,3,4     0,3,4,5,6   0,3,4,6     4           3,4,6      
-: [37] 3,4        
-: 37 Levels: -1 0 0,1 0,1,2 0,1,2,3,5 0,1,2,4 0,1,3 0,1,3,4 ... 8
+#+begin_example
+ [1] 2           -1          7           4           1           8          
+ [7] 1,2         1,2,4       0,1,2       0           0,2         1,2,5      
+[13] 1,2,3,5     0,1,2,3,5   0,1,2,3,4,5 0,1,2,3,5,8 1,5         0,1,5      
+[19] 1,4,5       1,5,8       5           1,3,5       3           1,3        
+[25] 3,5         0,3         0,1,3       0,1,3,4     0,3,6       0,1,3,6    
+[31] 6           0,6         3,6         0,5         0,5,6       0,3,5      
+[37] 0,1,3,5     0,1,3,5,6   0,1         0,1,6       0,3,5,6     0,3,4      
+[43] 0,3,4,6     0,1,3,4,6   0,4         3,4         0,1,3,4,5   4,6        
+[49] 0,4,6      
+49 Levels: -1 0 0,1 0,1,2 0,1,2,3,4,5 0,1,2,3,5 0,1,2,3,5,8 0,1,3 ... 8
+#+end_example
 
 *** how many unique jobs
 
@@ -426,9 +435,10 @@ unique(df$jobs)
 #+end_src
 
 #+RESULTS:
-:  [1] 11    -1    9     2,9   2     2,10  2,6   2,3   2,5   2,11  6     5    
-: [13] 5,9   0,2   0     7     1     1,8   1,4,8 1,4   4     10    4,7   8    
-: 24 Levels: -1 0 0,2 1 1,4 1,4,8 1,8 10 11 2 2,10 2,11 2,3 2,5 2,6 2,9 4 ... 9
+:  [1] 11     -1     9      2,9    2      2,9,11 2,10   2,6    2,3    2,5   
+: [11] 2,11   2,5,9  0,2    0      7      1      1,8    1,4,8  4,8    4     
+: [21] 10     4,7    8     
+: 23 Levels: -1 0 0,2 1 1,4,8 1,8 10 11 2 2,10 2,11 2,3 2,5 2,5,9 2,6 ... 9
 
 
 *** Plot number of jobs during the day
@@ -467,7 +477,7 @@ df$njobs %>% summary()
 
 #+RESULTS:
 :    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-:  0.0000  0.0000  1.0000  0.7494  1.0000  3.0000
+:  0.0000  1.0000  1.0000  0.9166  1.0000  3.0000
 
 *** Summary of number of phases
 
@@ -477,7 +487,7 @@ df$nphases %>% summary()
 
 #+RESULTS:
 :    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-:   0.000   0.000   1.000   1.036   1.000   6.000
+:   0.000   1.000   1.000   1.188   1.000   6.000
 
 *** Summary of duration
 
@@ -486,8 +496,8 @@ df$duration %>%  summary()
 #+end_src
 
 #+RESULTS:
-:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-:     0.0     0.0     1.0   116.3     1.0  6916.0
+:      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+: 0.000e+00 1.690e+02 8.110e+02 1.953e+06 6.401e+03 7.208e+09
  
 *** Histogram of duration
 

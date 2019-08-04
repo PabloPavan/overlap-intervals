@@ -7,13 +7,31 @@
  * @param heap pointer, ref vector filename, and ref vector info
  */
 
-void read_file(Heap *h, vector<char*>&filename_v, vector<char*>&info_v){
+void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
 	long int epoch_time = 1325376000;
-	FILE *f = fopen("../data/intervals_3_1_2012.csv", "r");
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	Node *no;
+
+	char* l =(char *) calloc(BUFFER_SIZE, sizeof(char));
+    vector<char*> path_v;
+    ifstream file_path;
+    
+    file_path.open("../data/path.dat");
+    if (!file_path) {
+        cout << "Unable to open file";
+        exit(1);
+    }
+    
+    while (file_path >> l) {
+        l = (char *) realloc(l, (strlen(l) + 1) * sizeof(char));
+        path_v.push_back(l);
+    }
+
+    file_path.close();
+
+	FILE *f = fopen(path_v[idx], "r");
 
 	char *header = fgets(line, sizeof(line), f); // skip header
 

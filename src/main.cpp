@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]){
 	vector<char*> filename_v;
 	vector<char*> info_v;
 
-	read_file(h, filename_v, info_v);
+	read_file(h, 0, filename_v, info_v);
 
 	#ifdef DUMP
 		cout << endl << "heap size: " << h->getSize() << endl << endl;

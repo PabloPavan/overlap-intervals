@@ -1,10 +1,9 @@
 #include "utils.h"
 
-
 /**
  * Read the input file
  * 
- * @param heap pointer, ref vector filename, and ref vector info
+ * @param heap pointer, index of the vector that contains the input files' path, ref vector filename, and ref vector info
  */
 
 void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){

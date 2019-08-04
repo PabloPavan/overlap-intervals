@@ -341,13 +341,13 @@ str(df)
 "#CCCCC4")
 
 
-df %>%
+df %>% filter(phases != "-1") %>%
 ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) + 
     geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = 1)) +
-    geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5) +
-    geom_vline(xintercept = max(df$end), linetype = 'dashed') +
-    scale_fill_manual(
-       "I/O phases", values = pal
+    geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5, color= "black") +
+    geom_vline(xintercept = max(df$end), linetype = 'dashed', size = 0.5, color= "black") +
+    scale_fill_discrete(
+       "I/O phases"
     ) +
     xlab("Time (microseconds)") +
     ylim(0, 1) +
@@ -380,17 +380,17 @@ ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) +
 "#CCCCC4")
 
 
-#df %>% filter(end < 259000) %>%
-ggplot(df, aes(x = start, y = start+duration, fill = as.factor(phases))) + 
+df %>% filter(phases != "-1") %>%
+ggplot( aes(x = start, y = start+duration, fill = as.factor(phases))) + 
     geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = 1)) +
-   # geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5) +
+    #geom_vline(xintercept = min(df$start), linetype = 'dashed', size = 0.5) +
     #geom_vline(xintercept = max(df$end), linetype = 'dashed') +
-    scale_fill_manual(
-       "I/O phases", values = pal
+    scale_fill_discrete(
+       "I/O phases"
     ) +
     xlab("Time (microseconds)") +
     ylim(0, 1) +
-    xlim(252500000000, 259000000000) +
+    xlim(249000000000, 259000000000) +
     #guides(fill = guide_legend(ncol = 3)) +
     theme_bw() +
     theme(
@@ -441,8 +441,10 @@ unique(df$jobs)
 *** Plot number of jobs during the day
 
 #+begin_src R :results output graphics :file final_3_1_2012_njobs.png  :exports both :width 1000 :height 250 :session *R* 
-plot_jobs <- ggplot(df, aes(x=start, y=njobs)) +
-    geom_line(size=0.2) +
+plot_jobs <- ggplot(df, aes( y=njobs)) +
+ geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = njobs), alpha=1, color="black", size=0.1 ) +
+     #geom_ribbon(aes(ymin=0, ymax=njobs), stat = "identity", alpha = 0.3) +
+     #geom_line() +
      geom_vline(xintercept = min(df$start), linetype = 'solid') +
      geom_vline(xintercept = max(df$end), linetype = 'solid') 
  
@@ -455,8 +457,10 @@ plot_jobs
 *** Plot number of phases during the day
 
 #+begin_src R :results output graphics :file final_3_1_2012_nphases.png :exports both :width 1000 :height 250 :session *R* 
-plot_jobs <- ggplot(df, aes(x=start, y=nphases)) +
-    geom_line(size=0.2) +
+plot_jobs <- ggplot(df, aes( y=nphases)) +
+ geom_rect(aes(xmin = start, xmax = start + duration, ymin = 0, ymax = nphases), alpha=1, color="black", size=0.1 ) +
+   #  geom_ribbon(aes(ymin=0, ymax=nphases), stat = "identity", alpha = 0.3) +
+    # geom_line() +
      geom_vline(xintercept = min(df$start), linetype = 'solid') +
      geom_vline(xintercept = max(df$end), linetype = 'solid') 
  
@@ -470,31 +474,58 @@ plot_jobs
 
 #+begin_src R :results output :session *R* :exports both
 df$njobs %>% summary()
+
+df %>% filter(duration != 0.0,  phases!="-1" ) %>% select(njobs) %>% summary()
 #+end_src
 
 #+RESULTS:
 :    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 :  0.0000  1.0000  1.0000  0.9166  1.0000  3.0000
+:      njobs      
+:  Min.   :1.000  
+:  1st Qu.:1.000  
+:  Median :1.000  
+:  Mean   :1.062  
+:  3rd Qu.:1.000  
+:  Max.   :3.000
 
 *** Summary of number of phases
 
 #+begin_src R :results output :session *R* :exports both
 df$nphases %>% summary()
+
+df %>% filter(duration != 0.0,  phases!="-1" ) %>% select(nphases) %>% summary()
 #+end_src
 
 #+RESULTS:
 :    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 :   0.000   1.000   1.000   1.188   1.000   6.000
+:     nphases     
+:  Min.   :1.000  
+:  1st Qu.:1.000  
+:  Median :1.000  
+:  Mean   :1.376  
+:  3rd Qu.:1.000  
+:  Max.   :6.000
 
 *** Summary of duration
 
 #+begin_src R :results output :session *R* :exports both
 df$duration %>%  summary()
+
+df %>% filter(duration != 0.0,  phases!="-1" ) %>% select(duration) %>% summary()
 #+end_src
 
 #+RESULTS:
 :      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 : 0.000e+00 1.690e+02 8.110e+02 1.953e+06 6.401e+03 7.208e+09
+:     duration        
+:  Min.   :1.000e+00  
+:  1st Qu.:1.330e+02  
+:  Median :6.350e+02  
+:  Mean   :1.305e+06  
+:  3rd Qu.:3.387e+03  
+:  Max.   :7.208e+09
  
 *** Histogram of duration
 
@@ -505,3 +536,10 @@ hist(log(df$duration))
 #+RESULTS:
 [[file:final_3_1_2012_hist_duration.png]]
 
+#+begin_src R :results output graphics :file final_3_1_2012_hist_duration_filter.png :exports both :width 600 :height 400 :session *R* 
+df %>% filter(duration != 0.0,  phases!="-1" ) %>% select(duration) -> tmp
+hist(log(tmp$duration))
+#+end_src
+
+#+RESULTS:
+[[file:final_3_1_2012_hist_duration_filter.png]]

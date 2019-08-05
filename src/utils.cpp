@@ -8,7 +8,8 @@
 
 void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
-	long int epoch_time = 1325376000;
+	//long int epoch_time = 1325376000;
+	long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	Node *no;
@@ -58,12 +59,12 @@ void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v)
 		info[strlen(info)-1] = '\0';
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1000000; 
+		start  = start * 1; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1000000;
+		start_time = start_time * 1;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1000000;
+		end = end * 1;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 
@@ -184,7 +185,7 @@ statistics_data extract_statistics(vector<int> &v){
 
 void dump_file(int long new_end, vector<Node*>&v){
 
-	char path_save[] = "../data/final_3_1_2012.csv";
+	char path_save[] = "../data/final.csv";
 
 	if(!first_write){
 
@@ -319,6 +320,7 @@ void create_intervals_without_next(vector<Node*> nodes){
 				int idx_min_nexts = min_find(nexts);
 
 				if(nodes[idx_min_nodes]->getStart() < nexts[idx_min_nexts]->getStart()){
+					cout << "entrou  " << nodes[idx_min_nodes]->getStart() << " " << nexts[idx_min_nexts]->getStart() << endl;
 					vector<Node*> tmp;
 					for (int i = 0; i < nexts.size(); ++i)
 						tmp.push_back(new Node(nexts[i]->getPhase(), nexts[i]->getJob(), nexts[i]->getDay(), nodes[idx_min_nodes]->getStart(), nexts[i]->getEnd()));
@@ -330,6 +332,8 @@ void create_intervals_without_next(vector<Node*> nodes){
 					aux_heap->insert(no);
 			 	}
 			}else{
+
+				cout << "esle 1 interno" << endl;
 
 				vector<Node*> tmp;
 				for (int i = 0; i < nodes.size(); ++i)

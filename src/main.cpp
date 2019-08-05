@@ -64,7 +64,8 @@ int main(int argc, char const *argv[]){
 				int idx_min_nexts = min_find(nexts);
 
 				if(nexts[idx_min_nexts]->getStart() < nodes[idx_min_nodes]->getEnd()){
-					dump_file(nexts[idx_min_nexts]->getStart(), nodes);	 
+					dump_file(nexts[idx_min_nexts]->getStart(), nodes);
+					cout << "aqui" << endl;
 			
 					if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
 				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
@@ -82,6 +83,7 @@ int main(int argc, char const *argv[]){
 				 	 	h->insert(no);
 				 	 }	
 				}else{
+					cout << "else 1" << endl;
 					for (int i = 0; i < nexts.size(); ++i)
 						h->insert(nexts[i]);
 
@@ -92,6 +94,7 @@ int main(int argc, char const *argv[]){
 					}
 				} 				
 	 		}else{
+	 			cout << "else 2" << endl;
 	 			if(nodes.size() > 1){		
 					create_intervals_without_next(nodes);
 				}else{

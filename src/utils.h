@@ -2,7 +2,7 @@
 #define	UTILS_H
 
 #include "node.h"
-#include "heap.h"
+#include "heap_min.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -23,7 +23,7 @@ struct statistics_data{
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
-void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v);
+void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&info_v);
 int idx_find(char *word, vector<char*>&v);
 int min_find(vector<Node*>&v);
 Node* back_pop(vector<Node*>&v);

@@ -5,8 +5,8 @@
 
 int main(int argc, char const *argv[]){
 
-	Heap *h;
-	h = new Heap(HEAP_SIZE);
+	Heap_min *h;
+	h = new Heap_min(HEAP_SIZE);
 
 	vector<char*> filename_v;
 	vector<char*> info_v;

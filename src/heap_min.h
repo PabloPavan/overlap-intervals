@@ -1,5 +1,5 @@
-#ifndef HEAP_H
-#define	HEAP_H
+#ifndef HEAP_MIN_H
+#define	HEAP_MIN_H
 
 #include "node.h"
 #include <iostream>
@@ -8,7 +8,7 @@ using namespace std;
 
 /* Min-Heap */
 
-class Heap {
+class Heap_min {
 private:
     /* Vector of pointers to Node */
     class Node **heap;
@@ -20,8 +20,8 @@ private:
     unsigned int right(unsigned int parent);
     void swap(unsigned int i, unsigned int j);
 public:
-    Heap(unsigned int max);
-    ~Heap();
+    Heap_min(unsigned int max);
+    ~Heap_min();
     /* Extract-min*/
     Node* extract();
     Node* top();

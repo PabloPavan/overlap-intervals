@@ -6,7 +6,7 @@
  * @param heap pointer, index of the vector that contains the input files' path, ref vector filename, and ref vector info
  */
 
-void read_file(Heap *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
+void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
 	//long int epoch_time = 1325376000;
 	long int epoch_time = 0;
@@ -279,7 +279,7 @@ void create_intervals_without_next(vector<Node*> nodes){
 	Node* n_next;
 	Node* no;
 
-	Heap *aux_heap = new Heap(nodes.size()+1);
+	Heap_min *aux_heap = new Heap_min(nodes.size()+1);
 
 	for (int i = 0; i < nodes.size(); ++i)
 		aux_heap->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));

@@ -88,7 +88,7 @@ int main(int argc, char const *argv[]){
 				 		}
 				 	}else{
 				 	 	if (nodes.size() > 1){
-				 			cout << "if novo 3" << endl;
+				 			cout << "if novo 4" << endl;
 				 			create_intervals_without_next(h, nodes);
 				 		} else{
 							no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	

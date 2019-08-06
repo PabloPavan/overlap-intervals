@@ -71,18 +71,31 @@ int main(int argc, char const *argv[]){
 					if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
 				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
 				 	 	h->insert(no);	
+				 	 	cout << "novo 1 " << nexts[idx_min_nexts]->getStart() << " " << nodes[idx_min_nodes]->getEnd()  << endl;
 				 	}else{
 				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nexts[idx_min_nexts]->getEnd());
-				 	 	h->insert(no);	
+				 	 	h->insert(no);
+				 	 	cout << "novo 2 " << nexts[idx_min_nexts]->getStart() << " " << nexts[idx_min_nexts]->getEnd() << endl;	
 				 	} 	 
 				 	if(nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-				 	 	no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
-				 	 	h->insert(no);
-
-				 	 }else{
-				 	 	no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
-				 	 	h->insert(no);
-				 	 }	
+				 		if (nexts.size() > 1){
+				 			cout << "if novo 3" << endl;
+				 			create_intervals_without_next(h, nexts);
+				 		} else{
+							no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
+				 	 		h->insert(no);
+				 	 		cout << "novo 3 " <<  nodes[idx_min_nodes]->getEnd() << " " << nexts[idx_min_nexts]->getEnd() << endl;
+				 		}
+				 	}else{
+				 	 	if (nodes.size() > 1){
+				 			cout << "if novo 3" << endl;
+				 			create_intervals_without_next(h, nodes);
+				 		} else{
+							no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
+				 	 		h->insert(no);
+				 	 		cout << "novo 4 " <<  nexts[idx_min_nexts]->getEnd() << " " << nodes[idx_min_nodes]->getEnd() << endl;	
+				 	 	}
+				 	}	
 				}else{
 					cout << "else 1" << endl;
 					for (int i = 0; i < nexts.size(); ++i)

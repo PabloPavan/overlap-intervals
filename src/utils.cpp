@@ -274,12 +274,11 @@ void dump_dict(const char path[], vector<char*>&v){
  *
  * @param vector of the Nodes
  */
-void create_intervals_without_next(vector<Node*> nodes){
+void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 	Node* n_current;
 	Node* n_next;
-	Node* no;
 
-	Heap_min *aux_heap = new Heap_min(nodes.size()+1);
+	Heap_max *aux_heap = new Heap_max(nodes.size()+1);
 
 	for (int i = 0; i < nodes.size(); ++i)
 		aux_heap->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
@@ -319,41 +318,32 @@ void create_intervals_without_next(vector<Node*> nodes){
 				int idx_min_nodes = min_find(nodes);
 				int idx_min_nexts = min_find(nexts);
 
-				if(nodes[idx_min_nodes]->getStart() < nexts[idx_min_nexts]->getStart()){
+				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
 					cout << "entrou  " << nodes[idx_min_nodes]->getStart() << " " << nexts[idx_min_nexts]->getStart() << endl;
-					vector<Node*> tmp;
-					for (int i = 0; i < nodes.size(); ++i)
-						tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[idx_min_nodes]->getStart(), nodes[i]->getEnd()));
-				
-					stack_dump.push(tmp);
-					stack_end.push(nexts[idx_min_nexts]->getStart());
-
-					no  = new Node(nexts,nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getStart());
-					aux_heap->insert(no);
+					
+					for (int i = 0; i < nodes.size(); ++i){
+						heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
+					}
+						
+					cout << "new " << " start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd() << endl;
+					aux_heap->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
 			 	}
 			}else{
 
 				cout << "esle 1 interno" << endl;
 
-				vector<Node*> tmp;
 				for (int i = 0; i < nodes.size(); ++i)
-					tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
-
-				stack_dump.push(tmp);
-				stack_end.push(tmp[0]->getEnd());
+					heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
 			}
 		}else{
-			nodes.push_back(n_current);
-			stack_dump.push(nodes);
-			stack_end.push(nodes[0]->getEnd());
+
+			cout << "aqui o que eu faco" << endl;
+			cout << " start " << n_current->getStart() << " end " << n_current->getEnd() << endl;
+
+			heap_min->insert(new Node(n_current->getPhase(), n_current->getJob(), n_current->getDay(), n_current->getEnd(), n_current->getStart()));
+
 
 		}
 	}
-
-	while (!stack_dump.empty()) { 
-		dump_file(stack_end.top(),stack_dump.top());
-		stack_end.pop();
-		stack_dump.pop(); 
-	} 	
-
+ 	
 }

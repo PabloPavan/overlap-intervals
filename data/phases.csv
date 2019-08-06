@@ -1,8 +1,10 @@
 id;name
 0;posix read unique file
 1;posix write consecutive sequential unique file
-2;posix write sequential unique file
-3;posix read sequential unique file
-4;posix read file
-5;posix read 
-6;posix  file
+2;posix read shared file
+3;posix write sequential unique file
+4;posix write unique file
+5;posix read consecutive sequential unique file
+6;posix read sequential unique file
+7;mpi-io read independent shared file
+8;mpi-io write shared file

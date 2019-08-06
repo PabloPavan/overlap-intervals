@@ -8,8 +8,8 @@
 
 void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
-	//long int epoch_time = 1325376000;
-	long int epoch_time = 0;
+	long int epoch_time = 1325376000;
+	//long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	Node *no;
@@ -59,12 +59,12 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
 		info[strlen(info)-1] = '\0';
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1; 
+		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1;
+		start_time = start_time * 1000000;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1;
+		end = end * 1000000;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 
@@ -185,7 +185,16 @@ statistics_data extract_statistics(vector<int> &v){
 
 void dump_file(int long new_end, vector<Node*>&v){
 
-	char path_save[] = "../data/final.csv";
+	char path_save[] = "../data/final_3_1_2012.csv";
+
+	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
+	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
+	vector<int> days_vec = remove_duplicates(v, &Node::getDay);
+
+	statistics_data jobs = extract_statistics(jobs_vec);
+	statistics_data phases = extract_statistics(phases_vec);
+	statistics_data days = extract_statistics(days_vec);
+
 
 	if(!first_write){
 
@@ -211,20 +220,13 @@ void dump_file(int long new_end, vector<Node*>&v){
 
 		save_file.open(path_save, fstream::app);
 
-		save_file <<  last_end <<";"<< v[0]->getStart() <<";"<< v[0]->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 << endl;
+		save_file <<  last_end <<";"<< v[0]->getStart() <<";"<< v[0]->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";"<< days.values <<";"<< days.times << endl;
 
 		save_file.close();
 	}
 	
 	last_end = new_end;
 
-	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
-	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
-	vector<int> days_vec = remove_duplicates(v, &Node::getDay);
-
-	statistics_data jobs = extract_statistics(jobs_vec);
-	statistics_data phases = extract_statistics(phases_vec);
-	statistics_data days = extract_statistics(days_vec);
 
 	#ifdef DUMP
 	cout << "start: " << v[0]->getStart() << " end: " << new_end << " duration: " << new_end-v[0]->getStart(); 
@@ -320,30 +322,23 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 
 				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
 					cout << "entrou  " << nodes[idx_min_nodes]->getStart() << " " << nexts[idx_min_nexts]->getStart() << endl;
-					
 					for (int i = 0; i < nodes.size(); ++i){
 						heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
-					}
-						
+					}		
 					cout << "new " << " start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd() << endl;
 					aux_heap->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
 			 	}
 			}else{
-
 				cout << "esle 1 interno" << endl;
-
+				vector<Node*> tmp;
 				for (int i = 0; i < nodes.size(); ++i)
-					heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+					tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+				dump_file(tmp[0]->getEnd(), tmp);
 			}
 		}else{
-
 			cout << "aqui o que eu faco" << endl;
 			cout << " start " << n_current->getStart() << " end " << n_current->getEnd() << endl;
-
 			heap_min->insert(new Node(n_current->getPhase(), n_current->getJob(), n_current->getDay(), n_current->getEnd(), n_current->getStart()));
-
-
 		}
-	}
- 	
+	}	
 }

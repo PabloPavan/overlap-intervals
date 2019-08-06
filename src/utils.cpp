@@ -322,8 +322,8 @@ void create_intervals_without_next(vector<Node*> nodes){
 				if(nodes[idx_min_nodes]->getStart() < nexts[idx_min_nexts]->getStart()){
 					cout << "entrou  " << nodes[idx_min_nodes]->getStart() << " " << nexts[idx_min_nexts]->getStart() << endl;
 					vector<Node*> tmp;
-					for (int i = 0; i < nexts.size(); ++i)
-						tmp.push_back(new Node(nexts[i]->getPhase(), nexts[i]->getJob(), nexts[i]->getDay(), nodes[idx_min_nodes]->getStart(), nexts[i]->getEnd()));
+					for (int i = 0; i < nodes.size(); ++i)
+						tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[idx_min_nodes]->getStart(), nodes[i]->getEnd()));
 				
 					stack_dump.push(tmp);
 					stack_end.push(nexts[idx_min_nexts]->getStart());

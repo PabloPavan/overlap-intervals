@@ -3,3 +3,7 @@ id;name
 1;posix write consecutive sequential unique file
 2;posix write sequential unique file
 3;posix read sequential unique file
+4;posix read file
+5;posix read 
+6;posix  file
+7;posixfile

@@ -78,16 +78,16 @@ str(df)
 #+RESULTS:
 #+begin_example
 
-'data.frame':	8 obs. of  9 variables:
- $ filename  : Factor w/ 2 levels "11.parsed.json",..: 1 1 2 2 1 1 2 2
- $ start_time: num  3761 3761 3761 3761 3900 ...
+'data.frame':	12 obs. of  9 variables:
+ $ filename  : Factor w/ 2 levels "11.parsed.json",..: 1 1 2 2 2 2 2 2 1 1 ...
+ $ start_time: num  3761 3761 3761 3761 3761 ...
  $ end_time  : num  4508 4508 4508 4508 4508 ...
- $ start     : num  2.3 2.3 2.3 2.3 2.3 2.3 2.3 2.3
- $ end       : num  19.8 19.8 30 40 19.8 19.8 30 40
- $ info      : Factor w/ 4 levels "posix read sequential unique file",..: 2 3 4 1 2 3 4 1
- $ start_    : num  3763 3763 3763 3763 3902 ...
- $ duration  : num  17.5 17.5 27.7 37.7 17.5 17.5 27.7 37.7
- $ end_      : num  3781 3781 3791 3801 3920 ...
+ $ start     : num  2.3 2.3 2.3 2.3 25 25 25 30 2.3 2.3 ...
+ $ end       : num  19.8 19.8 30 40 35 35 50 50 19.8 19.8 ...
+ $ info      : Factor w/ 8 levels "posix  file",..: 5 6 7 4 3 2 1 8 5 6 ...
+ $ start_    : num  3763 3763 3763 3763 3786 ...
+ $ duration  : num  17.5 17.5 27.7 37.7 10 10 25 20 17.5 17.5 ...
+ $ end_      : num  3781 3781 3791 3801 3796 ...
 #+end_example
 
 
@@ -130,16 +130,16 @@ str(df)
  #+RESULTS:
  #+begin_example
 
- 'data.frame':	7 obs. of  9 variables:
-  $ start   : int  3763 3763 3780 3791 3902 3902 3919
-  $ end     : int  3763 3801 3791 3902 3902 3940 3930
-  $ duration: int  0 38 11 111 0 38 11
-  $ phases  : Factor w/ 4 levels "-1","0,1,2,3",..: 2 4 3 1 2 4 3
-  $ nphases : int  4 1 1 0 4 1 1
-  $ jobs    : Factor w/ 3 levels "-1","0,1","1": 2 3 3 1 2 3 3
-  $ njobs   : int  2 1 1 0 2 1 1
-  $ days    : int  1 1 1 NA 1 1 1
-  $ ndays   : int  1 1 1 NA 1 1 1
+ 'data.frame':	10 obs. of  9 variables:
+  $ start   : int  3763 3780 3786 3791 3796 3801 3811 3902 3919 3930
+  $ end     : int  3780 3786 3791 3796 3801 3811 3902 3919 3930 3940
+  $ duration: int  17 6 5 5 5 10 91 17 11 10
+  $ phases  : Factor w/ 8 levels "-1","0,1,2,3",..: 2 3 4 6 7 8 1 2 3 5
+  $ nphases : int  4 2 5 5 2 1 0 4 2 1
+  $ jobs    : Factor w/ 3 levels "-1","0,1","1": 2 3 3 3 3 3 1 2 3 3
+  $ njobs   : int  2 1 1 1 1 1 0 2 1 1
+  $ days    : int  1 1 1 1 1 1 NA 1 1 1
+  $ ndays   : int  1 1 1 1 1 1 NA 1 1 1
  #+end_example
 
 *** Plot intevals

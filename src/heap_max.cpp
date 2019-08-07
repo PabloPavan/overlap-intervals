@@ -49,7 +49,8 @@ Heap_max::Heap_max(unsigned int max) { /* O(1) */
 }
 
 Heap_max::~Heap_max() { /* O(1) */
-    delete[] this->heap;
+    for (int i = 0; i < this->max; ++i)
+        delete[] this->heap[i];
 }
 
 /* Extract-min*/

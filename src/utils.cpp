@@ -8,8 +8,8 @@
 
 void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
-	long int epoch_time = 1325376000;
-	//long int epoch_time = 0;
+	//long int epoch_time = 1325376000;
+	long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 	Node *no;
@@ -59,12 +59,12 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
 		info[strlen(info)-1] = '\0';
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
-		start  = start * 1000000; 
+		start  = start * 1; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1000000;
+		start_time = start_time * 1;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1000000;
+		end = end * 1;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 
@@ -185,7 +185,7 @@ statistics_data extract_statistics(vector<int> &v){
 
 void dump_file(int long new_end, vector<Node*>&v){
 
-	char path_save[] = "../data/final_3_1_2012.csv";
+	char path_save[] = "../data/final.csv";
 
 	vector<int> jobs_vec = remove_duplicates(v, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(v, &Node::getPhase);
@@ -330,10 +330,10 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 			 	}
 			}else{
 				cout << "esle 1 interno" << endl;
-				vector<Node*> tmp;
+				// /vector<Node*> tmp;
 				for (int i = 0; i < nodes.size(); ++i)
-					tmp.push_back(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
-				dump_file(tmp[0]->getEnd(), tmp);
+					heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+				// dump_file(tmp[0]->getEnd(), tmp);
 			}
 		}else{
 			cout << "aqui o que eu faco" << endl;

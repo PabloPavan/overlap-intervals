@@ -87,10 +87,11 @@ int main(int argc, char const *argv[]){
 				 	 		cout << "novo 3 " <<  nodes[idx_min_nodes]->getEnd() << " " << nexts[idx_min_nexts]->getEnd() << endl;
 				 		}
 				 	}else{
-				 	 	if (nodes.size() > 1){
-				 			cout << "if novo 4" << endl;
-				 			create_intervals_without_next(h, nodes);
-				 		} else{
+				 	 	// if (nodes.size() > 1){
+				 			// cout << "if novo 4" << endl;
+				 			// create_intervals_without_next(h, nodes);
+				 		//} else{
+				 		if (nexts[idx_min_nexts]->getEnd() != nodes[idx_min_nodes]->getEnd()){
 							no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
 				 	 		h->insert(no);
 				 	 		cout << "novo 4 " <<  nexts[idx_min_nexts]->getEnd() << " " << nodes[idx_min_nodes]->getEnd() << endl;	

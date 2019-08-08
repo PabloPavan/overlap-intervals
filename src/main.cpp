@@ -60,70 +60,73 @@ int main(int argc, char const *argv[]){
 		 					break;
 			 		}	
 
-				int idx_min_nodes = min_find(nodes);
-				int idx_min_nexts = min_find(nexts);
+				// int idx_min_nodes = min_find(nodes);
+				// int idx_min_nexts = min_find(nexts);
 
-				if(nexts[idx_min_nexts]->getStart() < nodes[idx_min_nodes]->getEnd()){
+			 	if(nodes.size() > 1){
+			 		cout << "nodes 1" << endl;
+			 		create_intervals_without_next(h, nodes);
+			 		nodes.clear();
+			 	}else{
+			 		h->insert(nodes[0]);	
+			 	}	
+
+			 	if (nexts.size() > 1){
+				 	cout << "nexts 1" << endl;
+				 	create_intervals_without_next(h, nexts);
+				 	nexts.clear();
+
+				}else{
+					h->insert(nexts[0]);
+				}
+
+				n_current = h->extract();
+				n_next = h->extract();
+			 	
+				if(n_next->getStart() < n_current->getEnd()){
 					cout << "aqui" << endl;
-					dump_file(nexts[idx_min_nexts]->getStart(), nodes);
-					
-			
-					if (nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getEnd());
-				 	 	h->insert(no);	
-				 	 	cout << "novo 1 " << nexts[idx_min_nexts]->getStart() << " " << nodes[idx_min_nodes]->getEnd()  << endl;
-				 	}else{
-				 	 	no  = new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(), nexts[idx_min_nexts]->getEnd());
-				 	 	h->insert(no);
-				 	 	cout << "novo 2 " << nexts[idx_min_nexts]->getStart() << " " << nexts[idx_min_nexts]->getEnd() << endl;	
-				 	} 	 
-				 	if(nodes[idx_min_nodes]->getEnd() < nexts[idx_min_nexts]->getEnd()){
-				 		if (nodes.size() > 1){
-				 			cout << "if novo 3" << endl;
-				 			//create_intervals_without_next(h, nexts);
-				 			create_intervals_without_next(h, nodes);
-				 		}else{
-							no  = new Node(nexts, nodes[idx_min_nodes]->getEnd(), nexts[idx_min_nexts]->getEnd());
-				 	 		h->insert(no);
-				 	 		cout << "novo 3 " <<  nodes[idx_min_nodes]->getEnd() << " " << nexts[idx_min_nexts]->getEnd() << endl;
-				 		}
-				 	}else{
-				 	 	if (nodes.size() > 1){
-				 			cout << "if novo 4" << endl;
-				 			create_intervals_without_next(h, nodes);
-				 			create_intervals_without_next(h, nexts);
 
-				 		}else{
-				 			// if(nexts[idx_min_nexts]->getEnd() != nodes[idx_min_nodes]->getEnd()){
-							no  = new Node(nodes, nexts[idx_min_nexts]->getEnd(), nodes[idx_min_nodes]->getEnd());	
-					 	 	h->insert(no);
-					 	 	cout << "novo 4 " <<  nexts[idx_min_nexts]->getEnd() << " " << nodes[idx_min_nodes]->getEnd() << endl;	
-				 	 		//}
-				 		}
+					dump_file(n_next->getStart(), n_current);
+
+					if (n_current->getEnd() < n_next->getEnd()){
+
+				 	 	no  = new Node(n_next, n_current, n_next->getStart(), n_current->getEnd());
+				 	 	h->insert(no);	
+				 	 	cout << "novo 1 " << n_next->getStart() << " " << n_current->getEnd()  << endl;
+				 	}else{
+				 	 	no  = new Node(n_next, n_current, n_next->getStart(), n_next->getEnd());
+				 	 	h->insert(no);
+				 	 	cout << "novo 2 " << n_next->getStart() << " " << n_next->getEnd() << endl;	
+				 	} 	 
+				 	if(n_current->getEnd() < n_next->getEnd()){
+						no  = new Node(n_next, n_current->getEnd(), n_next->getEnd());
+				 	 	h->insert(no);
+				 	 	cout << "novo 3 " <<  n_current->getEnd() << " " << n_next->getEnd() << endl;
+				 	}else{
+						no  = new Node(n_current, n_next->getEnd(), n_current->getEnd());	
+					 	h->insert(no);
+					 	cout << "novo 4 " <<  n_next->getEnd() << " " << n_current->getEnd() << endl;	
 				 	}		
 			 	}else{
 					cout << "else 1" << endl;
-					for (int i = 0; i < nexts.size(); ++i)
-						h->insert(nexts[i]);
+					//for (int i = 0; i < nexts.size(); ++i)
+					h->insert(n_next);
+					dump_file(n_current->getEnd(), n_current);
 
-					if(nodes.size() > 1){
-						create_intervals_without_next(h, nodes);
-					}else{
-						dump_file(nodes[0]->getEnd(), nodes);
-					}
 				} 				
 	 		}else{
 	 			cout << "else 2" << endl;
 	 			if(nodes.size() > 1){		
 					create_intervals_without_next(h, nodes);
+					nodes.clear();
 				}else{
-					dump_file(nodes[0]->getEnd(), nodes);
+					dump_file(nodes[0]->getEnd(), nodes[0]);
+					nodes.clear();
 				}
 	 		}
 	 	}else{
 	 		cout << "else 3" << endl;
-	 		nodes.push_back(n_current);
-	 		dump_file(n_current->getEnd(), nodes);
+	 		dump_file(n_current->getEnd(), n_current);
 	 	}	
 	}
 

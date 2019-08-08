@@ -12,8 +12,6 @@ Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) 
     this->end = end;
 }
 
-
-
 Node::Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int end) { /* O(1) */
     
 
@@ -51,22 +49,44 @@ Node::Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int 
     this->end = end;
 }
 
-Node::Node(vector <Node*> nodes, long int start, long int end) { /* O(1) */
+
+Node::Node(Node* nexts, Node* nodes, long int start, long int end) { /* O(1) */
     
-    for(int i = 0; i < nodes.size(); ++i){
-        vector<int> p2 = nodes[i]->getPhase();
-        for (int j = 0; j < p2.size(); ++j)
-            this->phase.push_back(p2[j]);
 
-        vector<int> j2 = nodes[i]->getJob();
-        for (int j = 0; j < j2.size(); ++j)
-            this->job.push_back(j2[j]);
+    for (int j = 0; j < nexts->getPhase().size(); ++j)
+        this->phase.push_back(nexts->getPhase()[j]);
         
-        vector<int> d2 = nodes[i]->getDay();
-        for (int j = 0; j < d2.size(); ++j)
-            this->day.push_back(d2[j]);
-    }
+    for (int j = 0; j < nexts->getJob().size(); ++j)
+        this->job.push_back(nexts->getJob()[j]);
+         
+    for (int j = 0; j < nexts->getDay().size(); ++j)
+        this->day.push_back(nexts->getDay()[j]);
+    
 
+    for (int j = 0; j < nodes->getPhase().size(); ++j)
+        this->phase.push_back(nodes->getPhase()[j]);
+
+    for (int j = 0; j < nodes->getJob().size(); ++j)
+        this->job.push_back(nodes->getJob()[j]);
+         
+    for (int j = 0; j < nodes->getDay().size(); ++j)
+        this->day.push_back(nodes->getDay()[j]);
+
+
+    this->start = start;
+    this->end = end;
+}
+
+Node::Node(Node* nodes, long int start, long int end) { /* O(1) */
+    
+    for (int j = 0; j < nodes->getPhase().size(); ++j)
+        this->phase.push_back(nodes->getPhase()[j]);
+
+    for (int j = 0; j < nodes->getJob().size(); ++j)
+        this->job.push_back(nodes->getJob()[j]);
+         
+    for (int j = 0; j < nodes->getDay().size(); ++j)
+        this->day.push_back(nodes->getDay()[j]);
 
     this->start = start;
     this->end = end;

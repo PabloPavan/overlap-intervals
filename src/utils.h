@@ -28,8 +28,8 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
 int idx_find(char *word, vector<char*>&v);
 int min_find(vector<Node*>&v);
 Node* back_pop(vector<Node*>&v);
-vector<int> remove_duplicates(vector<Node*>&v, vector<int> (Node::*functionPtr)());
-void dump_file(int long new_end, vector<Node*>&v);
+vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)());
+void dump_file(int long new_end, Node* node);
 void dump_dict(const char path[], vector<char*>&v);
 statistics_data extract_statistics(vector<int> &v);
 //void dump_statistics(vector<Node*>&v);

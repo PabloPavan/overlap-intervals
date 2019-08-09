@@ -68,6 +68,7 @@ int main(int argc, char const *argv[]){
 					nodes.clear();
 				}else{
 					heap_min->insert(nodes[0]);	
+					nodes.clear();
 				}	
 
 				if (nexts.size() > 1){
@@ -76,6 +77,7 @@ int main(int argc, char const *argv[]){
 
 				}else{
 					heap_min->insert(nexts[0]);
+					nexts.clear();
 				}
 
 				n_current = heap_min->extract();

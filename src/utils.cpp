@@ -8,7 +8,6 @@
 
 void read_file(Heap_min *heap_min, int idx, vector<char*>&filename_v, vector<char*>&info_v){
 
-
 	long int epoch_time = 1325376000;
 	//long int epoch_time = 0;
 	char line[BUFFER_SIZE];

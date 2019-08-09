@@ -56,7 +56,7 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
 		end = atof(token);
 		token = strtok(NULL,delim); //info
 		strcpy(info, token);
-		info[strlen(info)-1] = '\0';
+		info[strlen(info)-1] = '\0'; // remove \n
 		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1000000; 
@@ -327,11 +327,11 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 					}		
 					cout << "new " << " start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd() << endl;
 					aux_heap->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
-			 	}
+				}
 			}else{
 				cout << "esle 1 interno" << endl;
-				for (int i = 0; i < nodes.size(); ++i)
-					heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+				cout << " start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd() << endl;
+				heap_min->insert(new Node(nodes[0]->getPhase(), nodes[0]->getJob(), nodes[0]->getDay(), nodes[0]->getEnd(), nodes[0]->getStart()));
 			}
 		}else{
 			cout << "aqui o que eu faco" << endl;

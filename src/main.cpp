@@ -89,11 +89,10 @@ int main(int argc, char const *argv[]){
 					dump_file(n_next->getStart(), n_current);
 
 					if (n_current->getEnd() < n_next->getEnd()){
-
 				 	 	no  = new Node(n_next, n_current, n_next->getStart(), n_current->getEnd());
 				 	 	h->insert(no);	
 				 	 	cout << "novo 1 " << n_next->getStart() << " " << n_current->getEnd()  << endl;
-				 	}else{
+				 	}else if(n_next, n_current, n_next->getStart() != n_next->getEnd()){
 				 	 	no  = new Node(n_next, n_current, n_next->getStart(), n_next->getEnd());
 				 	 	h->insert(no);
 				 	 	cout << "novo 2 " << n_next->getStart() << " " << n_next->getEnd() << endl;	
@@ -102,7 +101,7 @@ int main(int argc, char const *argv[]){
 						no  = new Node(n_next, n_current->getEnd(), n_next->getEnd());
 				 	 	h->insert(no);
 				 	 	cout << "novo 3 " <<  n_current->getEnd() << " " << n_next->getEnd() << endl;
-				 	}else{
+				 	}else if(n_current, n_next->getEnd() != n_current->getEnd()){
 						no  = new Node(n_current, n_next->getEnd(), n_current->getEnd());	
 					 	h->insert(no);
 					 	cout << "novo 4 " <<  n_next->getEnd() << " " << n_current->getEnd() << endl;	

@@ -6,13 +6,13 @@
  * @param heap pointer, index of the vector that contains the input files' path, ref vector filename, and ref vector info
  */
 
-void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&info_v){
+void read_file(Heap_min *heap_min, int idx, vector<char*>&filename_v, vector<char*>&info_v){
+
 
 	long int epoch_time = 1325376000;
 	//long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
-	Node *no;
 
 	char* l =(char *) calloc(BUFFER_SIZE, sizeof(char));
     vector<char*> path_v;
@@ -20,7 +20,9 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
     
     file_path.open("../data/path.dat");
     if (!file_path) {
-        cout << "Unable to open file";
+    	#ifdef LOG
+        	L_(lwarning) << "Unable to open file path.dat";
+        #endif
         exit(1);
     }
     
@@ -30,6 +32,10 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
     }
 
     file_path.close();
+
+    #ifdef LOG
+    	L_(ldebug) << "read file: " << path_v[idx];
+	#endif
 
 	FILE *f = fopen(path_v[idx], "r");
 
@@ -68,12 +74,7 @@ void read_file(Heap_min *h, int idx, vector<char*>&filename_v, vector<char*>&inf
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 
-		#ifdef DUMP
-		cout << "[" << start_ << ", " << end_ << "]" << endl;
-		#endif
-
-		no  = new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_);
-		h->insert(no);
+		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_));
 	}
 	fclose(f);
 }
@@ -210,38 +211,25 @@ void dump_file(int long new_end, Node* node){
 	}
 
 	if (node->getStart() > last_end){
-		#ifdef DUMP
-		cout << "start: " << last_end << " end: " << node->getStart()  << " duration: " << node->getStart()-last_end; 
-		cout << " phases: " << -1; 
-		cout << " jobs: " << -1 << endl << endl;
+		#ifdef LOG
+			L_(ldebug) << "save - " << "start: " << last_end << " end: " << node->getStart()  << " duration: " << node->getStart()-last_end << " phases: " << -1 << " jobs: " << -1 << " days: " << days.values;
 		#endif
 
 		fstream save_file;
-
 		save_file.open(path_save, fstream::app);
-
 		save_file <<  last_end <<";"<< node->getStart() <<";"<< node->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";"<< days.values <<";"<< days.times << endl;
-
 		save_file.close();
 	}
 	
 	last_end = new_end;
 
-
-	#ifdef DUMP
-	cout << "start: " << node->getStart() << " end: " << new_end << " duration: " << new_end-node->getStart(); 
-	cout << " phases: " << phases.values; //<< phases << " number of phases: " << number_of_phases; 
-	cout << " jobs: " << jobs.values;//<< " number of jobs: " << number_of_jobs;
-	cout << " days: " << days.values;
-	cout << endl << endl;
+	#ifdef LOG
+		L_(ldebug) << "save - " <<  "start: " << node->getStart() << " end: " << new_end << " duration: " << new_end-node->getStart() << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
 	#endif 
 
 	fstream save_file;
-
 	save_file.open(path_save, fstream::app);
-
 	save_file <<  node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-
 	save_file.close();
 
 	free(jobs.values);
@@ -257,6 +245,9 @@ void dump_file(int long new_end, Node* node){
  */
 
 void dump_dict(const char path[], vector<char*>&v){
+	#ifdef LOG
+		L_(ldebug) << "dump dict file: " << path;
+	#endif 
 	fstream save_file;
 	save_file.open(path, fstream::out);
 
@@ -280,40 +271,40 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 	Node* n_current;
 	Node* n_next;
 
-	Heap_max *aux_heap = new Heap_max(nodes.size()+1);
+	Heap_max *heap_max = new Heap_max(nodes.size()+1);
 
 	for (int i = 0; i < nodes.size(); ++i)
-		aux_heap->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+		heap_max->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
 	
-
-	stack <vector<Node*>> stack_dump; 
-	stack <long int> stack_end;
-	while(!aux_heap->isEmpty()){
+	#ifdef LOG
+		L_(ldebug) << "max heap size: " << heap_max->getSize();
+	#endif	
+	while(!heap_max->isEmpty()){
 	 	vector<Node*> nodes;
 	 	vector<Node*> nexts;
 
-	 	n_current = aux_heap->extract();
+	 	n_current = heap_max->extract();
 
-	 	if(!aux_heap->isEmpty()){
+	 	if(!heap_max->isEmpty()){
 
 	 		nodes.push_back(n_current);
 
-	 		if(!aux_heap->isEmpty())
-		 		while(n_current->getStart() == aux_heap->top()->getStart()){
-		 			nodes.push_back(aux_heap->extract());
-		 			if(aux_heap->isEmpty())
+	 		if(!heap_max->isEmpty())
+		 		while(n_current->getStart() == heap_max->top()->getStart()){
+		 			nodes.push_back(heap_max->extract());
+		 			if(heap_max->isEmpty())
 		 				break;
 		 		}
 
-	 		if(!aux_heap->isEmpty()){
+	 		if(!heap_max->isEmpty()){
 
-	 			n_next = aux_heap->extract();
+	 			n_next = heap_max->extract();
 
 	 			nexts.push_back(n_next);
-	 			if(!aux_heap->isEmpty())
-			 		while(n_next->getStart() == aux_heap->top()->getStart() && !aux_heap->isEmpty()){
-			 			nexts.push_back(aux_heap->extract());	
-			 			if(aux_heap->isEmpty())
+	 			if(!heap_max->isEmpty())
+			 		while(n_next->getStart() == heap_max->top()->getStart() && !heap_max->isEmpty()){
+			 			nexts.push_back(heap_max->extract());	
+			 			if(heap_max->isEmpty())
 		 					break;
 			 		}
 
@@ -321,22 +312,29 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 				int idx_min_nexts = min_find(nexts);
 
 				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
-					cout << "entrou  " << nodes[idx_min_nodes]->getStart() << " " << nexts[idx_min_nexts]->getStart() << endl;
 					for (int i = 0; i < nodes.size(); ++i){
 						heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
-					}		
-					cout << "new " << " start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd() << endl;
-					aux_heap->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
+					}
+
+					#ifdef LOG
+						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
+					#endif
+					heap_max->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
 				}
 			}else{
-				cout << "esle 1 interno" << endl;
-				cout << " start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd() << endl;
+				#ifdef LOG
+					L_(ldebug) << "else 1 inside - start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd();
+				#endif
 				heap_min->insert(new Node(nodes[0]->getPhase(), nodes[0]->getJob(), nodes[0]->getDay(), nodes[0]->getEnd(), nodes[0]->getStart()));
 			}
 		}else{
-			cout << "aqui o que eu faco" << endl;
-			cout << " start " << n_current->getStart() << " end " << n_current->getEnd() << endl;
+			#ifdef LOG
+				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
+			#endif
 			heap_min->insert(new Node(n_current->getPhase(), n_current->getJob(), n_current->getDay(), n_current->getEnd(), n_current->getStart()));
-		}
-	}	
+		}	
+	}
+	#ifdef LOG
+		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
+	#endif	
 }

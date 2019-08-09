@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define	UTILS_H
 
+#include "logger.h"
 #include "node.h"
 #include "heap_min.h"
 #include "heap_max.h"

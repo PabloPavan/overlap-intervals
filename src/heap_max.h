@@ -2,6 +2,7 @@
 #define	HEAP_MAX_H
 
 #include "node.h"
+#include "logger.h"
 #include <iostream>
 
 using namespace std;

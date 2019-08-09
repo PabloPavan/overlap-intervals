@@ -324,13 +324,13 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 				#ifdef LOG
 					L_(ldebug) << "else 1 inside - start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd();
 				#endif
-				heap_min->insert(new Node(nodes[0]->getPhase(), nodes[0]->getJob(), nodes[0]->getDay(), nodes[0]->getEnd(), nodes[0]->getStart()));
+				heap_min->insert(new Node(nodes, nodes[0]->getEnd(), nodes[0]->getStart()));
 			}
 		}else{
 			#ifdef LOG
 				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
 			#endif
-			heap_min->insert(new Node(n_current->getPhase(), n_current->getJob(), n_current->getDay(), n_current->getEnd(), n_current->getStart()));
+			heap_min->insert(new Node(n_current, n_current->getEnd(), n_current->getStart()));
 		}	
 	}
 	#ifdef LOG

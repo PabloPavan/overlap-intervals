@@ -16,6 +16,7 @@ public:
     
     Node(int phase, int job, int day, long int start, long int end);
     Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int end);
+    Node(vector <Node*> nodes, long int start, long int end);
     Node(Node* nexts, Node* nodes, long int start, long int end);
     Node(Node* nodes, long int start, long int end);
     Node(vector <int> phase, vector <int> job, vector <int> day, long int start, long int end);

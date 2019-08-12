@@ -311,10 +311,9 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 				int idx_min_nexts = min_find(nexts);
 
 				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
-					for (int i = 0; i < nodes.size(); ++i){
-						heap_min->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
-					}
-
+					
+					heap_min->insert(new Node(nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
+					
 					#ifdef LOG
 						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
 					#endif

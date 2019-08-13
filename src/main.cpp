@@ -51,19 +51,18 @@ int main(int argc, char const *argv[]){
 
 	Node* n_current;
 	Node* n_next;
+	
+	vector<Node*> nodes;
+	vector<Node*> nexts;
 
-	int interation = 0;
 	while(!heap_min->isEmpty()){
-		interation++;
-		vector<Node*> nodes;
-		vector<Node*> nexts;
 		n_current = heap_min->extract();
 
 		if(!heap_min->isEmpty()){
 
 			nodes.push_back(n_current);
 			if(!heap_min->isEmpty())
-				while(n_current->getStart() == heap_min->top()->getStart()){
+				while(n_current->getStart() == heap_min->top()->getStart() && !heap_min->isEmpty()){
 					nodes.push_back(heap_min->extract());
 					if(heap_min->isEmpty())
 						break;
@@ -75,7 +74,7 @@ int main(int argc, char const *argv[]){
 
 				nexts.push_back(n_next);
 				if(!heap_min->isEmpty())
-					while(n_next->getStart() == heap_min->top()->getStart() && !heap_min->isEmpty()){
+					while(n_next->getStart() == heap_min->top()->getStart()){
 						nexts.push_back(heap_min->extract());	
 						if(heap_min->isEmpty())
 							break;

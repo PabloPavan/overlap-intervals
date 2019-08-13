@@ -342,7 +342,7 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 
 				nexts.push_back(n_next);
 				if(!heap_max->isEmpty())
-					while(n_next->getStart() == heap_max->top()->getStart() && !heap_max->isEmpty()){
+					while(n_next->getStart() == heap_max->top()->getStart()){
 						nexts.push_back(heap_max->extract());	
 						if(heap_max->isEmpty())
 							break;

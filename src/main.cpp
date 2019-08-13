@@ -17,6 +17,25 @@ int main(int argc, char const *argv[]){
 		initLogger( "logger.log", ldebug);
 		L_(linfo) << "program started";
 	#endif
+
+	char* line =(char *) calloc(BUFFER_SIZE, sizeof(char));
+	vector<char*> path_v;
+	ifstream file_path;
+	
+	file_path.open("../data/path.dat");
+	if (!file_path) {
+		#ifdef LOG
+			L_(lwarning) << "Unable to open path.dat file";
+		#endif
+		exit(1);
+	}
+	
+	while (file_path >> line) {
+		line = (char *) realloc(line, (strlen(line) + 1) * sizeof(char));
+		path_v.push_back(line);
+	}
+
+	file_path.close();
 	
 	Heap_min *heap_min;
 	heap_min = new Heap_min(HEAP_SIZE);
@@ -24,7 +43,7 @@ int main(int argc, char const *argv[]){
 	vector<char*> filename_v;
 	vector<char*> info_v;
 
-	read_file(heap_min, 0, filename_v, info_v);
+	read_file(heap_min, path_v[0], filename_v, info_v);
 
 	#ifdef LOG
 		L_(ldebug) << "min heap size: " << heap_min->getSize();

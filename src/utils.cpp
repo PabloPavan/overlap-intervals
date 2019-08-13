@@ -6,37 +6,18 @@
  * @param heap pointer, index of the vector that contains the input files' path, ref vector filename, and ref vector info
  */
 
-void read_file(Heap_min *heap_min, int idx, vector<char*>&filename_v, vector<char*>&info_v){
+void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, vector<char*>&info_v){
 
-	long int epoch_time = 1325376000;
+	const long int epoch_time = 1325376000;
 	//long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 
-	char* l =(char *) calloc(BUFFER_SIZE, sizeof(char));
-	vector<char*> path_v;
-	ifstream file_path;
-	
-	file_path.open("../data/path.dat");
-	if (!file_path) {
-		#ifdef LOG
-			L_(lwarning) << "Unable to open file path.dat";
-		#endif
-		exit(1);
-	}
-	
-	while (file_path >> l) {
-		l = (char *) realloc(l, (strlen(l) + 1) * sizeof(char));
-		path_v.push_back(l);
-	}
-
-	file_path.close();
-
 	#ifdef LOG
-		L_(ldebug) << "read file: " << path_v[idx];
+		L_(ldebug) << "read file: " << path;
 	#endif
 
-	FILE *f = fopen(path_v[idx], "r");
+	FILE *f = fopen(path, "r");
 
 	char *header = fgets(line, sizeof(line), f); // skip header
 
@@ -174,6 +155,20 @@ statistics_data extract_statistics(vector<int> &v){
 }
 
 /**
+ * Checking if file exists
+ * If exist return true
+ * 
+ *
+ * @param char of the path file
+ * @return true if file exists, or false if file doesnt
+ */
+
+inline bool file_exists (const char filename[]) {
+	struct stat buffer;   
+	return (stat (filename, &buffer) == 0); 
+}
+
+/**
  * Saving a file with the interval data
  * If exist a idle time between the before and the current interval 
  * save this in file
@@ -183,10 +178,6 @@ statistics_data extract_statistics(vector<int> &v){
  * contains the info about the interval
  */
 
-inline bool file_exists (const char filename[]) {
-  struct stat buffer;   
-  return (stat (filename, &buffer) == 0); 
-}
 
 void dump_file(int long new_end, Node* node){
 

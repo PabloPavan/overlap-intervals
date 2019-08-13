@@ -183,6 +183,11 @@ statistics_data extract_statistics(vector<int> &v){
  * contains the info about the interval
  */
 
+inline bool file_exists (const char filename[]) {
+  struct stat buffer;   
+  return (stat (filename, &buffer) == 0); 
+}
+
 void dump_file(int long new_end, Node* node){
 
 	char path_save[] = "../data/final_3_1_2012.csv";
@@ -205,6 +210,7 @@ void dump_file(int long new_end, Node* node){
 
 		save_file.close();
 
+		first_write = true;
 		last_end = new_end;
 	}
 
@@ -229,67 +235,51 @@ void dump_file(int long new_end, Node* node){
 	
 	save_file.close();
 
-
 	char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-	strcat(folder, "../data/phases/");
-	strcat(folder,phases.values);
-	strcat(folder,".csv");
-	//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+	sprintf(folder,"%s%s%s", "../data/phases/", phases.values,".csv");
+	folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
 
-	fstream file;
 
-	file.open(folder, ios::in | ios::out | ios::app );
-
-	if(!first_write){
-
-	first_write = true;
-
-	// If file does not exist, Create new file
-	if (!file ){
+	if(!file_exists(folder)){
 		#ifdef LOG
-		L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
 		#endif 
-		file.open(folder,  ios::in | ios::out | ios::trunc);
-		file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-		file.close();
-	}else{  // use existing file
+		save_file.open(folder, ios::out | ios::trunc);
+		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+		save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file.close();	
+	}else{
+		save_file.open(folder, ios::app);
 		#ifdef LOG
-		L_(ldebug) << "Success "<<  folder <<" found.";
+			L_(ldebug) << "Success "<<  folder <<" found.";
 		#endif 
-		file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-		file.close();
+		save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file.close();
 	}
 
 	free(folder);
 
 	for (int i = 0; i < phases_vec.size(); ++i){
 		char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-		strcat(folder, "../data/patterns/");
-		sprintf(folder,"%d", phases_vec[i]);
-		strcat(folder,".csv");
-		//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+		sprintf(folder,"%s%d%s", "../data/patterns/", phases_vec[i],".csv");
+		folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
 
-		fstream file;
-
-		file.open(folder, ios::in | ios::out | ios::app );
-
-		// If file does not exist, Create new file
-		if (!file ){
+		if(!file_exists(folder)){
 			#ifdef LOG
-			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+				L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
 			#endif 
-			file.open(folder, ios::in |  ios::out | ios::trunc);
-			file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-			file.close();
-
-		}else{  // use existing file
+			save_file.open(folder, ios::out | ios::trunc);
+			save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+			save_file.close();	
+		}else{
+			save_file.open(folder, ios::app);
 			#ifdef LOG
-			L_(ldebug) << "Success "<<  folder <<" found.";
+				L_(ldebug) << "Success "<<  folder <<" found.";
 			#endif 
-			file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-			file.close();
+			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+			save_file.close();
 		}
-
 		free(folder);
 	}
 

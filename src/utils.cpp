@@ -14,26 +14,26 @@ void read_file(Heap_min *heap_min, int idx, vector<char*>&filename_v, vector<cha
 	char delim[] = ";";
 
 	char* l =(char *) calloc(BUFFER_SIZE, sizeof(char));
-    vector<char*> path_v;
-    ifstream file_path;
-    
-    file_path.open("../data/path.dat");
-    if (!file_path) {
-    	#ifdef LOG
-        	L_(lwarning) << "Unable to open file path.dat";
-        #endif
-        exit(1);
-    }
-    
-    while (file_path >> l) {
-        l = (char *) realloc(l, (strlen(l) + 1) * sizeof(char));
-        path_v.push_back(l);
-    }
+	vector<char*> path_v;
+	ifstream file_path;
+	
+	file_path.open("../data/path.dat");
+	if (!file_path) {
+		#ifdef LOG
+			L_(lwarning) << "Unable to open file path.dat";
+		#endif
+		exit(1);
+	}
+	
+	while (file_path >> l) {
+		l = (char *) realloc(l, (strlen(l) + 1) * sizeof(char));
+		path_v.push_back(l);
+	}
 
-    file_path.close();
+	file_path.close();
 
-    #ifdef LOG
-    	L_(ldebug) << "read file: " << path_v[idx];
+	#ifdef LOG
+		L_(ldebug) << "read file: " << path_v[idx];
 	#endif
 
 	FILE *f = fopen(path_v[idx], "r");
@@ -107,14 +107,14 @@ int idx_find(char *word, vector<char*>&v){
 
 vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)()){
 	vector<int> vec;
- 	set<int> s;
+	set<int> s;
 
- 	vector<int> u = (node->*functionPtr)();
- 	for(int j = 0; j < u.size(); ++j)
+	vector<int> u = (node->*functionPtr)();
+	for(int j = 0; j < u.size(); ++j)
 		s.insert(u[j]);
- 	
- 	vec.assign(s.begin(),s.end()); 
- 	return vec;
+	
+	vec.assign(s.begin(),s.end()); 
+	return vec;
 }
 
 /**
@@ -125,11 +125,11 @@ vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)()){
  */
 
 int min_find(vector<Node*>&v){
-    int min = 0;
-    for(int i = 1; i < v.size(); ++i)
-        if(v[i]->getEnd() < v[min]->getEnd())
-        	min = i;
-    return min;
+	int min = 0;
+	for(int i = 1; i < v.size(); ++i)
+		if(v[i]->getEnd() < v[min]->getEnd())
+			min = i;
+	return min;
 }
 
 /**
@@ -205,19 +205,18 @@ void dump_file(int long new_end, Node* node){
 
 		save_file.close();
 
-		first_write = true;
 		last_end = new_end;
 	}
+
+	fstream save_file;
+	save_file.open(path_save, fstream::app);
 
 	if (node->getStart() > last_end){
 		#ifdef LOG
 			L_(ldebug) << "save - " << "start: " << last_end << " end: " << node->getStart()  << " duration: " << node->getStart()-last_end << " phases: " << -1 << " jobs: " << -1 << " days: " << days.values;
 		#endif
-
-		fstream save_file;
-		save_file.open(path_save, fstream::app);
 		save_file <<  last_end <<";"<< node->getStart() <<";"<< node->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";"<< days.values <<";"<< days.times << endl;
-		save_file.close();
+		
 	}
 	
 	last_end = new_end;
@@ -226,10 +225,74 @@ void dump_file(int long new_end, Node* node){
 		L_(ldebug) << "save - " <<  "start: " << node->getStart() << " end: " << new_end << " duration: " << new_end-node->getStart() << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
 	#endif 
 
-	fstream save_file;
-	save_file.open(path_save, fstream::app);
 	save_file <<  node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+	
 	save_file.close();
+
+
+	char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
+	strcat(folder, "../data/phases/");
+	strcat(folder,phases.values);
+	strcat(folder,".csv");
+	//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+
+	fstream file;
+
+	file.open(folder, ios::in | ios::out | ios::app );
+
+	if(!first_write){
+
+	first_write = true;
+
+	// If file does not exist, Create new file
+	if (!file ){
+		#ifdef LOG
+		L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+		#endif 
+		file.open(folder,  ios::in | ios::out | ios::trunc);
+		file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+		file.close();
+	}else{  // use existing file
+		#ifdef LOG
+		L_(ldebug) << "Success "<<  folder <<" found.";
+		#endif 
+		file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		file.close();
+	}
+
+	free(folder);
+
+	for (int i = 0; i < phases_vec.size(); ++i){
+		char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
+		strcat(folder, "../data/patterns/");
+		sprintf(folder,"%d", phases_vec[i]);
+		strcat(folder,".csv");
+		//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+
+		fstream file;
+
+		file.open(folder, ios::in | ios::out | ios::app );
+
+		// If file does not exist, Create new file
+		if (!file ){
+			#ifdef LOG
+			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+			#endif 
+			file.open(folder, ios::in |  ios::out | ios::trunc);
+			file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+			file.close();
+
+		}else{  // use existing file
+			#ifdef LOG
+			L_(ldebug) << "Success "<<  folder <<" found.";
+			#endif 
+			file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+			file.close();
+		}
+
+		free(folder);
+	}
+
 
 	free(jobs.values);
 	free(phases.values);
@@ -257,9 +320,6 @@ void dump_dict(const char path[], vector<char*>&v){
 	}
 }
 
-// void dump_staticstics(vector<Node*>&v){
-
-// }
 
 /**
  * Creating intervals that not have a next interval
@@ -279,33 +339,33 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
 		L_(ldebug) << "max heap size: " << heap_max->getSize();
 	#endif	
 	while(!heap_max->isEmpty()){
-	 	vector<Node*> nodes;
-	 	vector<Node*> nexts;
+		vector<Node*> nodes;
+		vector<Node*> nexts;
 
-	 	n_current = heap_max->extract();
+		n_current = heap_max->extract();
 
-	 	if(!heap_max->isEmpty()){
+		if(!heap_max->isEmpty()){
 
-	 		nodes.push_back(n_current);
+			nodes.push_back(n_current);
 
-	 		if(!heap_max->isEmpty())
-		 		while(n_current->getStart() == heap_max->top()->getStart()){
-		 			nodes.push_back(heap_max->extract());
-		 			if(heap_max->isEmpty())
-		 				break;
-		 		}
+			if(!heap_max->isEmpty())
+				while(n_current->getStart() == heap_max->top()->getStart()){
+					nodes.push_back(heap_max->extract());
+					if(heap_max->isEmpty())
+						break;
+				}
 
-	 		if(!heap_max->isEmpty()){
+			if(!heap_max->isEmpty()){
 
-	 			n_next = heap_max->extract();
+				n_next = heap_max->extract();
 
-	 			nexts.push_back(n_next);
-	 			if(!heap_max->isEmpty())
-			 		while(n_next->getStart() == heap_max->top()->getStart() && !heap_max->isEmpty()){
-			 			nexts.push_back(heap_max->extract());	
-			 			if(heap_max->isEmpty())
-		 					break;
-			 		}
+				nexts.push_back(n_next);
+				if(!heap_max->isEmpty())
+					while(n_next->getStart() == heap_max->top()->getStart() && !heap_max->isEmpty()){
+						nexts.push_back(heap_max->extract());	
+						if(heap_max->isEmpty())
+							break;
+					}
 
 				int idx_min_nodes = min_find(nodes);
 				int idx_min_nexts = min_find(nexts);

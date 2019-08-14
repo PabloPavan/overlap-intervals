@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../include/utils.h"
 
 /**
  * Read the input file
@@ -181,7 +181,7 @@ inline bool file_exists (const char filename[]) {
 
 void dump_file(int long new_end, Node* node){
 
-	char path_save[] = "../data/final_3_1_2012.csv";
+	char path_save[] = "../data/final.csv";
 
 	vector<int> jobs_vec = remove_duplicates(node, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(node, &Node::getPhase);

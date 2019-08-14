@@ -1,4 +1,4 @@
-#include "heap_max.h"
+#include "../include/heap_max.h"
 
 
 /* Private */

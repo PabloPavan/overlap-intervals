@@ -1,8 +1,8 @@
-#include "utils.h"
-#include "logger.h"
-#include "node.h"
-#include "heap_min.h"
-#include "heap_max.h"
+#include "../include/utils.h"
+#include "../include/logger.h"
+#include "../include/node.h"
+#include "../include/heap_min.h"
+#include "../include/heap_max.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]){
 	file_path.open("../data/path.dat");
 	if (!file_path) {
 		#ifdef LOG
-			L_(lwarning) << "Unable to open path.dat file";
+			L_(lerror) << "Unable to open path.dat file";
 		#endif
 		exit(1);
 	}
@@ -51,7 +51,7 @@ int main(int argc, char const *argv[]){
 
 	Node* n_current;
 	Node* n_next;
-	
+
 	vector<Node*> nodes;
 	vector<Node*> nexts;
 

@@ -14,11 +14,8 @@
 
 Example from [[file:data/intervals.small.csv][intervals.small.csv]]
 
-[[file:R/interval_small.png]]
-
 * Output data
 
 Output from [[file:data/final.csv][final.csv]]
 
-[[file:R/saida_final.png]]
 

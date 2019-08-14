@@ -1,4 +1,4 @@
-#include "heap_min.h"
+#include "../include/heap_min.h"
 
 
 /* Private */

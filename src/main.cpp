@@ -159,6 +159,10 @@ int main(int argc, char const *argv[]){
 	dump_dict("../data/phases.csv", info_v);
 	dump_dict("../data/jobs.csv", filename_v);
 
+	for (int i = 0; i < path_v.size(); ++i){
+		free(path_v[i]);
+	}
+
 	endLogger();
 
 	return 0;

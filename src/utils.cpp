@@ -22,16 +22,17 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 	char *header = fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
-		char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
+		//char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
 		long int start_time;
 		long int end_time;
 		double start;
 		double end;
-		char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
+		//char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
 
 		char *token = strtok(line,delim); //filename
+		char *filename = (char *) calloc(strlen(token) + 1 , sizeof(char));
 		strcpy(filename, token);
-		filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
+		//filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
 		token = strtok(NULL,delim); //start_time
 		start_time = atoi(token);
 		token = strtok(NULL,delim); //end_time
@@ -41,9 +42,10 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 		token = strtok(NULL,delim); //end
 		end = atof(token);
 		token = strtok(NULL,delim); //info
+		char *info = (char *) calloc(strlen(token) + 1 , sizeof(char));
 		strcpy(info, token);
 		info[strlen(info)-1] = '\0'; // remove \n
-		info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
+		//info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
@@ -55,6 +57,7 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 		long int end_ = start_ + (endi - starti);
 
 		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_));
+
 	}
 	fclose(f);
 }
@@ -298,6 +301,7 @@ void dump_dict(const char path[], vector<char*>&v){
 
 	for (int i = 0; i < v.size(); ++i){
 		save_file << i << ";" << v[i] << endl;
+		free(v[i]); //free filename and info char
 	}
 }
 

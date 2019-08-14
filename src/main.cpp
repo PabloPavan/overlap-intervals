@@ -160,5 +160,6 @@ int main(int argc, char const *argv[]){
 	dump_dict("../data/jobs.csv", filename_v);
 
 	endLogger();
+
 	return 0;
 }

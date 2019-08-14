@@ -307,7 +307,7 @@ void dump_dict(const char path[], vector<char*>&v){
  *
  * @param vector of the Nodes
  */
-void create_intervals_without_next(Heap_min *heap_min, vector<Node*> nodes){
+void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 	Node* n_current;
 	Node* n_next;
 

@@ -12,7 +12,7 @@ Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) 
     this->end = end;
 }
 
-Node::Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int end) { /* O(1) */
+Node::Node(vector <Node*>& nexts, vector <Node*>& nodes, long int start, long int end) { /* O(1) */
     
 
     for(int i = 0; i < nexts.size(); ++i){
@@ -49,7 +49,7 @@ Node::Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int 
     this->end = end;
 }
 
-Node::Node(vector <Node*> nodes, long int start, long int end) { /* O(1) */
+Node::Node(vector <Node*>& nodes, long int start, long int end) { /* O(1) */
     
 
     for(int i = 0; i < nodes.size(); ++i){
@@ -133,8 +133,9 @@ Node::Node(vector <int> phase, vector <int> job, vector <int> day, long int star
     this->end = end;
 }
 
-void Node::destroy() { /* O(n lg n) */
-    delete this;
+Node::~Node() { /* O(n lg n) */
+   // delete this;
+   // cout << "matei o node" << endl;
 }
 
 vector <int> Node::getPhase() { /* O(1) */

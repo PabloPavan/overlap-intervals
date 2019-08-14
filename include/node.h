@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define	NODE_H
 #include <vector>
+#include <iostream>
 using namespace std;
 /* Binary tree node */
 
@@ -15,13 +16,12 @@ private:
 public:
     
     Node(int phase, int job, int day, long int start, long int end);
-    Node(vector <Node*> nexts, vector <Node*> nodes, long int start, long int end);
-    Node(vector <Node*> nodes, long int start, long int end);
+    Node(vector <Node*>& nexts, vector <Node*>& nodes, long int start, long int end);
+    Node(vector <Node*>& nodes, long int start, long int end);
     Node(Node* nexts, Node* nodes, long int start, long int end);
     Node(Node* nodes, long int start, long int end);
     Node(vector <int> phase, vector <int> job, vector <int> day, long int start, long int end);
-    
-    void destroy();
+    ~Node();
     vector<int> getPhase();
     vector<int> getJob();
     vector<int> getDay();

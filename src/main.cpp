@@ -83,14 +83,21 @@ int main(int argc, char const *argv[]){
 
 				if(nodes.size() > 1){	
 					create_intervals_without_next(heap_min, nodes);
+					for (int i = 0; i < nodes.size(); ++i){
+						delete nodes[i];
+					}
+
 					nodes.clear();
 				}else{
-					heap_min->insert(nodes[0]);	
+					heap_min->insert(nodes[0]);
 					nodes.clear();
 				}	
 
 				if (nexts.size() > 1){
 					create_intervals_without_next(heap_min, nexts);
+					for (int i = 0; i < nexts.size(); ++i){
+						delete nexts[i];
+					}
 					nexts.clear();
 
 				}else{
@@ -124,13 +131,16 @@ int main(int argc, char const *argv[]){
 						#ifdef LOG
 							L_(ldebug) << "new 4 - start " << n_next->getEnd() << " end " << n_current->getEnd();
 						#endif
-					}		
+					}
+					delete n_current;
+					delete n_next;		
 				}else{
 					#ifdef LOG
 						L_(ldebug) << "else 1";
 					#endif
 					heap_min->insert(n_next);
 					dump_file(n_current->getEnd(), n_current);
+					delete n_current;
 				} 				
 			}else{
 				#ifdef LOG
@@ -138,9 +148,13 @@ int main(int argc, char const *argv[]){
 				#endif
 				if(nodes.size() > 1){		
 					create_intervals_without_next(heap_min, nodes);
+					for (int i = 0; i < nodes.size(); ++i){
+						delete nodes[i];
+					}
 					nodes.clear();
 				}else{
 					dump_file(nodes[0]->getEnd(), nodes[0]);
+					delete nodes[0];
 					nodes.clear();
 				}
 			}
@@ -149,6 +163,7 @@ int main(int argc, char const *argv[]){
 				L_(ldebug) << "else 3";
 			#endif
 			dump_file(n_current->getEnd(), n_current);
+			delete n_current;
 		}	
 	}
 
@@ -159,10 +174,19 @@ int main(int argc, char const *argv[]){
 	dump_dict("../data/phases.csv", info_v);
 	dump_dict("../data/jobs.csv", filename_v);
 
+	for (int i = 0; i < info_v.size(); ++i)	{
+		free(info_v[i]);
+	}
+
+	for (int i = 0; i < filename_v.size(); ++i)	{
+		free(filename_v[i]);
+	}
+
 	for (int i = 0; i < path_v.size(); ++i){
 		free(path_v[i]);
 	}
 
+	delete heap_min;
 	endLogger();
 
 	return 0;

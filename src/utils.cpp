@@ -58,6 +58,8 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 
 		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_));
 
+		free(filename);
+		free(info);
 	}
 	fclose(f);
 }
@@ -73,11 +75,13 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 
 int idx_find(char *word, vector<char*>&v){
 	int idx = 0;
+	char *a = (char *) calloc(strlen(word) + 1 , sizeof(char));
+	strcpy(a,word);
 	for (idx = 0; idx < v.size(); ++idx)
-		if(strcmp(v[idx],word) == 0) 
+		if(strcmp(v[idx],a) == 0) 
 			break;
 	if(idx == v.size())
-		v.push_back(word);	
+		v.push_back(a);	
 	return idx;	
 
 }
@@ -301,7 +305,7 @@ void dump_dict(const char path[], vector<char*>&v){
 
 	for (int i = 0; i < v.size(); ++i){
 		save_file << i << ";" << v[i] << endl;
-		free(v[i]); //free filename and info char
+		//free(v[i]); //free filename and info char
 	}
 }
 
@@ -319,7 +323,8 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 
 	for (int i = 0; i < nodes.size(); ++i)
 		heap_max->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
-	
+		
+
 	#ifdef LOG
 		L_(ldebug) << "max heap size: " << heap_max->getSize();
 	#endif	
@@ -363,21 +368,35 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
 					#endif
 					heap_max->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
+					
+					for (int i = 0; i < nodes.size(); ++i){
+						delete nodes[i];
+					}
+
+					for (int i = 0; i < nexts.size(); ++i){
+						delete nexts[i];
+					}
 				}
 			}else{
 				#ifdef LOG
 					L_(ldebug) << "else 1 inside - start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd();
 				#endif
 				heap_min->insert(new Node(nodes, nodes[0]->getEnd(), nodes[0]->getStart()));
+				for (int i = 0; i < nodes.size(); ++i){
+					delete nodes[i];
+				}
 			}
 		}else{
 			#ifdef LOG
 				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
 			#endif
 			heap_min->insert(new Node(n_current, n_current->getEnd(), n_current->getStart()));
+			delete n_current;
+
 		}	
 	}
 	#ifdef LOG
 		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
 	#endif	
+		delete heap_max;
 }

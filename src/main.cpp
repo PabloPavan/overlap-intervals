@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <string>
 #include <vector>
 
 
@@ -40,8 +41,8 @@ int main(int argc, char const *argv[]){
 	Heap_min *heap_min;
 	heap_min = new Heap_min(HEAP_SIZE);
 
-	vector<char*> filename_v;
-	vector<char*> info_v;
+	vector<string> filename_v;
+	vector<string> info_v;
 
 	read_file(heap_min, path_v[0], filename_v, info_v);
 
@@ -174,13 +175,6 @@ int main(int argc, char const *argv[]){
 	dump_dict("../data/phases.csv", info_v);
 	dump_dict("../data/jobs.csv", filename_v);
 
-	for (int i = 0; i < info_v.size(); ++i)	{
-		free(info_v[i]);
-	}
-
-	for (int i = 0; i < filename_v.size(); ++i)	{
-		free(filename_v[i]);
-	}
 
 	for (int i = 0; i < path_v.size(); ++i){
 		free(path_v[i]);

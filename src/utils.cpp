@@ -8,7 +8,7 @@
  */
 
 
-unsigned int read_file(Heap_min *heap_min, const char path[], vector<string>&filename_v, vector<string>&info_v){
+unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vector<string>&filename_v, vector<string>&info_v){
 
 	const long int epoch_time = 1325376000;
 	//long int epoch_time = 0;

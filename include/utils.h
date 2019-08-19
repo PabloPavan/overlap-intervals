@@ -26,7 +26,7 @@ struct statistics_data{
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
-unsigned int read_file(Heap_min *h, const char path[], vector<string>&filename_v, vector<string>&info_v);
+unsigned int read_file(Heap_min *h, const char path[], long int day, vector<string>&filename_v, vector<string>&info_v);
 int idx_find(string word, vector<string>&v);
 int min_find(vector<Node*>&v);
 Node* back_pop(vector<Node*>&v);

@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <list>
 #include <sys/stat.h>
 
 #define BUFFER_SIZE 4096
@@ -26,10 +27,10 @@ struct statistics_data{
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
-unsigned int read_file(Heap_min *h, const char path[], long int day, vector<string>&filename_v, vector<string>&info_v);
+unsigned int read_file(Heap_min *h, string path, long int day, vector<string>&filename_v, vector<string>&info_v);
 int idx_find(string word, vector<string>&v);
 int min_find(vector<Node*>&v);
-Node* back_pop(vector<Node*>&v);
+string front_pop(list<string>&l);
 vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)());
 inline bool file_exists (const char filename[]);
 void dump_file(int long new_end, Node* node);

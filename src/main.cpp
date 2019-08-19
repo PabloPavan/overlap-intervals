@@ -8,6 +8,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <list>
 
 
 #define HEAP_SIZE 30000
@@ -19,8 +20,8 @@ int main(int argc, char const *argv[]){
 		L_(linfo) << "program started";
 	#endif
 
-	char* line =(char *) calloc(BUFFER_SIZE, sizeof(char));
-	vector<char*> path_v;
+	string line;
+	list<string> path_l;
 	ifstream file_path;
 	
 	file_path.open("../data/path.dat");
@@ -32,12 +33,11 @@ int main(int argc, char const *argv[]){
 	}
 	
 	while (file_path >> line) {
-		line = (char *) realloc(line, (strlen(line) + 1) * sizeof(char));
-		path_v.push_back(line);
+		path_l.push_back(line);
 	}
 
 	file_path.close();
-	
+
 	Heap_min *heap_min;
 	heap_min = new Heap_min(HEAP_SIZE);
 
@@ -45,14 +45,9 @@ int main(int argc, char const *argv[]){
 	vector<string> info_v;
 
 	long int day = 3; 
-	int idx = 0;
 	unsigned int heap_total_size;
-	heap_total_size = read_file(heap_min, path_v[idx++], day, filename_v, info_v);
-
-	#ifdef LOG
-		L_(ldebug) << "min heap size: " << heap_min->getSize();
-	#endif	
-
+	heap_total_size = read_file(heap_min, front_pop(path_l), day, filename_v, info_v);
+	
 	Node* n_current;
 	Node* n_next;
 
@@ -62,11 +57,13 @@ int main(int argc, char const *argv[]){
 
 	while(!heap_min->isEmpty()){
 
-		if (idx > path_v.size() && heap_min->getSize() < (heap_total_size*0.2)){
-			cout << "aconteceu" << endl;
-			heap_total_size = read_file(heap_min, path_v[idx++], ++day, filename_v, info_v);
+		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
+			#ifdef LOG
+				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " 30 perc of the total size: " << (heap_total_size*0.5);
+			#endif
+			heap_total_size = read_file(heap_min, front_pop(path_l), ++day, filename_v, info_v);
 		}
-
+		
 		n_current = heap_min->extract();
 
 		if(!heap_min->isEmpty()){
@@ -185,10 +182,6 @@ int main(int argc, char const *argv[]){
 	dump_dict("../data/phases.csv", info_v);
 	dump_dict("../data/jobs.csv", filename_v);
 
-
-	for (int i = 0; i < path_v.size(); ++i){
-		free(path_v[i]);
-	}
 
 	delete heap_min;
 	endLogger();

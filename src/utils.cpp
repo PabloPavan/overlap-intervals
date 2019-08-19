@@ -8,10 +8,9 @@
  */
 
 
-unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vector<string>&filename_v, vector<string>&info_v){
+unsigned int read_file(Heap_min *heap_min, string path, long int day, vector<string>&filename_v, vector<string>&info_v){
 
 	const long int epoch_time = 1325376000;
-	//long int epoch_time = 0;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 
@@ -19,23 +18,18 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 		L_(ldebug) << "read file: " << path;
 	#endif
 
-	FILE *f = fopen(path, "r");
+	FILE *f = fopen(path.c_str(), "r");
 
 	char *header = fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
-		//char *filename = (char *) calloc(BUFFER_SIZE, sizeof(char));
 		long int start_time;
 		long int end_time;
 		double start;
 		double end;
-		//char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
 
 		char *token = strtok(line,delim); //filename
 		string filename(token);
-		//char *filename = (char *) calloc(strlen(token) + 1 , sizeof(char));
-		//strcpy(filename, token);
-		//filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
 		token = strtok(NULL,delim); //start_time
 		start_time = atoi(token);
 		token = strtok(NULL,delim); //end_time
@@ -45,13 +39,8 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 		token = strtok(NULL,delim); //end
 		end = atof(token);
 		token = strtok(NULL,delim); //info
-		// char *info = (char *) calloc(strlen(token) + 1 , sizeof(char));
 		token[strlen(token)-1] = '\0'; // remove \n
 		string info(token);
-		// strcpy(info, token);
-
-		//info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
-		// convert the start_time, end_time, start and end to micro
 		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
 		start_time = start_time * 1000000;
@@ -63,11 +52,12 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 
 		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_));
 
-		//free(filename);
-		//free(info);
 	}
 	
 	fclose(f);
+	#ifdef LOG
+		L_(ldebug) << "min heap size: " << heap_min->getSize();
+	#endif
 	return heap_min->getSize();
 }
 
@@ -127,17 +117,17 @@ int min_find(vector<Node*>&v){
 }
 
 /**
- * Return and remove a value from a vector of the nodes
+ * Return and remove a value from list of the strign
  * 
- * @param ref of the nodes vector
- * @return an object of Node
+ * @param ref of the string list
+ * @return the value of the front
  */
 
-Node* back_pop(vector<Node*>&v){
-	Node *no;
-	no = v.back();
-	v.pop_back();
-	return no;
+string front_pop(list<string>&l){
+	string str;
+	str = l.front();
+	l.pop_front();
+	return str;
 }
 
 /**

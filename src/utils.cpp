@@ -4,9 +4,10 @@
  * Read the input file
  * 
  * @param heap pointer, index of the vector that contains the input files' path, ref vector filename, and ref vector info
+ * @return the heap's size
  */
 
-void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, vector<char*>&info_v){
+unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vector<char*>&filename_v, vector<char*>&info_v){
 
 	const long int epoch_time = 1325376000;
 	//long int epoch_time = 0;
@@ -56,10 +57,12 @@ void read_file(Heap_min *heap_min, const char path[], vector<char*>&filename_v, 
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 
-		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),1,start_,end_));
+		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_));
 
 	}
+	
 	fclose(f);
+	return heap_min->getSize();
 }
 
 /**

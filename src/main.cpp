@@ -43,7 +43,10 @@ int main(int argc, char const *argv[]){
 	vector<char*> filename_v;
 	vector<char*> info_v;
 
-	read_file(heap_min, path_v[0], filename_v, info_v);
+	long int day = 3; 
+	int idx = 0;
+	unsigned int heap_total_size;
+	heap_total_size = read_file(heap_min, path_v[idx++], day, filename_v, info_v);
 
 	#ifdef LOG
 		L_(ldebug) << "min heap size: " << heap_min->getSize();
@@ -55,7 +58,14 @@ int main(int argc, char const *argv[]){
 	vector<Node*> nodes;
 	vector<Node*> nexts;
 
+
 	while(!heap_min->isEmpty()){
+
+		if (idx > path_v.size() && heap_min->getSize() < (heap_total_size*0.2)){
+			cout << "aconteceu" << endl;
+			heap_total_size = read_file(heap_min, path_v[idx++], ++day, filename_v, info_v);
+		}
+
 		n_current = heap_min->extract();
 
 		if(!heap_min->isEmpty()){

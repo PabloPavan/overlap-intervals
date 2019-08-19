@@ -230,13 +230,7 @@ void dump_file(int long new_end, Node* node){
 	
 	save_file.close();
 
-	//char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-
 	string folder = output_path+"phases_"+phases.values+".csv";
-
-	//sprintf(folder,"%s%s%s", "../data/phases/", phases.values,".csv");
-	//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
-
 
 	if(!file_exists(folder.c_str())){
 		#ifdef LOG
@@ -255,15 +249,9 @@ void dump_file(int long new_end, Node* node){
 		save_file.close();
 	}
 
-	// free(folder);
-
 	for (int i = 0; i < phases_vec.size(); ++i){
 
 		string folder = output_path+"patterns_"+to_string(phases_vec[i])+".csv";
-
-		// char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-		// sprintf(folder,"%s%d%s", "../data/patterns/", phases_vec[i],".csv");
-		// folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
 
 		if(!file_exists(folder.c_str())){
 			#ifdef LOG
@@ -281,7 +269,6 @@ void dump_file(int long new_end, Node* node){
 			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 			save_file.close();
 		}
-		// free(folder);
 	}
 
 

@@ -13,30 +13,52 @@
 
 #define HEAP_SIZE 30000
 
+string input_path, output_path;
+
 int main(int argc, char const *argv[]){
+
+	if(argc==3) { 
+		cout << endl << "--Following Are The Command Line Arguments Passed--" << endl; 
+		for (int i = 1; i < argc; ++i)
+			cout << endl <<"argv["<<i<<"]: " << argv[i] << endl; 
+
+		input_path = argv[1];
+		output_path = argv[2];
+
+	}else{
+		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.dat] -- folder's path of the output file [path/]" << endl;
+		return 0;
+	}
 
 	#ifdef LOG
 		initLogger( "logger.log", ldebug);
-		L_(linfo) << "program started";
+		L_(linfo) << "Program started";
+		L_(linfo) << "Following Are The Command Line Arguments Passed";
+		L_(linfo) << "argv[1]: " << input_path << " -- argv[2]: " << output_path;
 	#endif
 
+	
 	string line;
 	list<string> path_l;
 	ifstream file_path;
 	
-	file_path.open("../data/path.dat");
+	file_path.open(input_path);
 	if (!file_path) {
 		#ifdef LOG
-			L_(lerror) << "Unable to open path.dat file";
+			L_(lerror) << "Unable to open: " << input_path << " file";
 		#endif
 		exit(1);
 	}
 	
 	while (file_path >> line) {
+		#ifdef LOG
+			L_(linfo) << "Input list: " << line;
+		#endif
 		path_l.push_back(line);
 	}
 
 	file_path.close();
+
 
 	Heap_min *heap_min;
 	heap_min = new Heap_min(HEAP_SIZE);
@@ -59,7 +81,7 @@ int main(int argc, char const *argv[]){
 
 		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
 			#ifdef LOG
-				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " 30 perc of the total size: " << (heap_total_size*0.5);
+				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 30 perc of the total size: " << (heap_total_size*0.5);
 			#endif
 			heap_total_size = read_file(heap_min, front_pop(path_l), ++day, filename_v, info_v);
 		}
@@ -179,8 +201,13 @@ int main(int argc, char const *argv[]){
 		L_(ldebug) << "min size of heap after: " << heap_min->getSize();
 	#endif
 
-	dump_dict("../data/phases.csv", info_v);
-	dump_dict("../data/jobs.csv", filename_v);
+
+	string jobs_path, phases_path;
+	phases_path = output_path + "dict_phases.csv";
+	jobs_path = output_path + "dict_jobs.csv";
+
+	dump_dict(phases_path, info_v);
+	dump_dict(jobs_path, filename_v);
 
 
 	delete heap_min;

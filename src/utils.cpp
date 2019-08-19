@@ -184,7 +184,8 @@ inline bool file_exists (const char filename[]) {
 
 void dump_file(int long new_end, Node* node){
 
-	char path_save[] = "../data/final.csv";
+
+	string path_save = output_path+"final.csv";
 
 	vector<int> jobs_vec = remove_duplicates(node, &Node::getJob);
 	vector<int> phases_vec = remove_duplicates(node, &Node::getPhase);
@@ -229,12 +230,15 @@ void dump_file(int long new_end, Node* node){
 	
 	save_file.close();
 
-	char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-	sprintf(folder,"%s%s%s", "../data/phases/", phases.values,".csv");
-	folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+	//char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
+
+	string folder = output_path+"phases_"+phases.values+".csv";
+
+	//sprintf(folder,"%s%s%s", "../data/phases/", phases.values,".csv");
+	//folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
 
 
-	if(!file_exists(folder)){
+	if(!file_exists(folder.c_str())){
 		#ifdef LOG
 			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
 		#endif 
@@ -251,14 +255,17 @@ void dump_file(int long new_end, Node* node){
 		save_file.close();
 	}
 
-	free(folder);
+	// free(folder);
 
 	for (int i = 0; i < phases_vec.size(); ++i){
-		char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
-		sprintf(folder,"%s%d%s", "../data/patterns/", phases_vec[i],".csv");
-		folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
 
-		if(!file_exists(folder)){
+		string folder = output_path+"patterns_"+to_string(phases_vec[i])+".csv";
+
+		// char* folder =(char *) calloc(BUFFER_SIZE, sizeof(char));
+		// sprintf(folder,"%s%d%s", "../data/patterns/", phases_vec[i],".csv");
+		// folder = (char *) realloc(folder, (strlen(folder) + 1) * sizeof(char));
+
+		if(!file_exists(folder.c_str())){
 			#ifdef LOG
 				L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
 			#endif 
@@ -274,7 +281,7 @@ void dump_file(int long new_end, Node* node){
 			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 			save_file.close();
 		}
-		free(folder);
+		// free(folder);
 	}
 
 
@@ -292,7 +299,7 @@ void dump_file(int long new_end, Node* node){
 
 
 
-void dump_dict(const char path[], vector<string>&v){
+void dump_dict(string path, vector<string>&v){
 	#ifdef LOG
 		L_(ldebug) << "dump dict file: " << path;
 	#endif 

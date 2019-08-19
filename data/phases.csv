@@ -1,6 +1,0 @@
-id;name
-0;posix write consecutive unique file
-1;posix read unique file
-2;posix read unique file
-3;posix read shared file
-4;posix write unique file

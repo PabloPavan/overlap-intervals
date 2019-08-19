@@ -7,7 +7,8 @@
  * @return the heap's size
  */
 
-unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vector<char*>&filename_v, vector<char*>&info_v){
+
+unsigned int read_file(Heap_min *heap_min, const char path[], vector<string>&filename_v, vector<string>&info_v){
 
 	const long int epoch_time = 1325376000;
 	//long int epoch_time = 0;
@@ -31,8 +32,9 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 		//char *info = (char *) calloc(BUFFER_SIZE, sizeof(char));
 
 		char *token = strtok(line,delim); //filename
-		char *filename = (char *) calloc(strlen(token) + 1 , sizeof(char));
-		strcpy(filename, token);
+		string filename(token);
+		//char *filename = (char *) calloc(strlen(token) + 1 , sizeof(char));
+		//strcpy(filename, token);
 		//filename = (char *) realloc(filename, (strlen(filename) + 1) * sizeof(char));
 		token = strtok(NULL,delim); //start_time
 		start_time = atoi(token);
@@ -43,9 +45,11 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 		token = strtok(NULL,delim); //end
 		end = atof(token);
 		token = strtok(NULL,delim); //info
-		char *info = (char *) calloc(strlen(token) + 1 , sizeof(char));
-		strcpy(info, token);
-		info[strlen(info)-1] = '\0'; // remove \n
+		// char *info = (char *) calloc(strlen(token) + 1 , sizeof(char));
+		token[strlen(token)-1] = '\0'; // remove \n
+		string info(token);
+		// strcpy(info, token);
+
 		//info = (char *) realloc(info, (strlen(info) + 1) * sizeof(char));
 		// convert the start_time, end_time, start and end to micro
 		start  = start * 1000000; 
@@ -59,6 +63,8 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
 
 		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_));
 
+		//free(filename);
+		//free(info);
 	}
 	
 	fclose(f);
@@ -74,16 +80,17 @@ unsigned int read_file(Heap_min *heap_min, const char path[], long int day, vect
  * @return the index of the vector that contains the word
  */
 
-int idx_find(char *word, vector<char*>&v){
+int idx_find(string word, vector<string>&v){
 	int idx = 0;
 	for (idx = 0; idx < v.size(); ++idx)
-		if(strcmp(v[idx],word) == 0) 
+		if(v[idx].compare(word) == 0) 
 			break;
 	if(idx == v.size())
 		v.push_back(word);	
 	return idx;	
 
 }
+
 
 /**
  * Removing values duplicates using a set
@@ -293,7 +300,9 @@ void dump_file(int long new_end, Node* node){
  * @param the file path and the vector
  */
 
-void dump_dict(const char path[], vector<char*>&v){
+
+
+void dump_dict(const char path[], vector<string>&v){
 	#ifdef LOG
 		L_(ldebug) << "dump dict file: " << path;
 	#endif 
@@ -304,10 +313,8 @@ void dump_dict(const char path[], vector<char*>&v){
 
 	for (int i = 0; i < v.size(); ++i){
 		save_file << i << ";" << v[i] << endl;
-		free(v[i]); //free filename and info char
 	}
 }
-
 
 /**
  * Creating intervals that not have a next interval
@@ -322,7 +329,8 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 
 	for (int i = 0; i < nodes.size(); ++i)
 		heap_max->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
-	
+		
+
 	#ifdef LOG
 		L_(ldebug) << "max heap size: " << heap_max->getSize();
 	#endif	
@@ -366,21 +374,35 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
 					#endif
 					heap_max->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
+					
+					for (int i = 0; i < nodes.size(); ++i){
+						delete nodes[i];
+					}
+
+					for (int i = 0; i < nexts.size(); ++i){
+						delete nexts[i];
+					}
 				}
 			}else{
 				#ifdef LOG
 					L_(ldebug) << "else 1 inside - start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd();
 				#endif
 				heap_min->insert(new Node(nodes, nodes[0]->getEnd(), nodes[0]->getStart()));
+				for (int i = 0; i < nodes.size(); ++i){
+					delete nodes[i];
+				}
 			}
 		}else{
 			#ifdef LOG
 				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
 			#endif
 			heap_min->insert(new Node(n_current, n_current->getEnd(), n_current->getStart()));
+			delete n_current;
+
 		}	
 	}
 	#ifdef LOG
 		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
 	#endif	
+		delete heap_max;
 }

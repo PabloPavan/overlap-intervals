@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 30000
+#define HEAP_SIZE 4294967290
 
 string input_path, output_path;
 
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]){
 
 	}else{
 		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.dat] -- folder's path of the output file [path/]" << endl;
-		return 0;
+		exit(1);
 	}
 
 	#ifdef LOG

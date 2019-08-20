@@ -138,8 +138,8 @@ inline string NowTime(){
 
 	struct timeval tv;
 	gettimeofday(&tv, 0);
-	char result[100] = {0};
-	sprintf(result, "%s.%03ld", timestamp, (long)tv.tv_usec / 1000); 
+	string result;
+	sprintf(result.c_str(), "%s.%03ld", timestamp, (long)tv.tv_usec / 1000); 
 	free(timestamp);
 	return result;
 }

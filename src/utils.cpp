@@ -142,12 +142,13 @@ string front_pop(list<string>&l){
 statistics_data extract_statistics(vector<int> &v){
 
 	char *value = (char*) calloc(v.size() * 2 + 1, sizeof(char));
-	char *tmp = (char*) calloc(3, sizeof(char));
+	char *tmp = (char*) calloc(BUFFER_SIZE, sizeof(char));
 
 	int i = 0;
 	for (i = 0; i < v.size()-1; ++i){
 		sprintf(tmp, "%d,", v[i]);
 		strcat(value, tmp);
+		bzero(tmp, BUFFER_SIZE);
 	}
 	sprintf(tmp, "%d", v[i++]);
 	strcat(value, tmp);

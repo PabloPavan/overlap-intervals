@@ -134,6 +134,8 @@ string front_pop(list<string>&l){
  * Creating statistics of a vector.
  * Creating a char with the values of the vector separated by comma
  * Count the number of values in the vector
+ * the "11" value is the limit of the int size 
+ * the "12" value is the limit of the int size + /0
  *
  * @param ref of the int vector
  * @return a struct with the number of values and the char

@@ -15,7 +15,7 @@ unsigned int read_file(Heap_min *heap_min, string path, long int day, vector<str
 	char delim[] = ";";
 
 	#ifdef LOG
-		L_(ldebug) << "read file: " << path;
+		L_(linfo) << "read file: " << path;
 	#endif
 
 	FILE *f = fopen(path.c_str(), "r");
@@ -89,20 +89,15 @@ int idx_find(string word, vector<string>&v){
  * @return a vector with with unique values
  */
 
-vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)()){
-	vector<int> vec;
+void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<int>&v){
 	set<int> s;
-
 	vector<int> u = (node->*functionPtr)();
 
-	s.insert(u.begin(), u.end());
-
-
-	// for(int j = 0; j < u.size(); ++j)
-	// 	s.insert(u[j]);
+	for(int j = 0; j < u.size(); ++j)
+		s.insert(u[j]);
 	
-	vec.assign(s.begin(),s.end()); 
-	return vec;
+	v.assign(s.begin(),s.end()); 
+
 }
 
 /**
@@ -112,7 +107,7 @@ vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)()){
  * @return the minimum value
  */
 
-int min_find(vector<Node*>&v){
+int min_find(const vector<Node*>&v){
 	int min = 0;
 	for(int i = 1; i < v.size(); ++i)
 		if(v[i]->getEnd() < v[min]->getEnd())
@@ -145,7 +140,7 @@ string front_pop(list<string>&l){
  * @return a struct with the number of values and the char
  */
 
-statistics_data extract_statistics(vector<int> &v){
+statistics_data extract_statistics(const vector<int> &v){
 
 	char *value = (char*) calloc(v.size() * 11 + 1, sizeof(char));
 	char *tmp = (char*) calloc(12, sizeof(char));
@@ -194,9 +189,13 @@ void dump_file(int long new_end, Node* node){
 
 	string path_save = output_path+"final.csv";
 
-	vector<int> jobs_vec = remove_duplicates(node, &Node::getJob);
-	vector<int> phases_vec = remove_duplicates(node, &Node::getPhase);
-	vector<int> days_vec = remove_duplicates(node, &Node::getDay);
+	vector<int> jobs_vec;
+	vector<int> phases_vec;
+	vector<int> days_vec;
+
+	remove_duplicates(node, &Node::getJob, jobs_vec);
+	remove_duplicates(node, &Node::getPhase, phases_vec);
+	remove_duplicates(node, &Node::getDay, days_vec);
 
 	statistics_data jobs = extract_statistics(jobs_vec);
 	statistics_data phases = extract_statistics(phases_vec);
@@ -293,9 +292,9 @@ void dump_file(int long new_end, Node* node){
 
 
 
-void dump_dict(string path, vector<string>&v){
+void dump_dict(string path, const vector<string>&v){
 	#ifdef LOG
-		L_(ldebug) << "dump dict file: " << path;
+		L_(linfo) << "dump dict file: " << path;
 	#endif 
 	fstream save_file;
 	save_file.open(path, fstream::out);
@@ -312,14 +311,14 @@ void dump_dict(string path, vector<string>&v){
  *
  * @param vector of the Nodes
  */
-void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
+void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes){
 	Node* n_current;
 	Node* n_next;
 
-	Heap_max *heap_max = new Heap_max(nodes.size()+1);
+	Heap_max *heap_max = new Heap_max(_nodes.size()+1);
 
-	for (int i = 0; i < nodes.size(); ++i)
-		heap_max->insert(new Node(nodes[i], nodes[i]->getEnd(), nodes[i]->getStart()));
+	for (int i = 0; i < _nodes.size(); ++i)
+		heap_max->insert(new Node(_nodes[i], _nodes[i]->getEnd(), _nodes[i]->getStart()));
 		
 
 	#ifdef LOG

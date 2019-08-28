@@ -31,13 +31,13 @@ struct statistics_data{
 
 unsigned int read_file(Heap_min *h, string path, long int day, vector<string>&filename_v, vector<string>&info_v);
 int idx_find(string word, vector<string>&v);
-int min_find(vector<Node*>&v);
+int min_find(const vector<Node*>&v);
 string front_pop(list<string>&l);
-vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)());
+void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<int>&v);
 inline bool file_exists (const char filename[]);
 void dump_file(int long new_end, Node* node);
-void dump_dict(string path, vector<string>&v);
-statistics_data extract_statistics(vector<int> &v);
-void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes);
+void dump_dict(string path, const vector<string>&v);
+statistics_data extract_statistics(const vector<int> &v);
+void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes);
 
 #endif

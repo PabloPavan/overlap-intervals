@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 4294967290
+#define HEAP_SIZE 1E6
 
 string input_path, output_path;
 
@@ -66,6 +66,10 @@ int main(int argc, char const *argv[]){
 	vector<string> filename_v;
 	vector<string> info_v;
 
+	string jobs_path, phases_path;
+	phases_path = output_path + "dict_phases.csv";
+	jobs_path = output_path + "dict_jobs.csv";
+
 	long int day = 3; 
 	unsigned int heap_total_size;
 	heap_total_size = read_file(heap_min, front_pop(path_l), day, filename_v, info_v);
@@ -83,7 +87,12 @@ int main(int argc, char const *argv[]){
 			#ifdef LOG
 				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 30 perc of the total size: " << (heap_total_size*0.5);
 			#endif
+
+			dump_dict(phases_path, info_v);
+			dump_dict(jobs_path, filename_v);
+
 			heap_total_size = read_file(heap_min, front_pop(path_l), ++day, filename_v, info_v);
+
 		}
 		
 		n_current = heap_min->extract();
@@ -195,10 +204,6 @@ int main(int argc, char const *argv[]){
 		L_(ldebug) << "min size of heap after: " << heap_min->getSize();
 	#endif
 
-
-	string jobs_path, phases_path;
-	phases_path = output_path + "dict_phases.csv";
-	jobs_path = output_path + "dict_jobs.csv";
 
 	dump_dict(phases_path, info_v);
 	dump_dict(jobs_path, filename_v);

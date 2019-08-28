@@ -94,8 +94,12 @@ vector<int> remove_duplicates(Node* node, vector<int> (Node::*functionPtr)()){
 	set<int> s;
 
 	vector<int> u = (node->*functionPtr)();
-	for(int j = 0; j < u.size(); ++j)
-		s.insert(u[j]);
+
+	s.insert(u.begin(), u.end());
+
+
+	// for(int j = 0; j < u.size(); ++j)
+	// 	s.insert(u[j]);
 	
 	vec.assign(s.begin(),s.end()); 
 	return vec;

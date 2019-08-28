@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 4294
+#define HEAP_SIZE 4294967290
 
 string input_path, output_path;
 
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	#ifdef LOG
-		initLogger( "logger.log", ldebug);
+		initLogger( "logger.log", linfo);
 		L_(linfo) << "Program started";
 		L_(linfo) << "Following Are The Command Line Arguments Passed";
 		L_(linfo) << "argv[1]: " << input_path << " -- argv[2]: " << output_path;

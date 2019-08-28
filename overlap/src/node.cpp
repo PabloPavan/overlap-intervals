@@ -5,133 +5,116 @@
 /* Public */
 
 Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) */
-    this->phase.push_back(phase);
-    this->job.push_back(job);
-    this->day.push_back(day);
-    this->start = start;
-    this->end = end;
+	this->phase.push_back(phase);
+	this->job.push_back(job);
+	this->day.push_back(day);
+	this->start = start;
+	this->end = end;
 }
 
 Node::Node(vector <Node*>& nexts, vector <Node*>& nodes, long int start, long int end) { /* O(1) */
-    
+	
 
-    for(int i = 0; i < nexts.size(); ++i){
-        vector<int> p1 = nexts[i]->getPhase();
-        for (int j = 0; j < p1.size(); ++j)
-            this->phase.push_back(p1[j]);
+	for(int i = 0; i < nodes.size(); ++i){
 
-        vector<int> j1 = nexts[i]->getJob();
-        for (int j = 0; j < j1.size(); ++j)
-            this->job.push_back(j1[j]);
-        
-        vector<int> d1 = nexts[i]->getDay();
-        for (int j = 0; j < d1.size(); ++j)
-            this->day.push_back(d1[j]);
-    }
+		vector<int> p = nodes[i]->getPhase();
+		phase.reserve(p.size());
+		phase.insert(phase.end(), p.begin(), p.end());
 
+		vector<int> j = nodes[i]->getJob();
+		job.reserve(j.size());
+		job.insert(job.end(), j.begin(), j.end());
 
-    for(int i = 0; i < nodes.size(); ++i){
-        vector<int> p2 = nodes[i]->getPhase();
-        for (int j = 0; j < p2.size(); ++j)
-            this->phase.push_back(p2[j]);
+		vector<int> d = nodes[i]->getDay();
+		day.reserve(d.size());
+		day.insert(day.end(), d.begin(), d.end());
 
-        vector<int> j2 = nodes[i]->getJob();
-        for (int j = 0; j < j2.size(); ++j)
-            this->job.push_back(j2[j]);
-        
-        vector<int> d2 = nodes[i]->getDay();
-        for (int j = 0; j < d2.size(); ++j)
-            this->day.push_back(d2[j]);
-    }
+	}
 
 
-    this->start = start;
-    this->end = end;
+	for(int i = 0; i < nexts.size(); ++i){
+
+		vector<int> p = nexts[i]->getPhase();
+		phase.reserve(p.size());
+		phase.insert(phase.end(), p.begin(), p.end());
+
+		vector<int> j = nexts[i]->getJob();
+		job.reserve(j.size());
+		job.insert(job.end(), j.begin(), j.end());
+
+		vector<int> d = nexts[i]->getDay();
+		day.reserve(d.size());
+		day.insert(day.end(), d.begin(), d.end());
+
+	}
+
+
+	this->start = start;
+	this->end = end;
 }
 
 Node::Node(vector <Node*>& nodes, long int start, long int end) { /* O(1) */
-    
+	
 
-    for(int i = 0; i < nodes.size(); ++i){
-        vector<int> p2 = nodes[i]->getPhase();
-        for (int j = 0; j < p2.size(); ++j)
-            this->phase.push_back(p2[j]);
+	for(int i = 0; i < nodes.size(); ++i){
 
-        vector<int> j2 = nodes[i]->getJob();
-        for (int j = 0; j < j2.size(); ++j)
-            this->job.push_back(j2[j]);
-        
-        vector<int> d2 = nodes[i]->getDay();
-        for (int j = 0; j < d2.size(); ++j)
-            this->day.push_back(d2[j]);
-    }
+		vector<int> p = nodes[i]->getPhase();
+		phase.reserve(p.size());
+		phase.insert(phase.end(), p.begin(), p.end());
+
+		vector<int> j = nodes[i]->getJob();
+		job.reserve(j.size());
+		job.insert(job.end(), j.begin(), j.end());
+
+		vector<int> d = nodes[i]->getDay();
+		day.reserve(d.size());
+		day.insert(day.end(), d.begin(), d.end());
+
+	}
 
 
-    this->start = start;
-    this->end = end;
+	this->start = start;
+	this->end = end;
 }
 
 
 
 Node::Node(Node* nexts, Node* nodes, long int start, long int end) { /* O(1) */
-    
+	
 
-    for (int j = 0; j < nexts->getPhase().size(); ++j)
-        this->phase.push_back(nexts->getPhase()[j]);
-        
-    for (int j = 0; j < nexts->getJob().size(); ++j)
-        this->job.push_back(nexts->getJob()[j]);
-         
-    for (int j = 0; j < nexts->getDay().size(); ++j)
-        this->day.push_back(nexts->getDay()[j]);
-    
-
-    for (int j = 0; j < nodes->getPhase().size(); ++j)
-        this->phase.push_back(nodes->getPhase()[j]);
-
-    for (int j = 0; j < nodes->getJob().size(); ++j)
-        this->job.push_back(nodes->getJob()[j]);
-         
-    for (int j = 0; j < nodes->getDay().size(); ++j)
-        this->day.push_back(nodes->getDay()[j]);
+		this->phase = nodes->getPhase();
+		this->job = nodes->getJob();
+		this->day = nodes->getDay();
 
 
-    this->start = start;
-    this->end = end;
+		vector<int> p = nexts->getPhase();
+		vector<int> j = nexts->getJob();
+		vector<int> d = nexts->getDay();
+
+		phase.reserve(p.size());
+		phase.insert(phase.end(), p.begin(), p.end());
+
+		job.reserve(j.size());
+		job.insert(job.end(), j.begin(), j.end());
+
+		day.reserve(d.size());
+		day.insert(day.end(), d.begin(), d.end());
+
+
+	this->start = start;
+	this->end = end;
 }
 
 Node::Node(Node* nodes, long int start, long int end) { /* O(1) */
-    
-    for (int j = 0; j < nodes->getPhase().size(); ++j)
-        this->phase.push_back(nodes->getPhase()[j]);
 
-    for (int j = 0; j < nodes->getJob().size(); ++j)
-        this->job.push_back(nodes->getJob()[j]);
-         
-    for (int j = 0; j < nodes->getDay().size(); ++j)
-        this->day.push_back(nodes->getDay()[j]);
+	this->phase = nodes->getPhase();
+	this->job = nodes->getJob();
+	this->day = nodes->getDay();
 
-    this->start = start;
-    this->end = end;
+	this->start = start;
+	this->end = end;
 }
 
-Node::Node(vector <int> phase, vector <int> job, vector <int> day, long int start, long int end) { /* O(1) */
-    
-  
-    for (int j = 0; j < phase.size(); ++j)
-        this->phase.push_back(phase[j]);
-
-    for (int j = 0; j < job.size(); ++j)
-        this->job.push_back(job[j]);
-    
-    for (int j = 0; j < day.size(); ++j)
-        this->day.push_back(day[j]);
-    
-
-
-    this->start = start;
-    this->end = end;
-}
 
 Node::~Node() { /* O(n lg n) */
    // delete this;
@@ -139,22 +122,22 @@ Node::~Node() { /* O(n lg n) */
 }
 
 vector <int> Node::getPhase() { /* O(1) */
-    return this->phase;
+	return this->phase;
 }
 
 vector <int> Node::getJob() { /* O(1) */
-    return this->job;
+	return this->job;
 }
 
 vector <int> Node::getDay() { /* O(1) */
-    return this->day;
+	return this->day;
 }
 
 long int Node::getStart() { /* O(1) */
-    return this->start;
+	return this->start;
 }
 
 long int Node::getEnd() { /* O(1) */
-    return this->end;
+	return this->end;
 }
 

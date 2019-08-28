@@ -315,7 +315,7 @@ void create_intervals_without_next(Heap_min *heap_min, vector<Node*>& nodes){
 	Heap_max *heap_max = new Heap_max(nodes.size()+1);
 
 	for (int i = 0; i < nodes.size(); ++i)
-		heap_max->insert(new Node(nodes[i]->getPhase(), nodes[i]->getJob(), nodes[i]->getDay(), nodes[i]->getEnd(), nodes[i]->getStart()));
+		heap_max->insert(new Node(nodes[i], nodes[i]->getEnd(), nodes[i]->getStart()));
 		
 
 	#ifdef LOG

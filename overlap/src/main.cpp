@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 4294967290
+#define HEAP_SIZE 4294
 
 string input_path, output_path;
 
@@ -73,11 +73,11 @@ int main(int argc, char const *argv[]){
 	Node* n_current;
 	Node* n_next;
 
-	vector<Node*> nodes;
-	vector<Node*> nexts;
-
 
 	while(!heap_min->isEmpty()){
+
+		vector<Node*> nodes;
+		vector<Node*> nexts;
 
 		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
 			#ifdef LOG
@@ -117,10 +117,8 @@ int main(int argc, char const *argv[]){
 						delete nodes[i];
 					}
 
-					nodes.clear();
 				}else{
 					heap_min->insert(nodes[0]);
-					nodes.clear();
 				}	
 
 				if (nexts.size() > 1){
@@ -128,11 +126,9 @@ int main(int argc, char const *argv[]){
 					for (int i = 0; i < nexts.size(); ++i){
 						delete nexts[i];
 					}
-					nexts.clear();
 
 				}else{
 					heap_min->insert(nexts[0]);
-					nexts.clear();
 				}
 
 				n_current = heap_min->extract();
@@ -181,11 +177,9 @@ int main(int argc, char const *argv[]){
 					for (int i = 0; i < nodes.size(); ++i){
 						delete nodes[i];
 					}
-					nodes.clear();
 				}else{
 					dump_file(nodes[0]->getEnd(), nodes[0]);
-					delete nodes[0];
-					nodes.clear();
+					delete nodes[0];			
 				}
 			}
 		}else{

@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 1E6
+#define HEAP_SIZE 15E6
 
 string input_path, output_path;
 

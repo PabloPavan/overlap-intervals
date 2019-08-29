@@ -140,7 +140,7 @@ string front_pop(list<string>&l){
  * @return a struct with the number of values and the char
  */
 
-statistics_data extract_statistics(const vector<int> &v){
+inline statistics_data extract_statistics(const vector<int> &v){
 
 	char *value = (char*) calloc(v.size() * 11 + 1, sizeof(char));
 	char *tmp = (char*) calloc(12, sizeof(char));
@@ -332,11 +332,11 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 
 		if(!heap_max->isEmpty()){
 
-			nodes.push_back(n_current);
+			nodes.emplace_back(n_current);
 
 			if(!heap_max->isEmpty())
 				while(n_current->getStart() == heap_max->top()->getStart()){
-					nodes.push_back(heap_max->extract());
+					nodes.emplace_back(heap_max->extract());
 					if(heap_max->isEmpty())
 						break;
 				}
@@ -345,10 +345,10 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 
 				n_next = heap_max->extract();
 
-				nexts.push_back(n_next);
+				nexts.emplace_back(n_next);
 				if(!heap_max->isEmpty())
 					while(n_next->getStart() == heap_max->top()->getStart()){
-						nexts.push_back(heap_max->extract());	
+						nexts.emplace_back(heap_max->extract());	
 						if(heap_max->isEmpty())
 							break;
 					}

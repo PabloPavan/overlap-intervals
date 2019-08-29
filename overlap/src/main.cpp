@@ -99,10 +99,10 @@ int main(int argc, char const *argv[]){
 
 		if(!heap_min->isEmpty()){
 
-			nodes.push_back(n_current);
+			nodes.emplace_back(n_current);
 			if(!heap_min->isEmpty())
 				while(n_current->getStart() == heap_min->top()->getStart() && !heap_min->isEmpty()){
-					nodes.push_back(heap_min->extract());
+					nodes.emplace_back(heap_min->extract());
 					if(heap_min->isEmpty())
 						break;
 				}
@@ -111,10 +111,10 @@ int main(int argc, char const *argv[]){
 
 				n_next = heap_min->extract();
 
-				nexts.push_back(n_next);
+				nexts.emplace_back(n_next);
 				if(!heap_min->isEmpty())
 					while(n_next->getStart() == heap_min->top()->getStart()){
-						nexts.push_back(heap_min->extract());	
+						nexts.emplace_back(heap_min->extract());	
 						if(heap_min->isEmpty())
 							break;
 					}	

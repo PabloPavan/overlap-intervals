@@ -37,7 +37,7 @@ inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr
 inline bool file_exists (const char filename[]);
 void dump_file(int long new_end, Node* node);
 void dump_dict(string path, const vector<string>&v);
-statistics_data extract_statistics(const vector<int> &v);
+inline statistics_data extract_statistics(const vector<int> &v);
 void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes);
 
 #endif

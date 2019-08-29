@@ -22,9 +22,9 @@ public:
     Node(Node* nodes, long int start, long int end);
     
     ~Node();
-    vector<int> getPhase();
-    vector<int> getJob();
-    vector<int> getDay();
+    const vector<int>& getPhase();
+    const vector<int>& getJob();
+    const vector<int>& getDay();
     long int getStart();
     long int getEnd();
 

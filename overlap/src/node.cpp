@@ -121,15 +121,15 @@ Node::~Node() { /* O(n lg n) */
    // cout << "matei o node" << endl;
 }
 
-vector <int> Node::getPhase() { /* O(1) */
+const vector <int>& Node::getPhase()  { /* O(1) */
 	return this->phase;
 }
 
-vector <int> Node::getJob() { /* O(1) */
+const vector <int>& Node::getJob()  { /* O(1) */
 	return this->job;
 }
 
-vector <int> Node::getDay() { /* O(1) */
+const vector <int>& Node::getDay()  { /* O(1) */
 	return this->day;
 }
 

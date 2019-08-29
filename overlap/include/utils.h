@@ -33,7 +33,7 @@ unsigned int read_file(Heap_min *h, string path, long int day, vector<string>&fi
 int idx_find(string word, vector<string>&v);
 int min_find(const vector<Node*>&v);
 string front_pop(list<string>&l);
-void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<int>&v);
+inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr)(), vector<int>&v);
 inline bool file_exists (const char filename[]);
 void dump_file(int long new_end, Node* node);
 void dump_dict(string path, const vector<string>&v);

@@ -89,7 +89,7 @@ int idx_find(string word, vector<string>&v){
  * @return a vector with with unique values
  */
 
-void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<int>&v){
+inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr)(), vector<int>&v){
 	set<int> s;
 	vector<int> u = (node->*functionPtr)();
 

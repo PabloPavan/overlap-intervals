@@ -93,11 +93,11 @@ void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<in
 	
 	vector<int> u = (node->*functionPtr)();
 
-	set<int> s(make_move_iterator(u.begin()),
-              make_move_iterator(u.end()));
+	set<int> s;
+	s.reserve(u.size());
 
-	// for(int j = 0; j < u.size(); ++j)
-	// 	s.insert(u[j]);
+	for(int j = 0; j < u.size(); ++j)
+		s.insert(u[j]);
 	
 	v.assign(s.begin(),s.end()); 
 

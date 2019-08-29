@@ -90,11 +90,14 @@ int idx_find(string word, vector<string>&v){
  */
 
 void remove_duplicates(Node* node, vector<int> (Node::*functionPtr)(), vector<int>&v){
-	set<int> s;
+	
 	vector<int> u = (node->*functionPtr)();
 
-	for(int j = 0; j < u.size(); ++j)
-		s.insert(u[j]);
+	set<int> s(make_move_iterator(u.begin()),
+              make_move_iterator(u.end()));
+
+	// for(int j = 0; j < u.size(); ++j)
+	// 	s.insert(u[j]);
 	
 	v.assign(s.begin(),s.end()); 
 

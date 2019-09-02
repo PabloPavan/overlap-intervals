@@ -11,7 +11,7 @@
 #include <list>
 
 
-#define HEAP_SIZE 15E6
+#define HEAP_SIZE 900E6
 
 string input_path, output_path;
 
@@ -83,9 +83,9 @@ int main(int argc, char const *argv[]){
 		vector<Node*> nodes;
 		vector<Node*> nexts;
 
-		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
+		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
 			#ifdef LOG
-				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 30 perc of the total size: " << (heap_total_size*0.5);
+				L_(linfo) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
 			#endif
 
 			dump_dict(phases_path, info_v);

@@ -13,7 +13,7 @@ class Heap_max {
 private:
     /* Vector of pointers to Node */
     class Node **heap;
-    unsigned int max, size;
+    unsigned int max = 0, size = 0;
     void heapifydown(unsigned int index);
     void heapifyup(unsigned int index);
     unsigned int left(unsigned int parent);

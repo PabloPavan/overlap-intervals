@@ -71,7 +71,7 @@ int main(int argc, char const *argv[]){
 	jobs_path = output_path + "dict_jobs.csv";
 
 	long int day = 3; 
-	unsigned int heap_total_size;
+	unsigned int heap_total_size = 0;
 	heap_total_size = read_file(heap_min, front_pop(path_l), day, filename_v, info_v);
 	
 	Node* n_current;

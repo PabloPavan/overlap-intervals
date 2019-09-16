@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	#ifdef LOG
-		initLogger( "logger.log", linfo);
+		initLogger( "logger.log", lerror);
 		L_(linfo) << "Program started";
 		L_(linfo) << "Following Are The Command Line Arguments Passed";
 		L_(linfo) << "argv[1]: " << input_path << " -- argv[2]: " << output_path;

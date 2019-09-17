@@ -310,7 +310,7 @@ void dump_dict(string path, const vector<string>&v){
 /**
  * Creating intervals that not have a next interval
  *
- * @param vector of the Nodes
+ * @param vector of the Node
  */
 void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes){
 	Node* n_current;
@@ -374,8 +374,8 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 						delete nexts[i];
 					}
 
-					vector<Nodes*>().swap(nodes);
-					vector<Nodes*>().swap(nexts);
+					vector<Node*>().swap(nodes);
+					vector<Node*>().swap(nexts);
 
 
 				}
@@ -387,7 +387,7 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 				for (int i = 0; i < nodes.size(); ++i){
 					delete nodes[i];
 				}
-				vector<Nodes*>().swap(nodes);
+				vector<Node*>().swap(nodes);
 			}
 		}else{
 			#ifdef LOG

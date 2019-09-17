@@ -100,6 +100,39 @@ inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr
 
 }
 
+/**
+ * Removing values duplicates
+ * 
+ * @param ref of the nodes vector and functions' ref of class Node
+ * @return a nodes vector with nodes with unique values of the phases, jobs, days 
+ */
+
+inline void remove_duplicates_from_vector(vector<Node*>& nodes_in, vector<Node*>& nodes_out){
+
+	nodes_out.reserve(nodes_in.size());
+
+	for (int i = 0; i < nodes_in.size(); ++i){
+		
+		vector<int> phases_vec; 
+		vector<int> jobs_vec;
+		vector<int> days_vec;
+
+		Node *node = nodes_in.back();
+
+		remove_duplicates(node, &Node::getPhase, phases_vec);
+		remove_duplicates(node, &Node::getJob, jobs_vec);
+		remove_duplicates(node, &Node::getDay, days_vec);
+
+		nodes_out.emplace_back(new Node(phases_vec, jobs_vec, days_vec, node->getStart(), node->getEnd()));
+		nodes_in.pop_back();
+
+		delete node;
+	}
+
+	vector<Node*>().swap(nodes_in);
+
+}
+
 
 /**
  * Finding a minimum value from a vector
@@ -326,18 +359,18 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 		L_(ldebug) << "max heap size: " << heap_max->getSize();
 	#endif	
 	while(!heap_max->isEmpty()){
-		vector<Node*> nodes;
-		vector<Node*> nexts;
+		vector<Node*> aux_nodes;
+		vector<Node*> aux_nexts;
 
 		n_current = heap_max->extract();
 
 		if(!heap_max->isEmpty()){
 
-			nodes.emplace_back(n_current);
+			aux_nodes.emplace_back(n_current);
 
 			if(!heap_max->isEmpty())
 				while(n_current->getStart() == heap_max->top()->getStart()){
-					nodes.emplace_back(heap_max->extract());
+					aux_nodes.emplace_back(heap_max->extract());
 					if(heap_max->isEmpty())
 						break;
 				}
@@ -346,13 +379,18 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 
 				n_next = heap_max->extract();
 
-				nexts.emplace_back(n_next);
+				aux_nexts.emplace_back(n_next);
 				if(!heap_max->isEmpty())
 					while(n_next->getStart() == heap_max->top()->getStart()){
-						nexts.emplace_back(heap_max->extract());	
+						aux_nexts.emplace_back(heap_max->extract());	
 						if(heap_max->isEmpty())
 							break;
 					}
+
+				vector<Node*> nodes;
+				vector<Node*> nexts;
+				remove_duplicates_from_vector(aux_nodes,nodes);
+				remove_duplicates_from_vector(aux_nexts,nexts);
 
 				int idx_min_nodes = min_find(nodes);
 				int idx_min_nexts = min_find(nexts);
@@ -377,17 +415,16 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 					vector<Node*>().swap(nodes);
 					vector<Node*>().swap(nexts);
 
-
 				}
 			}else{
 				#ifdef LOG
-					L_(ldebug) << "else 1 inside - start " << nodes[0]->getStart() << " end " << nodes[0]->getEnd();
+					L_(ldebug) << "else 1 inside - start " << aux_nodes[0]->getStart() << " end " << aux_nodes[0]->getEnd();
 				#endif
-				heap_min->insert(new Node(nodes, nodes[0]->getEnd(), nodes[0]->getStart()));
-				for (int i = 0; i < nodes.size(); ++i){
-					delete nodes[i];
+				heap_min->insert(new Node(aux_nodes, aux_nodes[0]->getEnd(), aux_nodes[0]->getStart()));
+				for (int i = 0; i < aux_nodes.size(); ++i){
+					delete aux_nodes[i];
 				}
-				vector<Node*>().swap(nodes);
+				vector<Node*>().swap(aux_nodes);
 			}
 		}else{
 			#ifdef LOG

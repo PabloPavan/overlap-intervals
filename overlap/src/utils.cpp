@@ -85,7 +85,7 @@ int idx_find(string word, vector<string>&v){
 /**
  * Removing values duplicates using a set
  * 
- * @param ref of the nodes vector and functions' ref of class Node
+ * @param ref of the node and functions' ref of class Node
  * @return a vector with with unique values
  */
 
@@ -99,6 +99,7 @@ inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr
 	v.assign(s.begin(),s.end()); 
 
 }
+
 
 /**
  * Finding a minimum value from a vector
@@ -363,7 +364,7 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 					#ifdef LOG
 						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
 					#endif
-					heap_max->insert(new Node(nexts,nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
+					heap_max->insert(new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
 					
 					for (int i = 0; i < nodes.size(); ++i){
 						delete nodes[i];
@@ -372,6 +373,11 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 					for (int i = 0; i < nexts.size(); ++i){
 						delete nexts[i];
 					}
+
+					nodes.erase(nodes.begin(),nodes.end());
+					nexts.erase(nexts.begin(),nexts.end());
+
+
 				}
 			}else{
 				#ifdef LOG
@@ -381,6 +387,7 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 				for (int i = 0; i < nodes.size(); ++i){
 					delete nodes[i];
 				}
+				nodes.erase(nodes.begin(),nodes.end());
 			}
 		}else{
 			#ifdef LOG

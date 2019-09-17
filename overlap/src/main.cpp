@@ -119,12 +119,12 @@ int main(int argc, char const *argv[]){
 							break;
 					}	
 
-
 				if(nodes.size() > 1){	
 					create_intervals_without_next(heap_min, nodes);
 					for (int i = 0; i < nodes.size(); ++i){
 						delete nodes[i];
 					}
+					nodes.erase(nodes.begin(),nodes.end());
 
 				}else{
 					heap_min->insert(nodes[0]);
@@ -135,6 +135,7 @@ int main(int argc, char const *argv[]){
 					for (int i = 0; i < nexts.size(); ++i){
 						delete nexts[i];
 					}
+					nexts.erase(nexts.begin(),nexts.end());
 
 				}else{
 					heap_min->insert(nexts[0]);
@@ -183,9 +184,10 @@ int main(int argc, char const *argv[]){
 				#endif
 				if(nodes.size() > 1){		
 					create_intervals_without_next(heap_min, nodes);
-					for (int i = 0; i < nodes.size(); ++i){
-						delete nodes[i];
-					}
+					// for (int i = 0; i < nodes.size(); ++i){
+					// 	delete nodes[i];
+					// }
+					nodes.erase(nodes.begin(),nodes.end());
 				}else{
 					dump_file(nodes[0]->getEnd(), nodes[0]);
 					delete nodes[0];			

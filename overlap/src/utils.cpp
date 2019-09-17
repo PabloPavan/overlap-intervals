@@ -338,6 +338,8 @@ void dump_dict(string path, const vector<string>&v){
 	for (int i = 0; i < v.size(); ++i){
 		save_file << i << ";" << v[i] << endl;
 	}
+
+	save_file.close();
 }
 
 /**
@@ -346,6 +348,7 @@ void dump_dict(string path, const vector<string>&v){
  * @param vector of the Node
  */
 void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes){
+	
 	Node* n_current;
 	Node* n_next;
 
@@ -438,5 +441,5 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 	#ifdef LOG
 		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
 	#endif	
-		delete heap_max;
+	delete heap_max;
 }

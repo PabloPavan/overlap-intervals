@@ -374,8 +374,8 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 						delete nexts[i];
 					}
 
-					nodes.erase(nodes.begin(),nodes.end());
-					nexts.erase(nexts.begin(),nexts.end());
+					vector<Nodes*>().swap(nodes);
+					vector<Nodes*>().swap(nexts);
 
 
 				}
@@ -387,7 +387,7 @@ void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nod
 				for (int i = 0; i < nodes.size(); ++i){
 					delete nodes[i];
 				}
-				nodes.erase(nodes.begin(),nodes.end());
+				vector<Nodes*>().swap(nodes);
 			}
 		}else{
 			#ifdef LOG

@@ -15,6 +15,8 @@
 
 string input_path, output_path;
 
+
+
 int main(int argc, char const *argv[]){
 
 	if(argc==3) { 
@@ -72,16 +74,23 @@ int main(int argc, char const *argv[]){
 
 	long int day = 3; 
 	unsigned int heap_total_size = 0;
-	heap_total_size = read_file(heap_min, front_pop(path_l), day, filename_v, info_v);
+	long int min_timestamp = -1; 
+	heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, day, filename_v, info_v); 
+
+
+	long int clock = min_timestamp;
+
+	cout << clock << endl;
+	cout << heap_total_size << endl;
 	
 	Node* n_current;
 	Node* n_next;
 
+	vector<Node*> current_pattern;
 
 	while(!heap_min->isEmpty()){
 
-		vector<Node*> nodes;
-		vector<Node*> nexts;
+	//	cout << "aqui" << endl;
 
 		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
 			#ifdef LOG
@@ -91,116 +100,52 @@ int main(int argc, char const *argv[]){
 			dump_dict(phases_path, info_v);
 			dump_dict(jobs_path, filename_v);
 
-			heap_total_size = read_file(heap_min, front_pop(path_l), ++day, filename_v, info_v);
+			heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
 
 		}
 		
-		n_current = heap_min->extract();
+		if(heap_min->getSize() > 1){
+			n_current = heap_min->extract();
+			n_next = heap_min->extract();
 
-		if(!heap_min->isEmpty()){
+			cout<< "if principal "  << n_next->getStart() << "  " << clock << " " << current_pattern.size() << endl;
+			if(n_next->getStart() > clock){
 
-			nodes.emplace_back(n_current);
-			if(!heap_min->isEmpty())
-				while(n_current->getStart() == heap_min->top()->getStart() && !heap_min->isEmpty()){
-					nodes.emplace_back(heap_min->extract());
-					if(heap_min->isEmpty())
-						break;
-				}
+				if (current_pattern.size() == 0)
+					break;
 
-			if(!heap_min->isEmpty()){
+				cout << "salvar o intervalo start " << clock << " end " << n_current->getStart() << " size " << current_pattern.size() << endl;
+				dump_file(clock, n_current->getStart(), current_pattern);
 
-				n_next = heap_min->extract();
-
-				nexts.emplace_back(n_next);
-				if(!heap_min->isEmpty())
-					while(n_next->getStart() == heap_min->top()->getStart()){
-						nexts.emplace_back(heap_min->extract());	
-						if(heap_min->isEmpty())
-							break;
-					}	
-
-				if(nodes.size() > 1){	
-					create_intervals_without_next(heap_min, nodes);
-					for (int i = 0; i < nodes.size(); ++i){
-						delete nodes[i];
-					}
-					vector<Node*>().swap(nodes);
-
-				}else{
-					heap_min->insert(nodes[0]);
-				}	
-
-				if (nexts.size() > 1){
-					create_intervals_without_next(heap_min, nexts);
-					for (int i = 0; i < nexts.size(); ++i){
-						delete nexts[i];
-					}
-					vector<Node*>().swap(nexts);
-
-				}else{
-					heap_min->insert(nexts[0]);
-				}
-
-				n_current = heap_min->extract();
-				n_next = heap_min->extract();
-				
-				if(n_next->getStart() < n_current->getEnd()){
-					dump_file(n_next->getStart(), n_current);
-					if (n_current->getEnd() < n_next->getEnd()){
-						heap_min->insert(new Node(n_next, n_current, n_next->getStart(), n_current->getEnd()));
-						#ifdef LOG
-							L_(ldebug) << "new 1 - start " << n_next->getStart() << " end " << n_current->getEnd();
-						#endif
-					}else if(n_next, n_current, n_next->getStart() != n_next->getEnd()){
-						heap_min->insert(new Node(n_next, n_current, n_next->getStart(), n_next->getEnd()));
-						#ifdef LOG
-							L_(ldebug) << "new 2 - start " << n_next->getStart() << " end " << n_next->getEnd();
-						#endif	
-					} 	 
-					if(n_current->getEnd() < n_next->getEnd()){
-						heap_min->insert(new Node(n_next, n_current->getEnd(), n_next->getEnd()));
-						#ifdef LOG
-							L_(ldebug) << "new 3 - start " << n_current->getEnd() << " end " << n_next->getEnd();
-						#endif	
-					}else if(n_current, n_next->getEnd() != n_current->getEnd()){	
-						heap_min->insert(new Node(n_current, n_next->getEnd(), n_current->getEnd()));
-						#ifdef LOG
-							L_(ldebug) << "new 4 - start " << n_next->getEnd() << " end " << n_current->getEnd();
-						#endif
-					}
-					delete n_current;
-					delete n_next;		
-				}else{
-					#ifdef LOG
-						L_(ldebug) << "else 1";
-					#endif
-					heap_min->insert(n_next);
-					dump_file(n_current->getEnd(), n_current);
-					delete n_current;
-				} 				
-			}else{
-				#ifdef LOG
-					L_(ldebug) << "else 2";
-				#endif
-				if(nodes.size() > 1){		
-					create_intervals_without_next(heap_min, nodes);
-					for (int i = 0; i < nodes.size(); ++i){
-						delete nodes[i];
-					}
-					vector<Node*>().swap(nodes);
-				}else{
-					dump_file(nodes[0]->getEnd(), nodes[0]);
-					delete nodes[0];			
-				}
+				// for (int i = 0; i < current_pattern.size(); ++i){
+				// 	delete current_pattern[i];
+				// }
 			}
-		}else{
-			#ifdef LOG
-				L_(ldebug) << "else 3";
-			#endif
-			dump_file(n_current->getEnd(), n_current);
-			delete n_current;
-		}	
+
+			cout << n_next->getStart() << "  " <<  n_current->getStart() << endl;
+			cout << n_next->getEnd() << "  " <<  n_current->getEnd() << endl;
+			if(n_next->getStart() == n_current->getStart()){
+				current_pattern.push_back(n_current);
+				cout << "if" << endl;
+			}else if(n_next->getEnd() == n_current->getEnd()){
+				current_pattern.pop_back();
+				cout << "else" << endl;
+			}
+			
+
+			cout <<"before " << clock << " after " <<  n_next->getStart() << endl;
+			clock = n_next->getStart();
+			heap_min->insert(n_next);
+
 	}
+
+	cout << "deu aaqui" << endl;
+	n_current = heap_min->extract();
+	current_pattern.push_back(n_current);
+	dump_file(clock, n_current->getStart(), current_pattern);
+
+	}
+
 
 	#ifdef LOG
 		L_(ldebug) << "min size of heap after: " << heap_min->getSize();

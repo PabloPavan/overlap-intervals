@@ -8,9 +8,10 @@
  */
 
 
-unsigned int read_file(Heap_min *heap_min, string path, long int day, vector<string>&filename_v, vector<string>&info_v){
+unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp, long int day, vector<string>&filename_v, vector<string>&info_v){
 
-	const long int epoch_time = 1325376000;
+	const long int epoch_time = 0;
+	//const long int epoch_time = 1325376000;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 
@@ -41,14 +42,17 @@ unsigned int read_file(Heap_min *heap_min, string path, long int day, vector<str
 		token = strtok(NULL,delim); //info
 		token[strlen(token)-1] = '\0'; // remove \n
 		string info(token);
-		start  = start * 1000000; 
+		start  = start * 1; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1000000;
+		start_time = start_time * 1;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1000000;
+		end = end * 1;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
+
+		if (*min_timestamp == -1 || *min_timestamp > start_)
+			*min_timestamp = start_;
 
 		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_));
 
@@ -89,12 +93,13 @@ int idx_find(string word, vector<string>&v){
  * @return a vector with with unique values
  */
 
-inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr)(), vector<int>&v){
+inline void remove_duplicates(const vector<Node*>& nodes, const vector<int>& (Node::*functionPtr)(), vector<int>&v){
 	set<int> s;
-	vector<int> u = (node->*functionPtr)();
-
-	for(int j = 0; j < u.size(); ++j)
-		s.insert(u[j]);
+	for (int i = 0; i < nodes.size(); ++i){	
+		vector<int> u = (nodes[i]->*functionPtr)();
+		for(int j = 0; j < u.size(); ++j)
+			s.insert(u[j]);
+	}
 	
 	v.assign(s.begin(),s.end()); 
 
@@ -107,31 +112,31 @@ inline void remove_duplicates(Node* node, const vector<int>& (Node::*functionPtr
  * @return a nodes vector with nodes with unique values of the phases, jobs, days 
  */
 
-inline void remove_duplicates_from_vector(vector<Node*>& nodes_in, vector<Node*>& nodes_out){
+// inline void remove_duplicates_from_vector(vector<Node*>& nodes_in, vector<Node*>& nodes_out){
 
-	nodes_out.reserve(nodes_in.size());
+// 	nodes_out.reserve(nodes_in.size());
 
-	for (int i = 0; i < nodes_in.size(); ++i){
+// 	for (int i = 0; i < nodes_in.size(); ++i){
 		
-		vector<int> phases_vec; 
-		vector<int> jobs_vec;
-		vector<int> days_vec;
+// 		vector<int> phases_vec; 
+// 		vector<int> jobs_vec;
+// 		vector<int> days_vec;
 
-		Node *node = nodes_in.back();
+// 		Node *node = nodes_in.back();
 
-		remove_duplicates(node, &Node::getPhase, phases_vec);
-		remove_duplicates(node, &Node::getJob, jobs_vec);
-		remove_duplicates(node, &Node::getDay, days_vec);
+// 		remove_duplicates(node, &Node::getPhase, phases_vec);
+// 		remove_duplicates(node, &Node::getJob, jobs_vec);
+// 		remove_duplicates(node, &Node::getDay, days_vec);
 
-		nodes_out.emplace_back(new Node(phases_vec, jobs_vec, days_vec, node->getStart(), node->getEnd()));
-		nodes_in.pop_back();
+// 		nodes_out.emplace_back(new Node(phases_vec, jobs_vec, days_vec, node->getStart(), node->getEnd()));
+// 		nodes_in.pop_back();
 
-		delete node;
-	}
+// 		delete node;
+// 	}
 
-	vector<Node*>().swap(nodes_in);
+// 	vector<Node*>().swap(nodes_in);
 
-}
+// }
 
 
 /**
@@ -218,7 +223,7 @@ inline bool file_exists (const char filename[]) {
  */
 
 
-void dump_file(int long new_end, Node* node){
+void dump_file(int long start, int long new_end, const vector<Node*>& nodes){
 
 
 	string path_save = output_path+"final.csv";
@@ -227,9 +232,9 @@ void dump_file(int long new_end, Node* node){
 	vector<int> phases_vec;
 	vector<int> days_vec;
 
-	remove_duplicates(node, &Node::getJob, jobs_vec);
-	remove_duplicates(node, &Node::getPhase, phases_vec);
-	remove_duplicates(node, &Node::getDay, days_vec);
+	remove_duplicates(nodes, &Node::getJob, jobs_vec);
+	remove_duplicates(nodes, &Node::getPhase, phases_vec);
+	remove_duplicates(nodes, &Node::getDay, days_vec);
 
 	statistics_data jobs = extract_statistics(jobs_vec);
 	statistics_data phases = extract_statistics(phases_vec);
@@ -252,21 +257,21 @@ void dump_file(int long new_end, Node* node){
 	fstream save_file;
 	save_file.open(path_save, fstream::app);
 
-	if (node->getStart() > last_end){
+	if (start > last_end){
 		#ifdef LOG
-			L_(ldebug) << "save - " << "start: " << last_end << " end: " << node->getStart()  << " duration: " << node->getStart()-last_end << " phases: " << -1 << " jobs: " << -1 << " days: " << days.values;
+			L_(ldebug) << "save - " << "start: " << last_end << " end: " << start  << " duration: " << start-last_end << " phases: " << -1 << " jobs: " << -1 << " days: " << days.values;
 		#endif
-		save_file <<  last_end <<";"<< node->getStart() <<";"<< node->getStart()-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";"<< days.values <<";"<< days.times << endl;
+		save_file <<  last_end <<";"<< start <<";"<< start-last_end <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";"<< days.values <<";"<< days.times << endl;
 		
 	}
 	
 	last_end = new_end;
 
 	#ifdef LOG
-		L_(ldebug) << "save - " <<  "start: " << node->getStart() << " end: " << new_end << " duration: " << new_end-node->getStart() << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
+		L_(ldebug) << "save - " <<  "start: " << start << " end: " << new_end << " duration: " << new_end-start << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
 	#endif 
 
-	save_file <<  node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+	save_file <<  start <<";"<< new_end <<";"<< new_end-start <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 	
 	save_file.close();
 
@@ -278,14 +283,14 @@ void dump_file(int long new_end, Node* node){
 		#endif 
 		save_file.open(folder, ios::out | ios::trunc);
 		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-		save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file << start <<";"<< new_end <<";"<< new_end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 		save_file.close();	
 	}else{
 		save_file.open(folder, ios::app);
 		#ifdef LOG
 			L_(ldebug) << "Success "<<  folder <<" found.";
 		#endif 
-		save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file << start <<";"<< new_end <<";"<< new_end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 		save_file.close();
 	}
 
@@ -299,14 +304,14 @@ void dump_file(int long new_end, Node* node){
 			#endif 
 			save_file.open(folder, ios::out | ios::trunc);
 			save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+			save_file << start <<";"<< new_end <<";"<< new_end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 			save_file.close();	
 		}else{
 			save_file.open(folder, ios::app);
 			#ifdef LOG
 				L_(ldebug) << "Success "<<  folder <<" found.";
 			#endif 
-			save_file << node->getStart() <<";"<< new_end <<";"<< new_end-node->getStart() <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+			save_file << start <<";"<< new_end <<";"<< new_end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
 			save_file.close();
 		}
 	}
@@ -347,99 +352,99 @@ void dump_dict(string path, const vector<string>&v){
  *
  * @param vector of the Node
  */
-void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes){
+// void create_intervals_without_next(Heap_min *heap_min, const vector<Node*>& _nodes){
 	
-	Node* n_current;
-	Node* n_next;
+// 	Node* n_current;
+// 	Node* n_next;
 
-	Heap_max *heap_max = new Heap_max(_nodes.size()+1);
+// 	Heap_max *heap_max = new Heap_max(_nodes.size()+1);
 
-	for (int i = 0; i < _nodes.size(); ++i)
-		heap_max->insert(new Node(_nodes[i], _nodes[i]->getEnd(), _nodes[i]->getStart()));
+// 	for (int i = 0; i < _nodes.size(); ++i)
+// 		heap_max->insert(new Node(_nodes[i], _nodes[i]->getEnd(), _nodes[i]->getStart()));
 		
 
-	#ifdef LOG
-		L_(ldebug) << "max heap size: " << heap_max->getSize();
-	#endif	
-	while(!heap_max->isEmpty()){
-		vector<Node*> aux_nodes;
-		vector<Node*> aux_nexts;
+// 	#ifdef LOG
+// 		L_(ldebug) << "max heap size: " << heap_max->getSize();
+// 	#endif	
+// 	while(!heap_max->isEmpty()){
+// 		vector<Node*> aux_nodes;
+// 		vector<Node*> aux_nexts;
 
-		n_current = heap_max->extract();
+// 		n_current = heap_max->extract();
 
-		if(!heap_max->isEmpty()){
+// 		if(!heap_max->isEmpty()){
 
-			aux_nodes.emplace_back(n_current);
+// 			aux_nodes.emplace_back(n_current);
 
-			if(!heap_max->isEmpty())
-				while(n_current->getStart() == heap_max->top()->getStart()){
-					aux_nodes.emplace_back(heap_max->extract());
-					if(heap_max->isEmpty())
-						break;
-				}
+// 			if(!heap_max->isEmpty())
+// 				while(n_current->getStart() == heap_max->top()->getStart()){
+// 					aux_nodes.emplace_back(heap_max->extract());
+// 					if(heap_max->isEmpty())
+// 						break;
+// 				}
 
-			if(!heap_max->isEmpty()){
+// 			if(!heap_max->isEmpty()){
 
-				n_next = heap_max->extract();
+// 				n_next = heap_max->extract();
 
-				aux_nexts.emplace_back(n_next);
-				if(!heap_max->isEmpty())
-					while(n_next->getStart() == heap_max->top()->getStart()){
-						aux_nexts.emplace_back(heap_max->extract());	
-						if(heap_max->isEmpty())
-							break;
-					}
+// 				aux_nexts.emplace_back(n_next);
+// 				if(!heap_max->isEmpty())
+// 					while(n_next->getStart() == heap_max->top()->getStart()){
+// 						aux_nexts.emplace_back(heap_max->extract());	
+// 						if(heap_max->isEmpty())
+// 							break;
+// 					}
 
-				vector<Node*> nodes;
-				vector<Node*> nexts;
-				remove_duplicates_from_vector(aux_nodes,nodes);
-				remove_duplicates_from_vector(aux_nexts,nexts);
+// 				vector<Node*> nodes;
+// 				vector<Node*> nexts;
+// 				remove_duplicates_from_vector(aux_nodes,nodes);
+// 				remove_duplicates_from_vector(aux_nexts,nexts);
 
-				int idx_min_nodes = min_find(nodes);
-				int idx_min_nexts = min_find(nexts);
+// 				int idx_min_nodes = min_find(nodes);
+// 				int idx_min_nexts = min_find(nexts);
 
-				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
+// 				if(nodes[idx_min_nodes]->getStart() > nexts[idx_min_nexts]->getStart()){
 					
-					heap_min->insert(new Node(nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
+// 					heap_min->insert(new Node(nodes, nexts[idx_min_nexts]->getStart(), nodes[idx_min_nodes]->getStart()));
 					
-					#ifdef LOG
-						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
-					#endif
-					heap_max->insert(new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
+// 					#ifdef LOG
+// 						L_(ldebug) << "new inside - start " << nexts[idx_min_nexts]->getStart() << " end " <<  nexts[idx_min_nexts]->getEnd();
+// 					#endif
+// 					heap_max->insert(new Node(nexts, nodes, nexts[idx_min_nexts]->getStart(),  nexts[idx_min_nexts]->getEnd()));
 					
-					for (int i = 0; i < nodes.size(); ++i){
-						delete nodes[i];
-					}
+// 					for (int i = 0; i < nodes.size(); ++i){
+// 						delete nodes[i];
+// 					}
 
-					for (int i = 0; i < nexts.size(); ++i){
-						delete nexts[i];
-					}
+// 					for (int i = 0; i < nexts.size(); ++i){
+// 						delete nexts[i];
+// 					}
 
-					vector<Node*>().swap(nodes);
-					vector<Node*>().swap(nexts);
+// 					vector<Node*>().swap(nodes);
+// 					vector<Node*>().swap(nexts);
 
-				}
-			}else{
-				#ifdef LOG
-					L_(ldebug) << "else 1 inside - start " << aux_nodes[0]->getStart() << " end " << aux_nodes[0]->getEnd();
-				#endif
-				heap_min->insert(new Node(aux_nodes, aux_nodes[0]->getEnd(), aux_nodes[0]->getStart()));
-				for (int i = 0; i < aux_nodes.size(); ++i){
-					delete aux_nodes[i];
-				}
-				vector<Node*>().swap(aux_nodes);
-			}
-		}else{
-			#ifdef LOG
-				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
-			#endif
-			heap_min->insert(new Node(n_current, n_current->getEnd(), n_current->getStart()));
-			delete n_current;
+// 				}
+// 			}else{
+// 				#ifdef LOG
+// 					L_(ldebug) << "else 1 inside - start " << aux_nodes[0]->getStart() << " end " << aux_nodes[0]->getEnd();
+// 				#endif
+// 				heap_min->insert(new Node(aux_nodes, aux_nodes[0]->getEnd(), aux_nodes[0]->getStart()));
+// 				for (int i = 0; i < aux_nodes.size(); ++i){
+// 					delete aux_nodes[i];
+// 				}
+// 				vector<Node*>().swap(aux_nodes);
+// 			}
+// 		}else{
+// 			#ifdef LOG
+// 				L_(ldebug) << "else 2 inside - start " << n_current->getStart() << " end " << n_current->getEnd();
+// 			#endif
+// 			heap_min->insert(new Node(n_current, n_current->getEnd(), n_current->getStart()));
+// 			delete n_current;
 
-		}	
-	}
-	#ifdef LOG
-		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
-	#endif	
-	delete heap_max;
-}
+// 		}	
+// 	}
+// 	#ifdef LOG
+// 		L_(ldebug) << "max size of heap after: " << heap_max->getSize();
+// 	#endif	
+// 	delete heap_max;
+// }

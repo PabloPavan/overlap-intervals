@@ -88,9 +88,24 @@ int main(int argc, char const *argv[]){
 
 	vector<Node*> current_pattern;
 
-	while(!heap_min->isEmpty()){
+	cout << "before" << endl;
+	for (int i = 0; i < heap_min->getSize(); ++i){
+		n_current = heap_min->print(i);
+		cout << "nodes["<<i<<"] - start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+	}
 
-	//	cout << "aqui" << endl;
+	// n_current  = heap_min->extract();
+
+	// cout << "extract nodes[0]- start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+
+	// cout << "after" << endl;
+	// for (int i = 0; i < heap_min->getSize(); ++i){
+	// 	n_current = heap_min->print(i);
+	// 	cout << "nodes["<<i<<"] - start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+	// }
+
+
+	while(!heap_min->isEmpty()){
 
 		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
 			#ifdef LOG
@@ -106,6 +121,7 @@ int main(int argc, char const *argv[]){
 		
 		if(heap_min->getSize() > 1){
 			n_current = heap_min->extract();
+			cout << "aqui" << endl;
 			n_next = heap_min->extract();
 
 			cout<< "if principal "  << n_next->getStart() << "  " << clock << " " << current_pattern.size() << endl;

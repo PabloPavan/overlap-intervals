@@ -26,6 +26,7 @@ public:
     /* Extract-min*/
     Node* extract();
     Node* top();
+    Node* print(int index);
     unsigned int getSize();
     bool insert(Node *no);
     bool isEmpty();

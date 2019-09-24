@@ -4,19 +4,24 @@
 /* Private */
 
 void Heap_min::heapifydown(unsigned int index = 0) { /* O(lg n) */
-	while ((left(index) < size && this->heap[index]->getStart() > this->heap[left(index)]->getStart()) || (right(index) < size && this->heap[index]->getStart() > this->heap[right(index)]->getStart())) {
-		if (right(index) < size && this->heap[right(index)]->getStart() < this->heap[left(index)]->getStart()) {
+	while (((left(index) < size && this->heap[index]->getStart() > this->heap[left(index)]->getStart()) || 
+		(right(index) < size && this->heap[index]->getStart() > this->heap[right(index)]->getStart())) || 
+		(((left(index) < size && this->heap[index]->getStart() == this->heap[left(index)]->getStart()) && (this->heap[index]->getEnd() > this->heap[left(index)]->getEnd())) || 
+		((right(index) < size && this->heap[index]->getStart() == this->heap[right(index)]->getStart()) && (this->heap[index]->getEnd() > this->heap[right(index)]->getEnd())))) {
+
+		if (right(index) < size && this->heap[right(index)]->getStart() > this->heap[left(index)]->getStart()) {
 			swap(index, right(index));
 			index = right(index);
 		} else {
 			swap(index, left(index));
 			index = left(index);
 		}
+
 	}
 }
 
 void Heap_min::heapifyup(unsigned int index) { /* O(lg n) */
-	while (index > 0 && this->heap[index]->getStart() < this->heap[parent(index)]->getStart()) {
+	while (((index > 0) && this->heap[index]->getStart() < this->heap[parent(index)]->getStart()) || ((index > 0) && (this->heap[index]->getStart() == this->heap[parent(index)]->getStart()) && (this->heap[index]->getEnd() < this->heap[parent(index)]->getEnd()))) {
 		swap(index, parent(index));
 		index = parent(index);
 	}
@@ -70,6 +75,16 @@ Node* Heap_min::extract() { /* O(lg n) */
 Node* Heap_min::top(){ /* O(1) */
 	if (isEmpty() == false) {
 		return this->heap[0];
+	}
+	#ifdef LOG
+		L_(lerror) << "In top function on Heap_min class - the heap is empty";
+	#endif
+	return (Node*) 0;
+}
+
+Node* Heap_min::print(int index){ /* O(1) */
+	if (isEmpty() == false) {
+		return this->heap[index];
 	}
 	#ifdef LOG
 		L_(lerror) << "In top function on Heap_min class - the heap is empty";

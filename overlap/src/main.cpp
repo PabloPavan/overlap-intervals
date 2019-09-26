@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <algorithm>
+#include<tuple>
 
 
 #define HEAP_SIZE 900E6
@@ -16,6 +18,13 @@
 string input_path, output_path;
 
 
+bool eq(Node* lhs,  Node* rhs){
+    return lhs->getStart() == rhs->getStart()
+        && lhs->getEnd() == rhs->getEnd()
+        && lhs->getPhase() == rhs->getPhase()
+        && lhs->getJob() == rhs->getJob()
+        && lhs->getDay() == rhs->getDay();
+}
 
 int main(int argc, char const *argv[]){
 
@@ -63,7 +72,7 @@ int main(int argc, char const *argv[]){
 
 
 	Heap_min *heap_min;
-	heap_min = new Heap_min(HEAP_SIZE);
+	heap_min = new Heap_min();
 
 	vector<string> filename_v;
 	vector<string> info_v;
@@ -77,90 +86,112 @@ int main(int argc, char const *argv[]){
 	long int min_timestamp = -1; 
 	heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, day, filename_v, info_v); 
 
-
 	long int clock = min_timestamp;
 
 	cout << clock << endl;
 	cout << heap_total_size << endl;
 	
-	Node* n_current;
-	Node* n_next;
+	tuple<long int, Node*> n_current;
+	tuple<long int, Node*> n_next;
 
 	vector<Node*> current_pattern;
 
-	cout << "before" << endl;
-	for (int i = 0; i < heap_min->getSize(); ++i){
-		n_current = heap_min->print(i);
-		cout << "nodes["<<i<<"] - start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+	// cout << "before" << endl;
+	// for (int i = 0; i < heap_min->getSize(); ++i){
+	// 	n_current = heap_min->print(i);
+	// 	cout << "nodes["<<i<<"]" << "int " << get<0>(n_current) << " - start " << get<1>(n_current)->getStart() << " end " <<  get<1>(n_current)->getEnd() << endl;
+	// }
+
+	while(!heap_min->isEmpty()){
+	n_current  = heap_min->extract();
+
+	cout << " extract nodes[0]" << "int " << get<0>(n_current) << " - start " << get<1>(n_current)->getStart() << " end " <<  get<1>(n_current)->getEnd() << endl;
 	}
+	// cout << "after" << endl;
+	// for (int i = 0; i < heap_min->getSize(); ++i){
+	// 	n_current = heap_min->print(i);
+	// 	cout << "nodes["<<i<<"]" << "int " << get<0>(n_current) << " - start " << get<1>(n_current)->getStart() << " end " <<  get<1>(n_current)->getEnd() << endl;
+	// }
 
-	// n_current  = heap_min->extract();
+	// 	n_current  = heap_min->extract();
 
-	// cout << "extract nodes[0]- start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+	// cout << " extract nodes[0]" << "int " << get<0>(n_current) << " - start " << get<1>(n_current)->getStart() << " end " <<  get<1>(n_current)->getEnd() << endl;
 
 	// cout << "after" << endl;
 	// for (int i = 0; i < heap_min->getSize(); ++i){
 	// 	n_current = heap_min->print(i);
-	// 	cout << "nodes["<<i<<"] - start " << n_current->getStart() << " end " <<  n_current->getEnd() << endl;
+	// 	cout << "nodes["<<i<<"]" << "int " << get<0>(n_current) << " - start " << get<1>(n_current)->getStart() << " end " <<  get<1>(n_current)->getEnd() << endl;
 	// }
 
 
-	while(!heap_min->isEmpty()){
 
-		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
-			#ifdef LOG
-				L_(linfo) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
-			#endif
+	// while(!heap_min->isEmpty()){
 
-			dump_dict(phases_path, info_v);
-			dump_dict(jobs_path, filename_v);
+	// 	if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
+	// 		#ifdef LOG
+	// 			L_(linfo) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
+	// 		#endif
 
-			heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
+	// 		dump_dict(phases_path, info_v);
+	// 		dump_dict(jobs_path, filename_v);
 
-		}
+	// 		heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
+
+	// 	}
 		
-		if(heap_min->getSize() > 1){
-			n_current = heap_min->extract();
-			cout << "aqui" << endl;
-			n_next = heap_min->extract();
+	// 	if(heap_min->getSize() > 1){
+	// 		n_current = heap_min->extract();
+	// 		n_next = heap_min->extract();
 
-			cout<< "if principal "  << n_next->getStart() << "  " << clock << " " << current_pattern.size() << endl;
-			if(n_next->getStart() > clock){
+	// 		if(n_current->getEnd() > n_next->getStart()){
 
-				if (current_pattern.size() == 0)
-					break;
 
-				cout << "salvar o intervalo start " << clock << " end " << n_current->getStart() << " size " << current_pattern.size() << endl;
-				dump_file(clock, n_current->getStart(), current_pattern);
+	// 			cout << "gravar" << endl;
 
-				// for (int i = 0; i < current_pattern.size(); ++i){
-				// 	delete current_pattern[i];
-				// }
-			}
+	// 			// if (current_pattern.size() == 0)
+	// 			// 	break;
 
-			cout << n_next->getStart() << "  " <<  n_current->getStart() << endl;
-			cout << n_next->getEnd() << "  " <<  n_current->getEnd() << endl;
-			if(n_next->getStart() == n_current->getStart()){
-				current_pattern.push_back(n_current);
-				cout << "if" << endl;
-			}else if(n_next->getEnd() == n_current->getEnd()){
-				current_pattern.pop_back();
-				cout << "else" << endl;
-			}
+	// 			// cout << "salvar o intervalo start " << clock << " end " << n_current->getStart() << " size " << current_pattern.size() << endl;
+	// 			// dump_file(clock, n_current->getStart(), current_pattern);
+
+	// 			// // for (int i = 0; i < current_pattern.size(); ++i){
+	// 			// // 	delete current_pattern[i];
+	// 			// // }
+	// 		}
+
+	// 		// cout << n_next->getStart() << "  " <<  n_current->getStart() << endl;
+	// 		// cout << n_next->getEnd() << "  " <<  n_current->getEnd() << endl;
+	// 		// if(n_next->getStart() == n_current->getStart()){
+	// 		// 	current_pattern.push_back(n_current);
+	// 		// 	cout << "if" << endl;
+	// 		// }else if(n_next->getStart() == n_current->getEnd()){
+
+	// 		// 	for (int i = 0; i < current_pattern.size(); ++i){
+	// 		// 		if(eq(n_current, current_pattern[i])){
+	// 		// 			current_pattern.erase(current_pattern.begin()+i);
+	// 		// 			cout << "i " << i << endl;
+	// 		// 		}
+	// 		// 	}
+
+	// 			// if(it != current_pattern.end()) 
+	// 			// 	current_pattern.erase(it);
+
+	// 			// //current_pattern.pop_back();
+	// 			// cout << "else" << endl;
+	// 	}
 			
 
-			cout <<"before " << clock << " after " <<  n_next->getStart() << endl;
-			clock = n_next->getStart();
-			heap_min->insert(n_next);
+	// 		// cout <<"before " << clock << " after " <<  n_next->getStart() << endl;
+	// 		// clock = n_next->getStart();
+	// 		// heap_min->insert(n_next);
 
-	}
 
-	cout << "deu aaqui" << endl;
-	n_current = heap_min->extract();
-	current_pattern.push_back(n_current);
-	dump_file(clock, n_current->getStart(), current_pattern);
+	// // cout << "deu aaqui" << endl;
+	// // n_current = heap_min->extract();
+	// // current_pattern.push_back(n_current);
+	// // dump_file(clock, n_current->getStart(), current_pattern);
 
-	}
+	// }
 
 
 	#ifdef LOG

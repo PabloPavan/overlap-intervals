@@ -4,6 +4,7 @@
 #include "node.h"
 #include "logger.h"
 #include <iostream>
+#include<tuple>
 
 using namespace std;
 
@@ -12,8 +13,8 @@ using namespace std;
 class Heap_min {
 private:
     /* Vector of pointers to Node */
-    class Node **heap;
-    unsigned int max = 0, size = 0;
+    vector<tuple<long int,Node*>> heap;
+    unsigned int size = 0;
     void heapifydown(unsigned int index);
     void heapifyup(unsigned int index);
     unsigned int left(unsigned int parent);
@@ -21,14 +22,14 @@ private:
     unsigned int right(unsigned int parent);
     void swap(unsigned int i, unsigned int j);
 public:
-    Heap_min(unsigned int max);
+    Heap_min();
     ~Heap_min();
     /* Extract-min*/
-    Node* extract();
-    Node* top();
-    Node* print(int index);
+    tuple<long int, Node*> extract();
+    tuple<long int, Node*> top();
+    tuple<long int, Node*>  print(int index);
     unsigned int getSize();
-    bool insert(Node *no);
+    bool insert(tuple<long int, Node*>);
     bool isEmpty();
 };
 

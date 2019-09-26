@@ -4,6 +4,8 @@
 
 /* Public */
 
+
+
 Node::Node(int phase, int job, int day, long int start, long int end) { /* O(1) */
 
 	this->phase.push_back(phase);

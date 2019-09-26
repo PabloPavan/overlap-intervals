@@ -54,7 +54,8 @@ unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp,
 		if (*min_timestamp == -1 || *min_timestamp > start_)
 			*min_timestamp = start_;
 
-		heap_min->insert(new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_));
+		heap_min->insert(make_tuple(start_,new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_)));
+		heap_min->insert(make_tuple(end_,new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_)));
 
 	}
 	

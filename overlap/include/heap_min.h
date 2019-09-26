@@ -15,6 +15,7 @@ private:
     /* Vector of pointers to Node */
     vector<tuple<long int,Node*>> heap;
     unsigned int size = 0;
+    bool compare(tuple<long int, Node*> A, tuple<long int, Node*> B);
     void heapifydown(unsigned int index);
     void heapifyup(unsigned int index);
     unsigned int left(unsigned int parent);

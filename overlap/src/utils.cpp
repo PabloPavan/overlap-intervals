@@ -41,12 +41,12 @@ unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp,
 		token = strtok(NULL,delim); //info
 		token[strlen(token)-1] = '\0'; // remove \n
 		string info(token);
-		start  = start * 1; 
+		start  = start * 1000000; 
 		start_time = start_time - epoch_time; 
-		start_time = start_time * 1;
+		start_time = start_time * 1000000;
 		long int starti = (long int) start;
 		long int start_ = start_time + starti;
-		end = end * 1;
+		end = end * 1000000;
 		long int endi = (long int) end;
 		long int end_ = start_ + (endi - starti);
 

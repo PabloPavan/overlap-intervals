@@ -1,4 +1,8 @@
 id;name
 0;posix read unique file	
 1;posix write consecutive sequential unique file
-2;posix write consecutive sequential unique fil
+2;posix sequential unique file
+3;posix sequential unique fil
+4;posix read unique file
+5;posix read shared file
+6;posix write unique file

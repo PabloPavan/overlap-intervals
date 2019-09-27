@@ -9,8 +9,8 @@
 
 unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp, long int day, vector<string>&filename_v, vector<string>&info_v){
 
-	const long int epoch_time = 0;
-	//const long int epoch_time = 1325376000;
+	//const long int epoch_time = 0;
+	const long int epoch_time = 1325376000;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 

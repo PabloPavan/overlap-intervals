@@ -15,7 +15,7 @@ private:
     /* Vector of pointers to Node */
     vector<tuple<long int,Node*>> heap;
     unsigned int size = 0;
-    bool compare(tuple<long int, Node*> A, tuple<long int, Node*> B);
+    bool compare(const tuple<long int, Node*>& A, const tuple<long int, Node*>& B);
     void heapifydown(unsigned int index);
     void heapifyup(unsigned int index);
     unsigned int left(unsigned int parent);
@@ -27,8 +27,7 @@ public:
     ~Heap_min();
     /* Extract-min*/
     tuple<long int, Node*> extract();
-    tuple<long int, Node*> top();
-    tuple<long int, Node*>  print(int index);
+    tuple<long int, Node*> getTop();
     unsigned int getSize();
     bool insert(tuple<long int, Node*>);
     bool isEmpty();

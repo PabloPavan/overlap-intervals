@@ -15,10 +15,6 @@ private:
     
 public:
     Node(int phase, int job, int day, long int start, long int end);
-    Node(const vector <Node*>& nexts, const vector <Node*>& nodes, long int start, long int end);
-    Node(const vector <Node*>& nodes, long int start, long int end);
-    Node(const vector <int> phase, const vector <int> job, const vector <int> day, long int start, long int end);    Node(Node* nexts, Node* nodes, long int start, long int end);
-    Node(Node* nodes, long int start, long int end);
 
     ~Node();
     const vector<int>& getPhase();
@@ -26,8 +22,6 @@ public:
     const vector<int>& getDay();
     long int getStart();
     long int getEnd();
-
-
 
 };
 #endif	/* NODE_H */

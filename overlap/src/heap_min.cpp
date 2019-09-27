@@ -3,7 +3,7 @@
 
 /* Private */
 
-bool Heap_min::compare(tuple<long int, Node*> A, tuple<long int, Node*> B){
+bool Heap_min::compare(const tuple<long int, Node*>& A, const tuple<long int, Node*>& B){
 	if(get<0>(A) < get<0>(B))
 		return true;
 	else if(get<0>(A) == get<0>(B)){
@@ -57,8 +57,6 @@ void Heap_min::swap(unsigned int i, unsigned int j) { /* O(1) */
 
 Heap_min::Heap_min() { /* O(1) */
 		this->size = 0;
-		// this->max = max;
-		// this->heap = new Node*[max];
 }
 
 Heap_min::~Heap_min() { /* O(1) */
@@ -81,7 +79,7 @@ tuple<long int, Node*> Heap_min::extract() { /* O(lg n) */
 		return make_tuple(0,(Node*)0);
 }
 
-tuple<long int, Node*> Heap_min::top(){ /* O(1) */
+tuple<long int, Node*> Heap_min::getTop(){ /* O(1) */
 		if (isEmpty() == false) {
 				return this->heap[0];
 		}
@@ -91,34 +89,15 @@ tuple<long int, Node*> Heap_min::top(){ /* O(1) */
 		return make_tuple(0,(Node*)0);
 }
 
-tuple<long int, Node*> Heap_min::print(int index){ /* O(1) */
-		if (isEmpty() == false) {
-				return this->heap[index];
-		}
-		#ifdef LOG
-				L_(lerror) << "In top function on Heap_min class - the heap is empty";
-		#endif
-		return make_tuple(0,(Node*)0);
-}
-
-
 unsigned int Heap_min::getSize() { /* O(1) */
 		return this->size;
 }
 
 bool Heap_min::insert(tuple<long int,Node*> _tuble){ /* O(lg n) */
-		
-		//cout << "I " << get<0>(_tuble) << endl;
 		this->heap.emplace_back(_tuble);
-		//this->heap[this->size] = no;
 		heapifyup(this->size);
 		this->size++;
 		return true;
-		
-		// #ifdef LOG
-		//      L_(lerror) << "In insert function on Heap_min class - the heap is full";
-		// #endif
-		// return false;
 }
 
 bool Heap_min::isEmpty() { /* O(1) */

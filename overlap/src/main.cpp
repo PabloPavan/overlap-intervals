@@ -98,26 +98,33 @@ int main(int argc, char const *argv[]){
 
 		n_current = heap_min->extract();
 
+		if(get<1>(n_current)->getStart() == get<1>(n_current)->getEnd()){
+			delete get<1>(n_current);
+			continue;
+		}
+
 		if(get<0>(n_current) > clock){
 			dump_file(clock, get<0>(n_current), current_pattern);
 		}
+
 		if(get<0>(n_current) == get<1>(n_current)->getStart()){
 			current_pattern.push_back(get<1>(n_current));
-		}else if(get<0>(n_current) == get<1>(n_current)->getEnd()){
+		} else if(get<0>(n_current) == get<1>(n_current)->getEnd()){
 			for (int i = 0; i < current_pattern.size(); ++i){
 				if(nodes_equals_compare(get<1>(n_current), current_pattern[i])){
 					delete current_pattern[i];
-					delete get<1>(n_current);
 					current_pattern.erase(current_pattern.begin()+i);
-					break;
 				}
 			}
-		}else{
-			#ifdef LOG
-				L_(lerror) << "PANIC in main: the conditions doesn't match";
-			#endif
-			exit(1);
+			delete get<1>(n_current);
 		}
+		else{
+		 	#ifdef LOG
+				L_(lerror) << "PANIC in main: the conditions doesn't match";
+		 	#endif
+		 	exit(1);
+		}
+		
 	clock = get<0>(n_current);
 	}
 

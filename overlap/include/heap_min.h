@@ -8,13 +8,14 @@
 
 using namespace std;
 
+#define SIZE_HEAP 100E6
 /* Min-Heap */
 
 class Heap_min {
 private:
     /* Vector of pointers to Node */
-    vector<tuple<long int,Node*>> heap;
-    unsigned int size = 0;
+   tuple<long int,Node*> *heap;
+    unsigned int max, size = 0;
     bool compare(const tuple<long int, Node*>& A, const tuple<long int, Node*>& B);
     void heapifydown(unsigned int index);
     void heapifyup(unsigned int index);

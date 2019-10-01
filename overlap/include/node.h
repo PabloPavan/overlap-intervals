@@ -7,9 +7,9 @@ using namespace std;
 
 class Node {
 private:
-    vector<int> phase;
-    vector<int> job;
-    vector<int> day;
+    int phase;
+    int job;
+    int day;
     long int start;
     long int end;
     
@@ -17,9 +17,9 @@ public:
     Node(int phase, int job, int day, long int start, long int end);
 
     ~Node();
-    const vector<int>& getPhase();
-    const vector<int>& getJob();
-    const vector<int>& getDay();
+    int getPhase();
+    int getJob();
+    int getDay();
     long int getStart();
     long int getEnd();
 

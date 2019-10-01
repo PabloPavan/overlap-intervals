@@ -12,7 +12,6 @@ bool Heap_min::compare(const tuple<long int, Node*>& A, const tuple<long int, No
 		else if(get<1>(A)->getStart() == get<1>(B)->getStart() && get<1>(A)->getEnd() < get<1>(B)->getEnd())
 			return true;
 	}
-
 	return false;
 }
 
@@ -25,7 +24,6 @@ void Heap_min::heapifydown(unsigned int index = 0) { /* O(lg n) */
 			swap(index, left(index));
 			index = left(index);
 		}
-
 }
 
 void Heap_min::heapifyup(unsigned int index) { /* O(lg n) */
@@ -57,10 +55,12 @@ void Heap_min::swap(unsigned int i, unsigned int j) { /* O(1) */
 
 Heap_min::Heap_min() { /* O(1) */
 		this->size = 0;
+		this->max = SIZE_HEAP;
+		this->heap = (tuple<long int, Node*>*) calloc (this->max,sizeof(tuple<long int, Node*>));
 }
 
 Heap_min::~Heap_min() { /* O(1) */
-		//delete[] this->heap;
+		free(this->heap);
 }
 
 /* Extract-min*/
@@ -93,8 +93,13 @@ unsigned int Heap_min::getSize() { /* O(1) */
 		return this->size;
 }
 
-bool Heap_min::insert(tuple<long int,Node*> _tuble){ /* O(lg n) */
-		this->heap.emplace_back(_tuble);
+bool Heap_min::insert(tuple<long int,Node*> _tuple){ /* O(lg n) */
+		if(this->size >= this->max){
+			this->max += SIZE_HEAP;
+			this->heap = (tuple<long int, Node*>*) realloc(this->heap, sizeof(tuple<long int, Node*>)*this->max);
+			L_(linfo) << "Realloc the heap size -- current size " << this->size << " -- after size " << this->max; 
+		}
+		this->heap[this->size] = _tuple;
 		heapifyup(this->size);
 		this->size++;
 		return true;

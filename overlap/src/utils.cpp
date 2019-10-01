@@ -92,15 +92,18 @@ int idx_find(string word, vector<string>&v){
  * @return a vector with with unique values
  */
 
-inline void remove_duplicates(const vector<Node*>& nodes, const vector<int>& (Node::*functionPtr)(), vector<int>&v){
+void remove_duplicates(const vector<Node*>& nodes, int (Node::*functionPtr)(), vector<int>&v){
+	//unordered_set<int> s;
 	set<int> s;
+	//s.reserve(10000);
 	for (int i = 0; i < nodes.size(); ++i){	
-		vector<int> u = (nodes[i]->*functionPtr)();
-		for(int j = 0; j < u.size(); ++j)
-			s.insert(u[j]);
+	//	vector<int> u = (nodes[i]->*functionPtr)();
+	//	for(int j = 0; j < u.size(); ++j)
+		s.insert((nodes[i]->*functionPtr)());
 	}
 	
-	v.assign(s.begin(),s.end()); 
+	v.assign(s.begin(),s.end());
+       	//sort(v.begin(), v.end());
 }
 
 
@@ -175,33 +178,22 @@ inline bool file_exists (const char filename[]) {
 
 void dump_file(int long start, int long end, const vector<Node*>& nodes){
 
-	string path_save = output_path+"final.csv";
 
 	if(!first_write){
 
-		fstream save_file;
-		save_file.open(path_save, fstream::out);
-
-		save_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl; 
-
-		save_file.close();
-
+		main_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n"; 
 		first_write = true;
 	
 	}
-
-	fstream save_file;
-	save_file.open(path_save, fstream::app);
 
 	if (nodes.size() == 0){
 		#ifdef LOG
 			L_(ldebug) << "save - " << "start: " << start << " end: " << end  << " duration: " << end-start << " phases: " << -1 << " jobs: " << -1 << " days: " << -1;
 		#endif
-		save_file <<  start <<";"<< end <<";"<< end-start <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";" << -1 <<";"<< 0 << endl;
+		main_file <<  start <<";"<< end <<";"<< end-start <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";" << -1 <<";"<< 0 << "\n";
 		return;	
 	}
 	 
-
 	vector<int> jobs_vec;
 	vector<int> phases_vec;
 	vector<int> days_vec;
@@ -214,55 +206,56 @@ void dump_file(int long start, int long end, const vector<Node*>& nodes){
 	statistics_data phases = extract_statistics(phases_vec);
 	statistics_data days = extract_statistics(days_vec);
 
-
+	
 	#ifdef LOG
 		L_(ldebug) << "save - " <<  "start: " << start << " end: " << end << " duration: " << end-start << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
 	#endif
 	
-	save_file <<  start <<";"<< end <<";"<< end-start <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+	main_file <<  start <<";"<< end <<";"<< end-start <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
 	
-	save_file.close();
 
 	string folder = output_path+"phases_"+phases.values+".csv";
+
+	fstream save_file;
 
 	if(!file_exists(folder.c_str())){
 		#ifdef LOG
 			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
 		#endif 
 		save_file.open(folder, ios::out | ios::trunc);
-		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n";
+		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
 		save_file.close();	
 	}else{
 		save_file.open(folder, ios::app);
 		#ifdef LOG
 			L_(ldebug) << "Success "<<  folder <<" found.";
 		#endif 
-		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
 		save_file.close();
 	}
 
-	for (int i = 0; i < phases_vec.size(); ++i){
+	// for (int i = 0; i < phases_vec.size(); ++i){
 
-		string folder = output_path+"patterns_"+to_string(phases_vec[i])+".csv";
+	// 	string folder = output_path+"patterns_"+to_string(phases_vec[i])+".csv";
 
-		if(!file_exists(folder.c_str())){
-			#ifdef LOG
-				L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
-			#endif 
-			save_file.open(folder, ios::out | ios::trunc);
-			save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-			save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-			save_file.close();	
-		}else{
-			save_file.open(folder, ios::app);
-			#ifdef LOG
-				L_(ldebug) << "Success "<<  folder <<" found.";
-			#endif 
-			save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-			save_file.close();
-		}
-	}
+	// 	if(!file_exists(folder.c_str())){
+	// 		#ifdef LOG
+	// 			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+	// 		#endif 
+	// 		save_file.open(folder, ios::out | ios::trunc);
+	// 		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+	// 		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+	// 		save_file.close();	
+	// 	}else{
+	// 		save_file.open(folder, ios::app);
+	// 		#ifdef LOG
+	// 			L_(ldebug) << "Success "<<  folder <<" found.";
+	// 		#endif 
+	// 		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
+	// 		save_file.close();
+	// 	}
+	// }
 
 
 	free(jobs.values);

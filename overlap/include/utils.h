@@ -13,7 +13,8 @@
 #include <list>
 #include <sys/stat.h>
 #include<tuple>
-
+#include<unordered_set>
+#include<algorithm>
 #define BUFFER_SIZE 4096
 
 using namespace std;
@@ -21,6 +22,7 @@ using namespace std;
 static bool first_write = false;
 
 extern string output_path;
+extern fstream main_file;
 
 struct statistics_data{
 	int  times;
@@ -31,7 +33,7 @@ struct statistics_data{
 unsigned int read_file(Heap_min *h, string path, long int *min_timestamp, long int day, vector<string>&filename_v, vector<string>&info_v);
 int idx_find(string word, vector<string>&v);
 string front_pop(list<string>&l);
-inline void remove_duplicates(const vector<Node*>& nodes, const vector<int>& (Node::*functionPtr)(), vector<int>&v);
+void remove_duplicates(const vector<Node*>& nodes, const vector<int>& (Node::*functionPtr)(), vector<int>&v);
 inline bool file_exists (const char filename[]);
 void dump_file(int long start, int long new_end, const vector<Node*>& nodes);
 void dump_dict(string path, const vector<string>&v);

@@ -14,6 +14,8 @@
 
 string input_path, output_path;
 
+fstream main_file;
+
 int main(int argc, char const *argv[]){
 
 	if(argc==3) { 
@@ -57,6 +59,8 @@ int main(int argc, char const *argv[]){
 
 	file_path.close();
 
+	string path_save = output_path+"final.csv";
+	main_file.open(path_save, fstream::app);
 
 	Heap_min *heap_min;
 	heap_min = new Heap_min();
@@ -81,9 +85,9 @@ int main(int argc, char const *argv[]){
 
 	while(!heap_min->isEmpty()){
 
-		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
+		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
 			#ifdef LOG
-				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 30 perc of the total size: " << (heap_total_size*0.5);
+				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
 			#endif
 
 			dump_dict(phases_path, info_v);
@@ -97,13 +101,15 @@ int main(int argc, char const *argv[]){
 		if(get<0>(n_current) > clock){
 			dump_file(clock, get<0>(n_current), current_pattern);
 		}
-
 		if(get<0>(n_current) == get<1>(n_current)->getStart()){
-			current_pattern.emplace_back(get<1>(n_current));
+			current_pattern.push_back(get<1>(n_current));
 		}else if(get<0>(n_current) == get<1>(n_current)->getEnd()){
 			for (int i = 0; i < current_pattern.size(); ++i){
 				if(nodes_equals_compare(get<1>(n_current), current_pattern[i])){
+					delete current_pattern[i];
+					delete get<1>(n_current);
 					current_pattern.erase(current_pattern.begin()+i);
+					break;
 				}
 			}
 		}else{
@@ -116,14 +122,15 @@ int main(int argc, char const *argv[]){
 	}
 
 	#ifdef LOG
-		L_(ldebug) << "min size of heap after: " << heap_min->getSize();
+		L_(linfo) << "min size of heap after: " << heap_min->getSize();
 	#endif
-
 
 	dump_dict(phases_path, info_v);
 	dump_dict(jobs_path, filename_v);
 
 	delete heap_min;
+	main_file.close();
+
 	endLogger();
 
 	return 0;

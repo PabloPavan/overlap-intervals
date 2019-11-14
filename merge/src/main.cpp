@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]){
 	fstream save_file;
 	save_file.open(output_path, fstream::out);
 
-	save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
+	save_file << "start;end;duration;phases;nphases;jobs;njobs;days;ndays" << endl;
 
 	FILE *f = fopen(input_path.c_str(), "r");
 

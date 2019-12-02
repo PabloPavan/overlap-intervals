@@ -62,20 +62,18 @@ unsigned int read_file(Heap_min *heap_min, string path, int64_t*min_timestamp){
  */
 
 void remove_duplicates(const vector<Node*>& nodes, string (Node::*functionPtr)(), vector<int>&v){
-	//unordered_set<int> s;
-	set<string> s;
-	//s.reserve(10000);
+	set<int> s;
 	for (int i = 0; i < nodes.size(); ++i){	
-	//	vector<int> u = (nodes[i]->*functionPtr)();
-	//	for(int j = 0; j < u.size(); ++j)
-		s.insert((nodes[i]->*functionPtr)());
+
+		string tmp = (nodes[i]->*functionPtr)();
+		stringstream stmp(tmp);
+
+		while(getline(stmp, token, ',')) {
+    		s.insert(stoi(token));
+		}
 	}
 
-	for (auto elem : s){
-		v.push_back(stoi(elem)); 
-	}
-	//v.assign(s.begin(),s.end());
-       	//sort(v.begin(), v.end());
+	v.assign(s.begin(),s.end());
 }
 
 

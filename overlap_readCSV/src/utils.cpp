@@ -7,10 +7,8 @@
  * @return the heap's size
  */
 
-unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp, vector<string>&filename_v, vector<string>&info_v){
+unsigned int read_file(Heap_min *heap_min, string path, int64_t*min_timestamp){
 
-	//const long int epoch_time = 0;
-	const long int epoch_time = 1325376000;
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
 
@@ -23,38 +21,28 @@ unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp,
 	char *header = fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
-		long int start_time;
-		long int end_time;
-		double start;
-		double end;
 
-		char *token = strtok(line,delim); //filename
-		string filename(token);
-		token = strtok(NULL,delim); //start_time
-		start_time = atoi(token);
+		char *token = strtok(line,delim);
+		int64_t start_time = atol(token); // start_time
 		token = strtok(NULL,delim); //end_time
-		end_time = atoi(token);
-		token = strtok(NULL,delim); //start
-		start = atof(token);
-		token = strtok(NULL,delim); //end
-		end = atof(token);
-		token = strtok(NULL,delim); //info
-		token[strlen(token)-1] = '\0'; // remove \n
-		string info(token);
-		start  = start * 1000000; 
-		start_time = start_time - epoch_time; 
-		start_time = start_time * 1000000;
-		long int starti = (long int) start;
-		long int start_ = start_time + starti;
-		end = end * 1000000;
-		long int endi = (long int) end;
-		long int end_ = start_ + (endi - starti);
+		int64_t end_time = atol(token);
+		token = strtok(NULL,delim); //duration
+		token = strtok(NULL,delim); //phases
+		string phases(token);
+		token = strtok(NULL,delim); //nphases
+		token = strtok(NULL,delim); //jobs
+		string jobs(token);
+		token = strtok(NULL,delim); //njobs
+		token = strtok(NULL,delim); // days
+		string days(token);
+		token = strtok(NULL,delim); //ndays
 
-		if (*min_timestamp == -1 || *min_timestamp > start_)
-			*min_timestamp = start_;
 
-		heap_min->insert(make_tuple(start_,new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_)));
-		heap_min->insert(make_tuple(end_,new Node(idx_find(info, info_v),idx_find(filename, filename_v),day,start_,end_)));
+		if (*min_timestamp == -1 || *min_timestamp > start_time)
+			*min_timestamp = start_time;
+
+		heap_min->insert(make_tuple(start_time,new Node(phases, jobs, days, start_time,end_time)));
+		heap_min->insert(make_tuple(end_time,new Node(phases, jobs, days, start_time,end_time)));
 
 	}
 	
@@ -63,25 +51,6 @@ unsigned int read_file(Heap_min *heap_min, string path, long int *min_timestamp,
 		L_(ldebug) << "min heap size: " << heap_min->getSize();
 	#endif
 	return heap_min->getSize();
-}
-
-/**
- * Creating a dict using vector
- * if word exists in vector return the index
- * if word doesn't exist create a new value in vector
- * 
- * @param word that needs be find, ref for the vector
- * @return the index of the vector that contains the word
- */
-
-int idx_find(string word, vector<string>&v){
-	int idx = 0;
-	for (idx = 0; idx < v.size(); ++idx)
-		if(v[idx].compare(word) == 0) 
-			break;
-	if(idx == v.size())
-		v.push_back(word);	
-	return idx;	
 }
 
 
@@ -107,19 +76,6 @@ void remove_duplicates(const vector<Node*>& nodes, int (Node::*functionPtr)(), v
 }
 
 
-/**
- * Return and remove a value from list of the strign
- * 
- * @param ref of the string list
- * @return the value of the front
- */
-
-string front_pop(list<string>&l){
-	string str;
-	str = l.front();
-	l.pop_front();
-	return str;
-}
 
 /**
  * Creating statistics of a vector.
@@ -176,12 +132,12 @@ inline bool file_exists (const char filename[]) {
  */
 
 
-void dump_file(int long start, int long end, const vector<Node*>& nodes){
+void dump_file(int64_t start, int64_t end, const vector<Node*>& nodes){
 
 
 	if(!first_write){
 
-		main_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n"; 
+		main_file << "start;end;duration;phases;nphases;jobs;njobs;days;ndays" << "\n"; 
 		first_write = true;
 	
 	}

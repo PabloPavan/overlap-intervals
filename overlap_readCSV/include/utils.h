@@ -16,6 +16,7 @@
 #include<unordered_set>
 #include<algorithm>
 #include <forward_list>
+#include <sstream>
 
 #define BUFFER_SIZE 4096
 
@@ -32,12 +33,10 @@ struct statistics_data{
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
-unsigned int read_file(Heap_min *h, string path, long int *min_timestamp, vector<string>&filename_v, vector<string>&info_v);
-int idx_find(string word, vector<string>&v);
-string front_pop(list<string>&l);
+unsigned int read_file(Heap_min *h, string path, int64_t *min_timestamp);
 void remove_duplicates(const vector<Node*>& nodes, int (Node::*functionPtr)(), vector<int>&v);
 inline bool file_exists (const char filename[]);
-void dump_file(int long start, int long new_end, const vector<Node*>& nodes);
+void dump_file(int64_t start, int64_t new_end, const vector<Node*>& nodes);
 void dump_dict(string path, const vector<string>&v);
 inline statistics_data extract_statistics(const vector<int> &v);
 bool nodes_equals_compare(Node* lhs,  Node* rhs);

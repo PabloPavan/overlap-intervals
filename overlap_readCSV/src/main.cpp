@@ -55,13 +55,13 @@ int main(int argc, char const *argv[]){
 	jobs_path = output_path + "dict_jobs.csv";
 
 	unsigned int heap_total_size = 0;
-	long int min_timestamp = -1; 
+	int64_tmin_timestamp = -1; 
 
 	heap_total_size = read_file(heap_min, input_path , &min_timestamp, filename_v, info_v); 
 
-	long int clock = min_timestamp;
+	int64_tclock = min_timestamp;
 
-	tuple<long int, Node*> n_current;
+	tuple<int64_t, Node*> n_current;
 
 	vector<Node*> current_pattern;
 

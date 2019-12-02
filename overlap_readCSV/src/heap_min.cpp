@@ -3,7 +3,7 @@
 
 /* Private */
 
-bool Heap_min::compare(const tuple<long int, Node*>& A, const tuple<long int, Node*>& B){
+bool Heap_min::compare(const tuple<int64_t, Node*>& A, const tuple<int64_t, Node*>& B){
 	if(get<0>(A) < get<0>(B))
 		return true;
 	else if(get<0>(A) == get<0>(B)){
@@ -46,7 +46,7 @@ unsigned int Heap_min::right(unsigned int parent) { /* O(1) */
 }
 
 void Heap_min::swap(unsigned int i, unsigned int j) { /* O(1) */
-		tuple<long int, Node*> swap = this->heap[i];
+		tuple<int64_t, Node*> swap = this->heap[i];
 		this->heap[i] = this->heap[j];
 		this->heap[j] = swap;
 }
@@ -56,7 +56,7 @@ void Heap_min::swap(unsigned int i, unsigned int j) { /* O(1) */
 Heap_min::Heap_min() { /* O(1) */
 		this->size = 0;
 		this->max = SIZE_HEAP;
-		this->heap = (tuple<long int, Node*>*) calloc (this->max,sizeof(tuple<long int, Node*>));
+		this->heap = (tuple<int64_t, Node*>*) calloc (this->max,sizeof(tuple<int64_t, Node*>));
 }
 
 Heap_min::~Heap_min() { /* O(1) */
@@ -64,9 +64,9 @@ Heap_min::~Heap_min() { /* O(1) */
 }
 
 /* Extract-min*/
-tuple<long int, Node*> Heap_min::extract() { /* O(lg n) */
+tuple<int64_t, Node*> Heap_min::extract() { /* O(lg n) */
 		if (isEmpty() == false) {
-				tuple<long int, Node*> min = this->heap[0];
+				tuple<int64_t, Node*> min = this->heap[0];
 				this->heap[0] = this->heap[this->size - 1];
 				this->size = this->size - 1;
 				heapifydown();
@@ -79,7 +79,7 @@ tuple<long int, Node*> Heap_min::extract() { /* O(lg n) */
 		return make_tuple(0,(Node*)0);
 }
 
-tuple<long int, Node*> Heap_min::getTop(){ /* O(1) */
+tuple<int64_t, Node*> Heap_min::getTop(){ /* O(1) */
 		if (isEmpty() == false) {
 				return this->heap[0];
 		}
@@ -93,10 +93,10 @@ unsigned int Heap_min::getSize() { /* O(1) */
 		return this->size;
 }
 
-bool Heap_min::insert(tuple<long int,Node*> _tuple){ /* O(lg n) */
+bool Heap_min::insert(tuple<int64_t,Node*> _tuple){ /* O(lg n) */
 		if(this->size >= this->max){
 			this->max += SIZE_HEAP;
-			this->heap = (tuple<long int, Node*>*) realloc(this->heap, sizeof(tuple<long int, Node*>)*this->max);
+			this->heap = (tuple<int64_t, Node*>*) realloc(this->heap, sizeof(tuple<int64_t, Node*>)*this->max);
 			L_(linfo) << "Realloc the heap size -- current size " << this->size << " -- after size " << this->max; 
 		}
 		this->heap[this->size] = _tuple;

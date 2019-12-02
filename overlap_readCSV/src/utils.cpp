@@ -7,7 +7,7 @@
  * @return the heap's size
  */
 
-unsigned int read_file(Heap_min *heap_min, string path, int64_t*min_timestamp){
+unsigned int read_file(Heap_min *heap_min, string path, int64_t *min_timestamp){
 
 	char line[BUFFER_SIZE];
 	char delim[] = ";";
@@ -190,28 +190,6 @@ void dump_file(int64_t start, int64_t end, const vector<Node*>& nodes){
 		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
 		save_file.close();
 	}
-
-	// for (int i = 0; i < phases_vec.size(); ++i){
-
-	// 	string folder = output_path+"patterns_"+to_string(phases_vec[i])+".csv";
-
-	// 	if(!file_exists(folder.c_str())){
-	// 		#ifdef LOG
-	// 			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
-	// 		#endif 
-	// 		save_file.open(folder, ios::out | ios::trunc);
-	// 		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << endl;
-	// 		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-	// 		save_file.close();	
-	// 	}else{
-	// 		save_file.open(folder, ios::app);
-	// 		#ifdef LOG
-	// 			L_(ldebug) << "Success "<<  folder <<" found.";
-	// 		#endif 
-	// 		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << endl;
-	// 		save_file.close();
-	// 	}
-	// }
 
 
 	free(jobs.values);

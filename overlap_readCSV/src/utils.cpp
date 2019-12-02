@@ -67,6 +67,7 @@ void remove_duplicates(const vector<Node*>& nodes, string (Node::*functionPtr)()
 
 		string tmp = (nodes[i]->*functionPtr)();
 		stringstream stmp(tmp);
+		string token;
 
 		while(getline(stmp, token, ',')) {
     		s.insert(stoi(token));

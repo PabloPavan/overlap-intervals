@@ -32,7 +32,7 @@ struct statistics_data{
 	statistics_data(int times, char *values) : times(times), values(values) {}
 };
 
-unsigned int read_file(Heap_min *h, string path, long int *min_timestamp, long int day, vector<string>&filename_v, vector<string>&info_v);
+unsigned int read_file(Heap_min *h, string path, long int *min_timestamp, vector<string>&filename_v, vector<string>&info_v);
 int idx_find(string word, vector<string>&v);
 string front_pop(list<string>&l);
 void remove_duplicates(const vector<Node*>& nodes, int (Node::*functionPtr)(), vector<int>&v);

@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]){
 		output_path = argv[2];
 
 	}else{
-		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.dat] -- folder's path of the output file [path/]" << endl;
+		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.csv] -- folder's path of the output file [path/]" << endl;
 		exit(1);
 	}
 
@@ -39,26 +39,8 @@ int main(int argc, char const *argv[]){
 	#endif
 
 	string line;
-	list<string> path_l;
 	ifstream file_path;
 	
-	file_path.open(input_path);
-	if (!file_path) {
-		#ifdef LOG
-			L_(lerror) << "Unable to open: " << input_path << " file";
-		#endif
-		exit(1);
-	}
-	
-	while (file_path >> line) {
-		#ifdef LOG
-			L_(linfo) << "Input list: " << line;
-		#endif
-		path_l.push_back(line);
-	}
-
-	file_path.close();
-
 	string path_save = output_path+"final.csv";
 	main_file.open(path_save, fstream::app);
 
@@ -72,10 +54,10 @@ int main(int argc, char const *argv[]){
 	phases_path = output_path + "dict_phases.csv";
 	jobs_path = output_path + "dict_jobs.csv";
 
-	long int day = 3; 
 	unsigned int heap_total_size = 0;
 	long int min_timestamp = -1; 
-	heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, day, filename_v, info_v); 
+
+	heap_total_size = read_file(heap_min, input_path , &min_timestamp, filename_v, info_v); 
 
 	long int clock = min_timestamp;
 
@@ -84,17 +66,6 @@ int main(int argc, char const *argv[]){
 	vector<Node*> current_pattern;
 
 	while(!heap_min->isEmpty()){
-
-		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
-			#ifdef LOG
-				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
-			#endif
-
-			dump_dict(phases_path, info_v);
-			dump_dict(jobs_path, filename_v);
-
-			heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
-		}
 
 		n_current = heap_min->extract();
 

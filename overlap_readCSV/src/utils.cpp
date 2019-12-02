@@ -37,7 +37,9 @@ unsigned int read_file(Heap_min *heap_min, string path, int64_t *min_timestamp){
 		string days(token);
 		token = strtok(NULL,delim); //ndays
 
-
+		if(phases=="-1"){ // if the intervals is a idle time we skip it
+			continue;
+		}
 		if (*min_timestamp == -1 || *min_timestamp > start_time)
 			*min_timestamp = start_time;
 

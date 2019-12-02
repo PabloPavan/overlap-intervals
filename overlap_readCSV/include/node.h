@@ -2,7 +2,7 @@
 #define	NODE_H
 #include <vector>
 #include <iostream>
-##include <string>
+#include <string>
 using namespace std;
 /* Binary tree node */
 

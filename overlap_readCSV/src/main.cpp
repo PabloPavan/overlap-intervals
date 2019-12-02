@@ -47,17 +47,10 @@ int main(int argc, char const *argv[]){
 	Heap_min *heap_min;
 	heap_min = new Heap_min();
 
-	vector<string> filename_v;
-	vector<string> info_v;
-
-	string jobs_path, phases_path;
-	phases_path = output_path + "dict_phases.csv";
-	jobs_path = output_path + "dict_jobs.csv";
-
 	unsigned int heap_total_size = 0;
 	int64_tmin_timestamp = -1; 
 
-	heap_total_size = read_file(heap_min, input_path , &min_timestamp, filename_v, info_v); 
+	heap_total_size = read_file(heap_min, input_path , &min_timestamp); 
 
 	int64_tclock = min_timestamp;
 
@@ -102,9 +95,6 @@ int main(int argc, char const *argv[]){
 	#ifdef LOG
 		L_(linfo) << "min size of heap after: " << heap_min->getSize();
 	#endif
-
-	dump_dict(phases_path, info_v);
-	dump_dict(jobs_path, filename_v);
 
 	delete heap_min;
 	main_file.close();

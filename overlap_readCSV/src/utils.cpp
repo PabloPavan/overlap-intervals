@@ -197,29 +197,7 @@ void dump_file(int64_t start, int64_t end, const vector<Node*>& nodes){
 	free(days.values);
 }
 
-/**
- * Saving a file with the vector of dict
- *
- * @param the file path and the vector
- */
 
-
-
-void dump_dict(string path, const vector<string>&v){
-	#ifdef LOG
-		L_(linfo) << "dump dict file: " << path;
-	#endif 
-	fstream save_file;
-	save_file.open(path, fstream::out);
-
-	save_file << "id;" << "name" << endl; 
-
-	for (int i = 0; i < v.size(); ++i){
-		save_file << i << ";" << v[i] << endl;
-	}
-
-	save_file.close();
-}
 
 /**
  * compare to nodes and return true if they are equals

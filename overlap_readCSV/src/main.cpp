@@ -48,11 +48,11 @@ int main(int argc, char const *argv[]){
 	heap_min = new Heap_min();
 
 	unsigned int heap_total_size = 0;
-	int64_tmin_timestamp = -1; 
+	int64_t min_timestamp = -1; 
 
 	heap_total_size = read_file(heap_min, input_path , &min_timestamp); 
 
-	int64_tclock = min_timestamp;
+	int64_t clock = min_timestamp;
 
 	tuple<int64_t, Node*> n_current;
 

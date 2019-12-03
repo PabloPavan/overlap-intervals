@@ -72,11 +72,17 @@ int main(int argc, char const *argv[]){
 	phases_path = output_path + "dict_phases.csv";
 	jobs_path = output_path + "dict_jobs.csv";
 
-	long int day = 3; 
+	long int day = 2; // start in day 3 
 	unsigned int heap_total_size = 0;
 	long int min_timestamp = -1; 
-	heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, day, filename_v, info_v); 
 
+	int loops = 7; // how many days it will read at the same time
+	int iter = 0;
+	while(iter < loops && !path_l.empty()){ // one week
+		heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v); 
+		iter++;
+	}
+	
 	long int clock = min_timestamp;
 
 	tuple<long int, Node*> n_current;
@@ -85,15 +91,21 @@ int main(int argc, char const *argv[]){
 
 	while(!heap_min->isEmpty()){
 
-		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.2)){
+		if (!path_l.empty() && heap_min->getSize() < (heap_total_size*0.5)){
 			#ifdef LOG
-				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 20 perc of the total size: " << (heap_total_size*0.2);
+				L_(ldebug) << "size of the heap current: " << heap_min->getSize() << " -- 50 perc of the total size: " << (heap_total_size*0.5);
 			#endif
 
 			dump_dict(phases_path, info_v);
 			dump_dict(jobs_path, filename_v);
 
-			heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
+			iter = 0;
+			while(iter < loops && !path_l.empty()){ // one week
+				heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v); 
+				iter++;
+			}
+	
+			//heap_total_size = read_file(heap_min, front_pop(path_l), &min_timestamp, ++day, filename_v, info_v);
 		}
 
 		n_current = heap_min->extract();

@@ -180,17 +180,15 @@ void dump_file(int long start, int long end, const vector<Node*>& nodes){
 
 
 	if(!first_write){
-
-		main_file << "start;" << "end;" << "duration;" << "phases;" << "nphases;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n"; 
+		main_file << "start;end;duration;phases;nphases;jobs;njobs;days;ndays" << "\n"; 
 		first_write = true;
-	
 	}
 
 	if (nodes.size() == 0){
 		#ifdef LOG
-			L_(ldebug) << "save - " << "start: " << start << " end: " << end  << " duration: " << end-start << " phases: " << -1 << " jobs: " << -1 << " days: " << -1;
+			L_(ldebug) << "save - " << "start: " << start << " end: " << end  << " duration: " << end-start << " phases: " << -1 << " jobs: " << -1 << " days: " << last_days;
 		#endif
-		main_file <<  start <<";"<< end <<";"<< end-start <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";" << -1 <<";"<< 0 << "\n";
+		main_file <<  start <<";"<< end <<";"<< end-start <<";"<< -1 <<";"<< 0 <<";"<< -1 <<";"<< 0 <<";" << last_days <<";"<< last_ndays << "\n";
 		return;	
 	}
 	 
@@ -206,7 +204,6 @@ void dump_file(int long start, int long end, const vector<Node*>& nodes){
 	statistics_data phases = extract_statistics(phases_vec);
 	statistics_data days = extract_statistics(days_vec);
 
-	
 	#ifdef LOG
 		L_(ldebug) << "save - " <<  "start: " << start << " end: " << end << " duration: " << end-start << " phases: " << phases.values << " jobs: " << jobs.values << " days: " << days.values;
 	#endif
@@ -256,6 +253,9 @@ void dump_file(int long start, int long end, const vector<Node*>& nodes){
 	// 		save_file.close();
 	// 	}
 	// }
+
+	last_days = days.values;
+	last_ndays = days.times;
 
 
 	free(jobs.values);

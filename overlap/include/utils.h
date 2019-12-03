@@ -26,6 +26,9 @@ static bool first_write = false;
 extern string output_path;
 extern fstream main_file;
 
+static string last_days;
+static int last_ndays;
+
 struct statistics_data{
 	int  times;
 	char *values;

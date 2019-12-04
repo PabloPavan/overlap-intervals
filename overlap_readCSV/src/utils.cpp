@@ -18,7 +18,7 @@ unsigned int read_file(Heap_min *heap_min, string path, int64_t *min_timestamp){
 
 	FILE *f = fopen(path.c_str(), "r");
 
-	char *header = fgets(line, sizeof(line), f); // skip header
+	//char *header = fgets(line, sizeof(line), f); // skip header
 
 	while(fgets(line, sizeof(line), f)){
 
@@ -140,7 +140,7 @@ void dump_file(int64_t start, int64_t end, const vector<Node*>& nodes){
 
 	if(!first_write){
 
-		main_file << "start;end;duration;phases;nphases;jobs;njobs;days;ndays" << "\n"; 
+		//main_file << "start;end;duration;phases;nphases;jobs;njobs;days;ndays" << "\n"; 
 		first_write = true;
 	
 	}
@@ -173,26 +173,26 @@ void dump_file(int64_t start, int64_t end, const vector<Node*>& nodes){
 	main_file <<  start <<";"<< end <<";"<< end-start <<";"<< phases.values <<";"<< phases.times <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
 	
 
-	string folder = output_path+"phases_"+phases.values+".csv";
+	// string folder = output_path+"phases_"+phases.values+".csv";
 
-	fstream save_file;
+	// fstream save_file;
 
-	if(!file_exists(folder.c_str())){
-		#ifdef LOG
-			L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
-		#endif 
-		save_file.open(folder, ios::out | ios::trunc);
-		save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n";
-		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
-		save_file.close();	
-	}else{
-		save_file.open(folder, ios::app);
-		#ifdef LOG
-			L_(ldebug) << "Success "<<  folder <<" found.";
-		#endif 
-		save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
-		save_file.close();
-	}
+	// if(!file_exists(folder.c_str())){
+	// 	#ifdef LOG
+	// 		L_(ldebug) << "Cannot open "<< folder << ", file does not exist. Creating new file..";
+	// 	#endif 
+	// 	save_file.open(folder, ios::out | ios::trunc);
+	// 	save_file << "start;" << "end;" << "duration;" << "jobs;" << "njobs;" << "days;" << "ndays" << "\n";
+	// 	save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
+	// 	save_file.close();	
+	// }else{
+	// 	save_file.open(folder, ios::app);
+	// 	#ifdef LOG
+	// 		L_(ldebug) << "Success "<<  folder <<" found.";
+	// 	#endif 
+	// 	save_file << start <<";"<< end <<";"<< end-start <<";"<< jobs.values <<";"<< jobs.times <<";"<< days.values <<";"<< days.times << "\n";
+	// 	save_file.close();
+	// }
 
 
 	free(jobs.values);

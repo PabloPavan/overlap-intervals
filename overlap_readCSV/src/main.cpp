@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]){
 		output_path = argv[2];
 
 	}else{
-		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.csv] -- folder's path of the output file [path/]" << endl;
+		cout <<"Error: argument -- usage: " << argv[0] << " path of the input file [.csv] -- path of the output file [.csv]" << endl;
 		exit(1);
 	}
 
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]){
 	string line;
 	ifstream file_path;
 	
-	string path_save = output_path+"final.csv";
+	string path_save = output_path;
 	main_file.open(path_save, fstream::app);
 
 	Heap_min *heap_min;
